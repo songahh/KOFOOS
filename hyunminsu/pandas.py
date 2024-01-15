@@ -9,7 +9,7 @@ json_str=""
 
 key = 'f48b2f6ad8bb4380b591'
 page = 1
-url = "https://openapi.foodsafetykorea.go.kr/api/"+key+"/C005/json/"+str(page)+"/"+str(page+)
+url = "https://openapi.foodsafetykorea.go.kr/api/"+key+"/C005/json/"+str(page)+"/"+str(page+999)
 response = urllib.request.urlopen(url)
 temp = response.read().decode("utf-8")
 json_str = json.loads(temp)
