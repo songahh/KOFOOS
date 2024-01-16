@@ -32,5 +32,26 @@
     - 상,하단 메뉴바  
     ![image](/uploads/8b2f1ee63aff230cf8c75546267ed467/image.png){: width="200"}
 
+
 # ☑️ 0116 Todo List
-커밋 테스트
+~~1. Flutter 강의듣기~~     
+~~2. 시작화면 디자인~~     
+~~3. Jira, Gitlab, MM 연동~~     
+
+
+## ⚒️ 자세히 보기
+### 1. Flutter 강의듣기
+- Widget
+![image](/uploads/27913f5a412bc0d71f8d9ce10e2fe0ec/image.png)
+- 프로젝트 폴더 구성
+    - **pubspec.yaml**
+        - 프로젝트의 메타데이터를 정리하고 관리하는 곳
+        - 프로젝트의 버전, 사용환경, 다트의 버전, 각종 디펜던시/라이브러리 등을 정리하고 관리
+
+
+### 2. 시작화면 디자인
+- **스플래시 스크린 디자인**  
+![image](/uploads/b9324931fd9be8ca596cf9da6824fa76/image.png){: width="200"}
+
+### 3. Jira, Gitlab, MM 연동
+![image](/uploads/9aa3d3c00350f940c85517d3ed204095/image.png){: width="200"}
