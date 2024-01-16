@@ -2,7 +2,7 @@
 
 1. Flutter 학습
     - [코드팩토리] [입문] Dart 언어 4시간만에 완전정복 강의 - 인프런 (완료)<br>
-    - Youtube [코딩셰프] Flutter 강의 순한맛 (학습중)
+    - Youtube [코딩셰프] Flutter 강의 순한맛(학습중)
 
 2. ERD 작성 (완료)
 
@@ -11,9 +11,10 @@
 ### 240116 진행사항
 
 1. Flutter 학습
-    - Youtube [코딩셰프] Flutter 강의 순한맛 (학습중)
+    - Youtube [코딩셰프] Flutter 강의 순한맛(학습중)
 
 2. API 명세서 완성
 
 3. Jira 학습 및 주간 스프린트 생성
+
 
