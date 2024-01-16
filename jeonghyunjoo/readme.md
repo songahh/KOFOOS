@@ -19,4 +19,5 @@
 - 유스케이스 다이어그램 작성
 - API 명세서 작성
 - JIRA 스프린트 작성 완료
+
 ![image](/uploads/21dd20ee37e8b819b183915462ef2918/image.png)
