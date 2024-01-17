@@ -9,7 +9,7 @@
 
 
 
-2일차
+### 2일차
 ## 웹 크롤링
 - **python3, pip 설치** 
     - ```python --version```
@@ -21,3 +21,7 @@
 - **셀레니움, 드라이버 메니저 설치**
     - ```pip install webdriver_manager```
     - ```pip install selenium```
+
+### 3일차
+발표 자료 준비 및 앱 자동화 개발환경 구축
+<img src="img/appium.PNG">
