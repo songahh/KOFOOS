@@ -17,4 +17,9 @@
 
 3. Jira 학습 및 주간 스프린트 생성
 
+### 240117 진행사항
 
+1. Flutter 학습
+    - Youtube [코딩셰프] Flutter 강의 순한맛(학습중)
+
+2. ERD 재작성 (ERD CLOUD 활용)
