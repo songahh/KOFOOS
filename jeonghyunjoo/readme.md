@@ -21,3 +21,13 @@
 - JIRA 스프린트 작성 완료
 
 ![image](/uploads/21dd20ee37e8b819b183915462ef2918/image.png)
+
+# 2024-01-17
+## Flutter 학습
+- 기본 코딩
+
+## ERD 재작성
+![yumcode](/uploads/50b8f1c9a4dba218b29820b4ccb3a633/yumcode.png)
+
+## 팀미팅
+- AI + 빅데이터를 활용한 다양한 분석 기법 고려해보기
