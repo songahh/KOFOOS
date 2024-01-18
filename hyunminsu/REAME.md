@@ -49,7 +49,17 @@
 
 <img src="/uploads/79e013582cc73c6dcd8dde398b1f70d8/image.png" width=60% height = 250px>
 
+# 👨🏻‍💻 1월 17일 진행사항
 
+## 웹 크롤링 
+
+### 예외처리 마무리
+
+* crawl.py참고
+
+## 데이터 처리 계획
+
+* api 호출 param 결정 및 데이터 수집 계획 수립
 
 
 
