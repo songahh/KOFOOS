@@ -51,3 +51,14 @@
 
 ### 3. ERD 수정
 [![kofoos.png](https://i.postimg.cc/59rvrwnH/kofoos.png)](https://postimg.cc/z3nVbRm5)
+
+## 240123 진행사항
+### 1. 플러터 학습
+- 노마드코더 Flutter로 웹툰 앱 만들기 (~3.5)
+### 2. 팀 회의
+- 기능 정의서 기반 기능별 인원 할당
+- 구체적인 개발 기간 설정
+### 3. 개발환경 구축
+- 개발 툴 설치 및 버전 통일
+    - Intellij , open JDK 21, MySQL workbench
+- DB 테이블 생성 
