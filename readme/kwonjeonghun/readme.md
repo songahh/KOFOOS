@@ -94,3 +94,10 @@
 - splash screen 구현
 - gesture detector 스와이프 모션 기능 추가
 - assets으로 font awesome 등록
+# ✔ 240126 진행사항
+### 1. 발표 진행
+### 2. Redis 학습
+### 3. 플러터 프로젝트 구조 설계
+- MVVM 패턴 학습
+- MVVM 패턴 적용
+- yaml 설정파일 수정
