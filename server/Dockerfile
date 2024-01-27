@@ -15,7 +15,7 @@ WORKDIR /app
 
 # 빌더 이미지에서 jar 파일만 복사
 # COPY --from=builder /build/build/libs/api-0.0.1-SNAPSHOT.jar ./app.jar
-COPY --from=builder /build/build/libs/api-0.0.1-SNAPSHOT-plain.jar .
+COPY --from=builder /build/build/libs/api-0.0.1-SNAPSHOT.jar .
 
 EXPOSE 8080
 
