@@ -2,7 +2,7 @@ package com.kofoos.api.User;
 
 import jakarta.persistence.*;
 
-@Table(name = "user")
+@Table(name = "uaser")
 @Entity
 public class UserDto {
     @Id
