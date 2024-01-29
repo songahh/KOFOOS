@@ -1,5 +1,6 @@
 package com.kofoos.api.entity;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,6 +8,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "editor_recommendation_article")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
 public class EditorRecommendationArticle {
 
     @Id
@@ -29,5 +33,13 @@ public class EditorRecommendationArticle {
 
     @OneToMany(mappedBy = "editorRecommendationArticle")
     private List<EditorProductsList> editorProductsList = new ArrayList<>();
-    // Getters and Setters
+
+    @Builder
+    public EditorRecommendationArticle(String subject, String content, Date registrationTime, String image) {
+        this.subject = subject;
+        this.content = content;
+        this.registrationTime = registrationTime;
+        this.image = image;
+    }
+
 }

@@ -1,9 +1,12 @@
 package com.kofoos.api.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Getter
 @Table(name = "wishlist_nonItem")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WishlistNonItem {
 
     @Id
@@ -18,5 +21,14 @@ public class WishlistNonItem {
     @JoinColumn(name = "wishlist_folder_id")
     private WishlistFolder wishlistFolder;
 
-    // Getters and Setters
+    @Builder
+    public WishlistNonItem(String imageUrl, WishlistFolder wishlistFolder) {
+        this.imageUrl = imageUrl;
+        setWishlistFolder(wishlistFolder);
+    }
+
+    private void setWishlistFolder(WishlistFolder wishlistFolder) {
+        this.wishlistFolder = wishlistFolder;
+        wishlistFolder.getWishlistNonItems().add(this);
+    }
 }

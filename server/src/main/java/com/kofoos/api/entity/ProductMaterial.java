@@ -1,9 +1,12 @@
 package com.kofoos.api.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Getter
 @Table(name = "product_material")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductMaterial {
 
     @Id
@@ -18,6 +21,20 @@ public class ProductMaterial {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    // Getters and Setters
+    @Builder
+    public ProductMaterial(DislikedMaterial dislikedMaterial, Product product) {
+        setProduct(product);
+        setDislikedMaterial(dislikedMaterial);
+    }
+
+    private void setProduct(Product product) {
+        this.product = product;
+        product.getProductMaterials().add(this);
+    }
+
+    private void setDislikedMaterial(DislikedMaterial dislikedMaterial) {
+        this.dislikedMaterial = dislikedMaterial;
+        dislikedMaterial.getProductMaterials().add(this);
+    }
 }
 

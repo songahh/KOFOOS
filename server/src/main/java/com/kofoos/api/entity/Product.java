@@ -1,13 +1,14 @@
 package com.kofoos.api.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
 
     @Id
@@ -50,5 +51,43 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<EditorProductsList> editorProductsLists = new ArrayList<>();
+
+    @Builder
+    public Product(String barcode, String name, String description, byte[] image, int like, int hit, String convenienceStore, Category category) {
+        this.barcode = barcode;
+        this.name = name;
+        this.description = description;
+        this.image = image;
+        this.like = like;
+        this.hit = hit;
+        this.convenienceStore = convenienceStore;
+        setCategory(category);
+    }
+
+    @Builder
+    public void setCategory(Category category) {
+        this.category = category;
+        category.getProducts().add(this);
+    }
+
+    public void setHistory(History history) {
+        this.history = history;
+    }
+
+    public void setWishlistItem(WishlistItem wishlistItem){
+        this.wishlistItem = wishlistItem;
+    }
+
+    public void addLike(){
+        this.like += 1;
+    }
+    public void subLike(){
+        this.like -= 1;
+    }
+
+    public void addHit(){
+        this.hit += 1;
+    }
+
 
 }

@@ -1,11 +1,14 @@
 package com.kofoos.api.entity;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
 @Table(name = "member")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id
@@ -28,5 +31,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<UserDislikesMaterial> userDislikesMaterials = new ArrayList<>();
 
-    // Getters and Setters
+    @Builder
+    public User(String deviceId, String language) {
+        this.deviceId = deviceId;
+        this.language = language;
+    }
 }

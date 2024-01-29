@@ -1,16 +1,20 @@
 package com.kofoos.api.entity;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
 @Table(name = "wishlist_folder")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WishlistFolder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "wishlist_folder_id")
+
     private Long id;
 
     @Column(name = "name")
@@ -26,5 +30,19 @@ public class WishlistFolder {
     @OneToMany(mappedBy = "wishlistFolder")
     private List<WishlistNonItem> wishlistNonItems = new ArrayList<>();
 
-    // Getters and Setters
+    @Builder
+    private WishlistFolder(String name, User user) {
+        this.name = name;
+        setUser(user);
+    }
+
+    private void setUser(User user) {
+        this.user = user;
+        user.getWishlistFolders().add(this);
+    }
+
+    public void updateName(String name){
+        this.name = name;
+    }
+
 }
