@@ -1,11 +1,14 @@
 package com.kofoos.api.entity;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
 @Table(name = "disliked_material")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DislikedMaterial {
 
     @Id
@@ -20,11 +23,15 @@ public class DislikedMaterial {
     private List<ProductMaterial> productMaterials = new ArrayList<>();
 
     @OneToMany(mappedBy = "dislikedMaterial")
-    private List<UserDislikesMaterial> userDislikesMaterialList = new ArrayList<>();
+    private List<UserDislikesMaterial> UserDislikesMaterials = new ArrayList<>();
 
     @OneToMany(mappedBy = "dislikedMaterial")
-    private List<DislikedMaterialDetails> dislikedMaterialDetails = new ArrayList<>();
+    private List<DislikedMaterialDetails> dislikedMaterialDetailsList = new ArrayList<>();
 
 
+    @Builder
+    public DislikedMaterial(String name) {
+        this.name = name;
+    }
 
 }
