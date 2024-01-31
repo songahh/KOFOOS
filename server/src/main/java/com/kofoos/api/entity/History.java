@@ -1,0 +1,45 @@
+package com.kofoos.api.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class History {
+
+    @Id
+    @GeneratedValue
+    private int id;
+
+    private LocalDateTime viewTime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    private User user;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    private Product product;
+
+    @Builder
+    public History(LocalDateTime viewTime, User user, Product product) {
+
+        this.viewTime = viewTime;
+        setUser(user);
+        setProduct(product);
+
+    }
+
+    private void setUser(User user) {
+        this.user = user;
+        user.getHistories().add(this);
+    }
+
+    private void setProduct(Product product) {
+        this.product = product;
+        product.setHistory(this);
+    }
+}
