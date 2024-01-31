@@ -12,25 +12,22 @@ public class History {
 
     @Id
     @GeneratedValue
-    private int id;
+    @Column(name = "disliked_material_details_id")
+    private Long id;
 
     private LocalDateTime viewTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "member_id")
     private User user;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @Builder
     public History(LocalDateTime viewTime, User user, Product product) {
-
         this.viewTime = viewTime;
-        setUser(user);
-        setProduct(product);
-
     }
 
     private void setUser(User user) {
