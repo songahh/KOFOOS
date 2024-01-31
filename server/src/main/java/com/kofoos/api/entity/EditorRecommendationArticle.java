@@ -15,7 +15,8 @@ public class EditorRecommendationArticle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "disliked_material_details_id")
+    private Long id;
 
     @Column(length = 50, name = "subject")
     private String subject;

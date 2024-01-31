@@ -14,6 +14,7 @@ public class Image {
 
     @Id
     @GeneratedValue
+    @Column(name = "image_id")
     private int id;
 
     @Column(length = 100)

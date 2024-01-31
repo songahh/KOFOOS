@@ -4,23 +4,24 @@ import lombok.*;
 
 @Entity
 @Getter
-@Table(name = "disliked_material_details")
+@Table(name = "disliked_material_detail")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DislikedMaterialDetails {
+public class DislikedMaterialDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "disliked_material_detail_id")
+    private Long id;
 
     @Column(length = 15, name = "detail_name")
     private String detailName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "material_id")
     private DislikedMaterial dislikedMaterial;
 
     @Builder
-    public DislikedMaterialDetails(String detailName, DislikedMaterial dislikedMaterial) {
+    public DislikedMaterialDetail(String detailName, DislikedMaterial dislikedMaterial) {
         this.detailName = detailName;
         setDislikedMaterial(dislikedMaterial);
     }
