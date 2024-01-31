@@ -1,18 +1,38 @@
 package com.kofoos.api.common.dto;
 
+import com.kofoos.api.entity.User;
+import com.kofoos.api.entity.WishlistFolder;
+import com.kofoos.api.entity.WishlistItem;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
+@Builder
 public class WishlistFolderDto {
+
     private int id;
     private String name;
-    private String userName;
+    private UserDto userDto;
+    private List<WishlistItemDto> wishlistItemDtos;
 
-    @Builder
-    public WishlistFolderDto(int id, String name, String userName) {
-        this.id = id;
-        this.name = name;
-        this.userName = userName;
+    public static WishlistFolderDto of(WishlistFolder wishlistFolder){
+
+        List<WishlistItemDto> wishlistItemDtos = new ArrayList<>();
+
+        for(WishlistItem wishlistItem : wishlistFolder.getWishlistitems()){
+            wishlistItemDtos.add(WishlistItemDto.of(wishlistItem));
+        }
+
+        return WishlistFolderDto.builder()
+                .name(wishlistFolder.getName())
+                .userDto(UserDto.of(wishlistFolder.getUser()))
+                .wishlistItemDtos(wishlistItemDtos)
+                .build();
+
     }
+
 }

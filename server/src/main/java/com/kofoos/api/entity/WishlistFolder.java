@@ -13,22 +13,18 @@ public class WishlistFolder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "wishlist_folder_id")
-
-    private Long id;
+    private int id;
 
     @Column(name = "name")
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "id")
     private User user;
 
     @OneToMany(mappedBy = "wishlistFolder")
     private List<WishlistItem> wishlistitems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "wishlistFolder")
-    private List<WishlistNonItem> wishlistNonItems = new ArrayList<>();
 
     @Builder
     private WishlistFolder(String name, User user) {
