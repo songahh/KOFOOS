@@ -13,8 +13,7 @@ public class DislikedMaterial {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "material_id")
-    private Long id;
+    private int id;
 
     @Column(length = 45,name = "name")
     private String name;
@@ -27,7 +26,6 @@ public class DislikedMaterial {
 
     @OneToMany(mappedBy = "dislikedMaterial")
     private List<DislikedMaterialDetails> dislikedMaterialDetailsList = new ArrayList<>();
-
 
     @Builder
     public DislikedMaterial(String name) {

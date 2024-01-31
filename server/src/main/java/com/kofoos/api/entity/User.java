@@ -7,14 +7,12 @@ import java.util.List;
 
 @Entity
 @Getter
-@Table(name = "member")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
-    private Long id;
+    private int id;
 
     @Column(unique = true)
     private String deviceId;

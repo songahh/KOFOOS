@@ -13,8 +13,7 @@ public class Category {
 
     @Id
     @GeneratedValue
-    @Column(name = "category_id")
-    private Long id;
+    private int id;
 
     @Column(length = 45,name = "cat_1")
     private String cat1;
