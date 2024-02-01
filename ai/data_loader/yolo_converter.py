@@ -52,7 +52,7 @@ class YoloDataConverter:
             txt_name = "valid.txt"
 
         # 하위폴더
-        dirs = [dir.name for dir in os.scandir(file_anno_path) if ".zip" not in dir.name] # ex. 과자1
+        dirs = [dir.name for dir in os.scandir(file_anno_path) if "." not in dir.name] # ex. 과자1
         
         # 라벨을 만듦
         for dir in dirs:
@@ -61,7 +61,7 @@ class YoloDataConverter:
             if not os.path.exists(sub_path):
                 os.mkdir(sub_path)
 
-            sub_file_dirs = [file_dir.name for file_dir in os.scandir(sub_path)] # ex. 10060_해태포키블루베리41G
+            sub_file_dirs = [file_dir.name for file_dir in os.scandir(sub_path) ] # ex. 10060_해태포키블루베리41G
             for file_dir in sub_file_dirs:
                 sub_file_path = os.path.join(sub_path, file_dir)
                 files = glob.glob(os.path.join(sub_file_path, '*_meta.xml'))
@@ -93,7 +93,7 @@ class YoloDataConverter:
 
 
         basename = os.path.basename(file)
-        filename = os.path.splitext(basename)[0]
+        filename = os.path.splitext(basename)[0].replace("_meta", "")
         
         result = [] # {클래스라벨idx} {x_center} {y_center} {width} {height}
 
@@ -122,6 +122,7 @@ class YoloDataConverter:
             sub_file_dir_path = os.path.join(sub_dir_path, file_dir)
             if not os.path.exists(sub_file_dir_path):
                 os.mkdir(sub_file_dir_path)
+
             with open(os.path.join(sub_file_dir_path, f"{filename}.txt"), "w", encoding="utf-8") as f:
                 f.write("\n".join(result))
 
