@@ -11,7 +11,7 @@ public class EditorProductsList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "editor_products_list_id")
-    private Long id;
+    private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")

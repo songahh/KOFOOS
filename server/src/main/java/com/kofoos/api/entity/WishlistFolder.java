@@ -14,7 +14,7 @@ public class WishlistFolder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "wishlist_folder_id")
-    private Long id;
+    private int id;
 
     @Column(name = "name")
     private String name;
@@ -25,6 +25,7 @@ public class WishlistFolder {
 
     @OneToMany(mappedBy = "wishlistFolder")
     private List<WishlistItem> wishlistitems = new ArrayList<>();
+
 
     @Builder
     private WishlistFolder(String name, User user) {
