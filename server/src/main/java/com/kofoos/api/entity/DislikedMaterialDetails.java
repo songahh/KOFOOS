@@ -10,13 +10,14 @@ public class DislikedMaterialDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "disliked_material_details_id")
     private int id;
 
     @Column(length = 15, name = "detail_name")
     private String detailName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "material_id")
     private DislikedMaterial dislikedMaterial;
 
     @Builder
