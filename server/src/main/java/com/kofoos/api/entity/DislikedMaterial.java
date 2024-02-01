@@ -13,6 +13,7 @@ public class DislikedMaterial {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "disliked_material_id")
     private int id;
 
     @Column(length = 45,name = "name")

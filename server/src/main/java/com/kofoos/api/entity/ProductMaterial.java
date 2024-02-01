@@ -11,14 +11,15 @@ public class ProductMaterial {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_material_id")
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "disliked_material_id")
     private DislikedMaterial dislikedMaterial;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @Builder
