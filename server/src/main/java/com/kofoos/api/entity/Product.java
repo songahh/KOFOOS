@@ -29,7 +29,7 @@ public class Product {
     @JoinColumn(name = "image_id")
     private Image image;
 
-    @Column(name = "like")
+    @Column(name = "wish")
     private Integer like;
 
     @Column(name = "hit")
@@ -55,7 +55,8 @@ public class Product {
     private List<EditorProductsList> editorProductsLists = new ArrayList<>();
 
     @Builder
-    public Product(String barcode, String name, String description, Image image, int like, int hit, String convenienceStore, Category category) {
+    public Product(int id, String barcode, String name, String description, Image image, int like, int hit, String convenienceStore, Category category) {
+        this.id = id;
         this.barcode = barcode;
         this.name = name;
         this.description = description;

@@ -4,10 +4,7 @@ import org.springframework.expression.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +30,7 @@ public class WishlistController {
         deviceId: String
      */
     @ResponseBody
-    @GetMapping("/product/like")
+    @PostMapping("/product/like")
     public ResponseEntity<Map<String, Object>> likeProduct(@RequestBody Map<String, Object> req)
             throws ParseException {
         Map<String, Object> result = new HashMap<String, Object>();
@@ -41,7 +38,7 @@ public class WishlistController {
         int productId = (Integer) req.get("productId");
         String deviceId = (String)  req.get("deviceId");
 
-
+        System.out.println("========="+productId);
 
         wishlistService.like(productId,deviceId);
 
