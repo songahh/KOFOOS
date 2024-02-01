@@ -13,7 +13,7 @@ public class WishlistItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "wishlist_item_id")
-    private Long id;
+    private int id;
 
     private Integer bought;
 
@@ -21,14 +21,20 @@ public class WishlistItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_id")
+    private Image image;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "folder_id")
+    @JoinColumn(name = "wishlist_folder_id")
     private WishlistFolder wishlistFolder;
 
     @Builder
-    public WishlistItem(Integer bought, Product product, WishlistFolder wishlistFolder) {
+    public WishlistItem(Integer bought,Image image, Product product, WishlistFolder wishlistFolder) {
         this.bought = bought;
         setProduct(product);
+        setImage(image);
         setWishlistFolder(wishlistFolder);
     }
 
@@ -36,6 +42,12 @@ public class WishlistItem {
         this.product = product;
         product.setWishlistItem(this);
     }
+
+    private void setImage(Image image){
+        this.image = image;
+        image.setWishlistItem(this);
+    }
+
 
     private void setWishlistFolder(WishlistFolder wishlistFolder) {
         this.wishlistFolder = wishlistFolder;

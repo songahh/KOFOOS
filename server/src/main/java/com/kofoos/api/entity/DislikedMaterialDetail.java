@@ -10,8 +10,8 @@ public class DislikedMaterialDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "disliked_material_detail_id")
-    private Long id;
+    @Column(name = "disliked_material_details_id")
+    private int id;
 
     @Column(length = 15, name = "detail_name")
     private String detailName;

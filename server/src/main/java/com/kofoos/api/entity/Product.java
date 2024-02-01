@@ -13,8 +13,7 @@ public class Product {
 
     @Id
     @GeneratedValue
-    @Column(name = "disliked_material_details_id")
-    private Long id;
+    private int id;
 
     @Column(length = 45)
     private String  barcode;
@@ -25,9 +24,11 @@ public class Product {
     @Column(length = 600)
     private String  description;
 
-    private byte[] image;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    private Image image;
 
-    @Column(name = "good")
+    @Column(name = "like")
     private int like;
 
     @Column(name = "hit")
@@ -37,7 +38,7 @@ public class Product {
     private String convenienceStore;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "id")
     private Category category;
 
     @OneToOne(mappedBy = "product")
@@ -53,22 +54,28 @@ public class Product {
     private List<EditorProductsList> editorProductsLists = new ArrayList<>();
 
     @Builder
-    public Product(String barcode, String name, String description, byte[] image, int like, int hit, String convenienceStore, Category category) {
+    public Product(String barcode, String name, String description, Image image, int like, int hit, String convenienceStore, Category category) {
         this.barcode = barcode;
         this.name = name;
         this.description = description;
-        this.image = image;
+        setImage(image);
         this.like = like;
         this.hit = hit;
         this.convenienceStore = convenienceStore;
         setCategory(category);
     }
 
-    @Builder
     public void setCategory(Category category) {
         this.category = category;
         category.getProducts().add(this);
     }
+
+    public void setImage(Image image){
+        this.image = image;
+        image.setProduct(this);
+    }
+
+
 
     public void setHistory(History history) {
         this.history = history;

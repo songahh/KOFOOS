@@ -11,14 +11,14 @@ import java.time.LocalDateTime;
 public class History {
 
     @Id
-    @GeneratedValue
-    @Column(name = "disliked_material_details_id")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "history_id")
+    private int id;
 
     private LocalDateTime viewTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -27,7 +27,11 @@ public class History {
 
     @Builder
     public History(LocalDateTime viewTime, User user, Product product) {
+
         this.viewTime = viewTime;
+        setUser(user);
+        setProduct(product);
+
     }
 
     private void setUser(User user) {
