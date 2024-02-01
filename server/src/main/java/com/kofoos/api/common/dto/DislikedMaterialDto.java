@@ -1,7 +1,7 @@
 package com.kofoos.api.common.dto;
 
 import com.kofoos.api.entity.DislikedMaterial;
-import com.kofoos.api.entity.DislikedMaterialDetails;
+import com.kofoos.api.entity.DislikedMaterialDetail;
 import com.kofoos.api.entity.ProductMaterial;
 import com.kofoos.api.entity.UserDislikesMaterial;
 import jakarta.persistence.*;
@@ -18,20 +18,20 @@ public class DislikedMaterialDto {
     private String name;
     private List<ProductMaterialDto> productMaterialDtos;
     private List<UserDislikesMaterialDto> userDislikesMaterialDtos;
-    private List<DislikedMaterialDetailsDto> dislikedMaterialDetailsDtos;
+    private List<DislikedMaterialDetailDto> dislikedMaterialdetailDtos;
 
     public static DislikedMaterialDto of(DislikedMaterial dislikedMaterial){
 
         List<ProductMaterialDto> productMaterialDtos = new ArrayList<>();
-        List<DislikedMaterialDetailsDto> dislikedMaterialDetailsDtos = new ArrayList<>();
+        List<DislikedMaterialDetailDto> dislikedMaterialdetailDtos = new ArrayList<>();
         List<UserDislikesMaterialDto> userDislikesMaterialDtos = new ArrayList<>();
 
         for(ProductMaterial productMaterial : dislikedMaterial.getProductMaterials()){
             productMaterialDtos.add(ProductMaterialDto.of(productMaterial));
         }
 
-        for(DislikedMaterialDetails dislikedMaterialDetails : dislikedMaterial.getDislikedMaterialDetailsList()){
-            dislikedMaterialDetailsDtos.add(DislikedMaterialDetailsDto.of(dislikedMaterialDetails));
+        for(DislikedMaterialDetail dislikedMaterialDetail : dislikedMaterial.getDislikedMaterialDetailList()){
+            dislikedMaterialdetailDtos.add(DislikedMaterialDetailDto.of(dislikedMaterialDetail));
         }
 
         for(UserDislikesMaterial userDislikesMaterial : dislikedMaterial.getUserDislikesMaterials()){
@@ -41,7 +41,7 @@ public class DislikedMaterialDto {
         return DislikedMaterialDto.builder()
                 .name(dislikedMaterial.getName())
                 .productMaterialDtos(productMaterialDtos)
-                .dislikedMaterialDetailsDtos(dislikedMaterialDetailsDtos)
+                .dislikedMaterialdetailDtos(dislikedMaterialdetailDtos)
                 .userDislikesMaterialDtos(userDislikesMaterialDtos)
                 .build();
 

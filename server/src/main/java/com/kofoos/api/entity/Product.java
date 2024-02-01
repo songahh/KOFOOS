@@ -12,7 +12,8 @@ import java.util.List;
 public class Product {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
     private int id;
 
     @Column(length = 45)
@@ -25,20 +26,20 @@ public class Product {
     private String  description;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "image_id")
     private Image image;
 
     @Column(name = "like")
-    private int like;
+    private Integer like;
 
     @Column(name = "hit")
-    private int hit;
+    private Integer hit;
 
     @Column(length = 10)
     private String convenienceStore;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @OneToOne(mappedBy = "product")
