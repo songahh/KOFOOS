@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'KOFOOS',
+      title: 'KOFO',
       initialBinding: BindingsBuilder(() {
         Get.put(RootController());
       }),
