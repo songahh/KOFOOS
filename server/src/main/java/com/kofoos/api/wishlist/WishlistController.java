@@ -46,6 +46,24 @@ public class WishlistController {
         //ok상태코드 리턴
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
+
+    @ResponseBody
+    @PostMapping("/product/cancel")
+    public ResponseEntity<Map<String, Object>> cencelLikeProduct(@RequestBody Map<String, Object> req)
+            throws ParseException {
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        int productId = (Integer) req.get("productId");
+        String deviceId = (String)  req.get("deviceId");
+
+        System.out.println("[ 좋아요 취소 ("+productId+" / "+ deviceId + " )]");
+
+        wishlistService.cancel(productId,deviceId);
+
+
+        //ok상태코드 리턴
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
     /**
      * Get /products/category/ranking 카테고리 카테고리랭킹 (목록)
      * Post /product/like 상품 좋아요(위시리스트 추가)

@@ -5,4 +5,6 @@ public interface WishlistService {
 
     void moveItem();
     void moveItems();
+
+    void cancel(int productId, String deviceId);
 }

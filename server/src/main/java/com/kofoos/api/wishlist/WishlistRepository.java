@@ -4,16 +4,12 @@ import com.kofoos.api.entity.WishlistItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface WishlistRepository extends JpaRepository<WishlistItem, Long> {
 
-  /*  @Query("SELECT u FROM User u WHERE u.age >= :age")
-    List<User> findByAgeGreaterThanEqual(@Param("age") Integer age);
-
-    @Query("SELECT u FROM User u WHERE u.age >= :age")
-    List<User> findByAgeGreaterThanEqual(@Param("age") Integer age);
-    @Query("SELECT u FROM User u WHERE u.age >= :age")
-    List<User> findByAgeGreaterThanEqual(@Param("age") Integer age);*/
+    Optional<WishlistItem> findWishlistItemByWishlistFolderIdAndProductId(int wishlist_folder_id, int productId);
 
 
 }
