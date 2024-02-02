@@ -1,15 +1,18 @@
 package com.kofoos.api.wishlist;
 
-import com.kofoos.api.entity.Product;
-import com.kofoos.api.entity.User;
-import com.kofoos.api.entity.WishlistFolder;
-import com.kofoos.api.entity.WishlistItem;
+import com.kofoos.api.common.dto.ProductDto;
+import com.kofoos.api.common.dto.WishlistFolderDto;
+import com.kofoos.api.common.dto.WishlistItemDto;
+import com.kofoos.api.entity.*;
 import com.kofoos.api.wishlist.repo.FolderRepository;
 import com.kofoos.api.wishlist.repo.ProductRepository;
 import com.kofoos.api.wishlist.repo.UserRepository;
 import io.lettuce.core.ScriptOutputType;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,7 +36,7 @@ public class WishlistServiceImpl implements WishlistService {
 
         Optional<User> optionalUser = userRepository.findUserIdByDeviceId(deviceId);
         User currentUser = optionalUser.get();
-        System.out.println("=============="+currentUser.getId());
+        System.out.println("==============" + currentUser.getId());
         int userId = optionalUser.map(User::getId).orElse(0);
 
 
@@ -50,7 +53,7 @@ public class WishlistServiceImpl implements WishlistService {
 
             folder = folderRepository.save(newfolder);
 
-            System.out.println("folderId: "+folder.getId());
+            System.out.println("folderId: " + folder.getId());
         } else {
             folder = folderByUserIdAndName.get();
         }
@@ -65,7 +68,7 @@ public class WishlistServiceImpl implements WishlistService {
                 .image(currentProduct.getImage())
                 .build();
 
-        System.out.println("dd: "+wishlistItem.getId());
+        System.out.println("dd: " + wishlistItem.getId());
         System.out.println(wishlistItem.getBought());
         System.out.println(wishlistItem.getImage());
         System.out.println(wishlistItem.getWishlistFolder().getId());
@@ -110,6 +113,70 @@ public class WishlistServiceImpl implements WishlistService {
             System.out.println("sorry!!");
         }
         wishlistRepository.delete(wishlistItem.get());
+    }
+
+    @Override
+    public void check(int itemId, Integer bought) {
+        // wishlist_item 테이블을 itemId로 조회해서 bought값으로 변경
+        Optional<WishlistItem> wishlistItemOptional = wishlistRepository.findById(itemId);
+
+
+        if (wishlistItemOptional.isPresent()) {
+            WishlistItem item = wishlistItemOptional.get();
+
+
+        }
+    }
+
+    @Override
+    public void create(String folderName, String deviceId) {
+
+        User currentUser = userRepository.findUserIdByDeviceId(deviceId).get();
+
+        WishlistFolder newFolder = WishlistFolder.builder()
+                .name(folderName)
+                .user(currentUser)
+                .build();
+
+        folderRepository.save(newFolder);
+    }
+
+    @Override
+    public void delete(Integer folderId, String deviceId) {
+
+
+        folderRepository.deleteById((folderId));
+
+    }
+
+    @Override
+    public List<WishlistFolderDto> findFolderList(String deviceId) {
+        User user = userRepository.findUserIdByDeviceId(deviceId).get();
+
+        //user
+        List<WishlistFolder> folderList = folderRepository.findFolderByUserId(user.getId());
+         List<WishlistFolderDto> folderDtos = new ArrayList<>();
+
+        for(WishlistFolder folder : folderList){
+            WishlistFolderDto folderDto = WishlistFolderDto.of(folder);
+            folderDtos.add(folderDto);
+        }
+
+        return folderDtos;
+    }
+
+    @Override
+    public List<ProductDto> findFolder(int folderId) {
+        List<Product> productIds = folderRepository.findProductsByFolderId(folderId);
+        List<ProductDto> products = new ArrayList<>();
+
+        for(Product id: productIds){
+            ProductDto productDto = ProductDto.of(id);
+            products.add(productDto);
+        }
+
+
+        return products;
     }
 
 
