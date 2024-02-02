@@ -29,7 +29,7 @@ public class Product {
     @JoinColumn(name = "image_id")
     private Image image;
 
-    @Column(name = "like")
+    @Column(name = "wish")
     private Integer like;
 
     @Column(name = "hit")
@@ -42,16 +42,16 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToOne(mappedBy = "product")
+    @OneToOne(mappedBy = "product",fetch = FetchType.LAZY)
     private WishlistItem wishlistItem;
 
-    @OneToOne(mappedBy = "product")
+    @OneToOne(mappedBy = "product",fetch = FetchType.LAZY)
     private History history;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private List<ProductMaterial> productMaterials = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private List<EditorProductsList> editorProductsLists = new ArrayList<>();
 
     @Builder
