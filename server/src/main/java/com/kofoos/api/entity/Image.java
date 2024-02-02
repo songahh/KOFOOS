@@ -20,10 +20,10 @@ public class Image {
     @Column(length = 100)
     private String imgUrl;
 
-    @OneToOne(mappedBy = "image")
+    @OneToOne(mappedBy = "image",fetch = FetchType.LAZY)
     private WishlistItem wishlistItem;
 
-    @OneToOne(mappedBy = "image")
+    @OneToOne(mappedBy = "image",fetch = FetchType.LAZY)
     private Product product;
 
     @Builder
