@@ -35,6 +35,9 @@ public class Product {
     @Column(name = "hit")
     private Integer hit;
 
+    @Column(name = "item_no",length = 10)
+    private String itemNo;
+
     @Column(length = 10)
     private String convenienceStore;
 
@@ -45,8 +48,8 @@ public class Product {
     @OneToOne(mappedBy = "product",fetch = FetchType.LAZY)
     private WishlistItem wishlistItem;
 
-    @OneToOne(mappedBy = "product",fetch = FetchType.LAZY)
-    private History history;
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    private List<History> history;
 
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private List<ProductMaterial> productMaterials = new ArrayList<>();
@@ -55,13 +58,14 @@ public class Product {
     private List<EditorProductsList> editorProductsLists = new ArrayList<>();
 
     @Builder
-    public Product(String barcode, String name, String description, Image image, int like, int hit, String convenienceStore, Category category) {
+    public Product(String barcode, String name, String description,String itemNo, Image image, int like, int hit, String convenienceStore, Category category) {
         this.barcode = barcode;
         this.name = name;
         this.description = description;
         setImage(image);
         this.like = like;
         this.hit = hit;
+        this.itemNo = itemNo;
         this.convenienceStore = convenienceStore;
         setCategory(category);
     }
@@ -78,9 +82,7 @@ public class Product {
 
 
 
-    public void setHistory(History history) {
-        this.history = history;
-    }
+
 
     public void setWishlistItem(WishlistItem wishlistItem){
         this.wishlistItem = wishlistItem;
