@@ -23,6 +23,7 @@ public class RedisService {
         String key = "recentViewed:" + deviceId;
         double score = System.currentTimeMillis();
         redisTemplate.opsForZSet().add(key, product, score);
+        //
     }
 
     public Set<Object> getRecentViewedItems(String deviceId) {
