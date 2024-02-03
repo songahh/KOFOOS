@@ -21,12 +21,12 @@ public class ProductDetailDto {
     private String barcode;
     private String name;
     private String description;
+    private String itemNo;
     private int hit;
     private String convenienceStore;
     private CategorySearchDto categorySearchDto;
     private List<String> dislikedMaterials;
-
-//    private ImageDto imageDto;
+    private String imgurl;
 
     public static ProductDetailDto of(Product product) {
 
@@ -44,6 +44,8 @@ public class ProductDetailDto {
                 .categorySearchDto(CategorySearchDto.of(product.getCategory()))
                 .convenienceStore(product.getConvenienceStore())
                 .dislikedMaterials(dislikedMaterials)
+                .itemNo(product.getItemNo())
+//                .imgurl(product.getImage().getImgUrl())
                 .build();
 
     }

@@ -21,7 +21,7 @@ public class History {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
@@ -41,6 +41,6 @@ public class History {
 
     private void setProduct(Product product) {
         this.product = product;
-        product.setHistory(this);
+        product.getHistory().add(this);
     }
 }
