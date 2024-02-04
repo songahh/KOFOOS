@@ -1,5 +1,6 @@
 package com.kofoos.api.product.controller;
 
+import com.kofoos.api.common.dto.ProductDto;
 import com.kofoos.api.entity.Product;
 import com.kofoos.api.product.dto.ProductDetailDto;
 import com.kofoos.api.product.dto.RequestId;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -72,11 +74,13 @@ public class ProductController {
     }
 
     // 상품 검색 및 정렬
-    @GetMapping("/products/list/{cat1}/{cat2}/{cat3}/{order}")
+    @GetMapping("/list/{cat1}/{cat2}/{cat3}/{order}")
     public ResponseEntity<?> findProductsOrder(@PathVariable String cat1,@PathVariable String cat2,@PathVariable String cat3, @PathVariable String order){
+        System.out.println("cat1 = " + cat1);
         int id = categoryService.findId(cat1,cat2,cat3);
-        List<Product> products = productService.findProductsOrder(id,order);
-        return new ResponseEntity<>(products,HttpStatus.OK);
+        System.out.println("id = " + id);
+        List<ProductDetailDto> productDetailDtos = productService.findProductsOrder(id,order);
+        return new ResponseEntity<>(productDetailDtos,HttpStatus.OK);
     }
 
     //테스트
