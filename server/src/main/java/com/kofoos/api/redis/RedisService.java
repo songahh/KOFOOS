@@ -40,7 +40,6 @@ public class RedisService {
             keys.stream()
                     .map(key -> recentItems.put(key,redisTemplate.opsForZSet().reverseRange(key, 0, 9)));
         }
-
         return recentItems;
 
     }

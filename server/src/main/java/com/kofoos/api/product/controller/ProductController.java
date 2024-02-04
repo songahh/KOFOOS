@@ -40,6 +40,7 @@ public class ProductController {
                 .name(productDetailDto.getName())
                 .imgUrl(productDetailDto.getImgurl())
                 .deviceId(deviceId)
+                .itemNo(productDetailDto.getItemNo())
                 .build();
         redisService.addRecentViewedItem(deviceId,redisEntity);
         return new ResponseEntity<>(productDetailDto, HttpStatus.OK);

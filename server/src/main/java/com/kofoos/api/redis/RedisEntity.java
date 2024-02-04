@@ -18,6 +18,7 @@ public class RedisEntity {
     private LocalDateTime createdAt;
     private String imgUrl;
     private String deviceId;
+    private String itemNo;
 
 
 }
