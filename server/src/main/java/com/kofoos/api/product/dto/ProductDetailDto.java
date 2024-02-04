@@ -11,6 +11,7 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,21 @@ public class ProductDetailDto {
     private CategorySearchDto categorySearchDto;
     private List<String> dislikedMaterials;
     private String imgurl;
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductDetailDto that = (ProductDetailDto) o;
+        return Objects.equals(barcode, that.barcode) &&
+                Objects.equals(itemNo, that.itemNo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(barcode, itemNo);
+    }
 
     public static ProductDetailDto of(Product product) {
 
