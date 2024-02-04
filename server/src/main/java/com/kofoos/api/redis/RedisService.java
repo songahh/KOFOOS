@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -29,6 +31,18 @@ public class RedisService {
     public Set<Object> getRecentViewedItems(String deviceId) {
         String key = "recentViewed:" + deviceId;
         return redisTemplate.opsForZSet().reverseRange(key, 0, 9);
+    }
+
+    public Map<String,Set<Object>> getAllRecentViewedItems() {
+        Map<String, Set<Object>> recentItems = new HashMap<>();
+        Set<String> keys = redisTemplate.keys("*");
+        if (keys != null) {
+            keys.stream()
+                    .map(key -> recentItems.put(key,redisTemplate.opsForZSet().reverseRange(key, 0, 9)));
+        }
+
+        return recentItems;
+
     }
 
 }

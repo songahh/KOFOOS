@@ -23,6 +23,7 @@ public class ProductDetailDto {
     private String description;
     private String itemNo;
     private int hit;
+    private int like;
     private String convenienceStore;
     private CategorySearchDto categorySearchDto;
     private List<String> dislikedMaterials;
@@ -45,6 +46,7 @@ public class ProductDetailDto {
                 .convenienceStore(product.getConvenienceStore())
                 .dislikedMaterials(dislikedMaterials)
                 .itemNo(product.getItemNo())
+                .like(product.getLike())
 //                .imgurl(product.getImage().getImgUrl())
                 .build();
 

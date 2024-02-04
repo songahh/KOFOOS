@@ -72,23 +72,15 @@ public class ProductController {
     }
 
     // 상품 검색 및 정렬
-    @GetMapping("/list/{id}/{order}")
-    public ResponseEntity<?> findProductsOrder(@PathVariable int id, @PathVariable String order){
+    @GetMapping("/products/list/{cat1}/{cat2}/{cat3}/{order}")
+    public ResponseEntity<?> findProductsOrder(@PathVariable String cat1,@PathVariable String cat2,@PathVariable String cat3, @PathVariable String order){
+        int id = categoryService.findId(cat1,cat2,cat3);
         List<Product> products = productService.findProductsOrder(id,order);
         return new ResponseEntity<>(products,HttpStatus.OK);
     }
 
-    // 유저 히스토리 레디스에서 가져온 데이터
-
-    @PostMapping("/history/detail")
-    public ResponseEntity<?> getHistories(@RequestBody RequestId requestId){
-//        deviceId = deviceId.replace("\"","");
-        System.out.println("deviceId = " + requestId.getDeviceId());
-        Set<Object> histories = redisService.getRecentViewedItems(requestId.getDeviceId());
-        return new ResponseEntity<>(histories,HttpStatus.OK);
-
-    }
-
+    //테스트
+    
 
 
 

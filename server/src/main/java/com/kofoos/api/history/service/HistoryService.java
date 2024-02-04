@@ -3,6 +3,7 @@ package com.kofoos.api.history.service;
 import com.kofoos.api.history.repository.HistoryRepository;
 import com.kofoos.api.product.dto.ProductDetailDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,5 +27,9 @@ public class HistoryService {
         return productDetailDtos;
 
     }
+
+
+
+
 
 }
