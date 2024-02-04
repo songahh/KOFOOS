@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,6 @@ public class HistoryController {
 
     @PostMapping("/redis")
     public ResponseEntity<?> getHistoriesRedis(@RequestBody RequestId requestId){
-//        deviceId = deviceId.replace("\"","");
         System.out.println("deviceId = " + requestId.getDeviceId());
         Set<Object> histories = redisService.getRecentViewedItems(requestId.getDeviceId());
         return new ResponseEntity<>(histories,HttpStatus.OK);
@@ -53,13 +53,12 @@ public class HistoryController {
         List<ProductDetailDto> allList = new ArrayList<>(mysql);
         Set<Object> redis = redisService.getRecentViewedItems(requestId.getDeviceId());
         if (redis != null && !redis.isEmpty()) {
-            // Redis에서 가져온 Set<Object>를 ProductDetailDto 리스트로 변환하여 all에 추가
             List<ProductDetailDto> redisProducts = redis.stream().map(o -> {
                 RedisEntity redisEntity = (RedisEntity) o;
                 return ProductDetailDto.builder()
                         .barcode(redisEntity.getBarcode())
-                        .imgurl(redisEntity.getImgUrl()) // RedisEntity에서 imgUrl을 가져옴
-                        .itemNo(redisEntity.getDeviceId()) // 이 부분은 itemNo를 deviceId로 잘못 매핑한 것 같아 수정이 필요할 수 있음
+                        .imgurl(redisEntity.getImgUrl())
+                        .itemNo(redisEntity.getDeviceId())
                         .build();
             }).collect(Collectors.toList());
             allList.addAll(redisProducts);
@@ -72,13 +71,13 @@ public class HistoryController {
 
     }
 
-
     @Scheduled(fixedDelay = 1000)
-    public void updateSqlHistory(){
-//        System.out.println("Hello Hello");
-        //레디스에서 가져와서 갱신을 해야하나?
-        //모든 유저를 가져와야 하나?
-
+    public void updateSql(){
+        Map<String,ProductDetailDto> redisHistories = redisService.getAllRedisHistories();
+        // redisHistories에 있는 데이터를
+        // mysql로 업데이트(mysql 삭제하고 삽입 or
+        // 각각의 deviceId별 redisHistories의 길이만큼만 update)
     }
+
 
 }
