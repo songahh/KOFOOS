@@ -1,7 +1,9 @@
 package com.kofoos.api.wishlist;
 
-import com.kofoos.api.common.dto.ProductDto;
+import com.kofoos.api.wishlist.dto.FolderDto;
+import com.kofoos.api.wishlist.dto.ProductDto;
 import com.kofoos.api.common.dto.WishlistFolderDto;
+import com.kofoos.api.wishlist.dto.WishlistDto;
 import org.springframework.expression.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -132,14 +134,14 @@ public class WishlistController {
 
         System.out.println("[ 폴더 리스트 조회 ( deviceId : "+deviceId +")]");
 
-       List<WishlistFolderDto> folderList =  wishlistService.findFolderList(deviceId);
+       List<FolderDto> folderList =  wishlistService.findFolderList(deviceId);
 
         result.put("folderList",folderList);
         //ok상태코드 리턴
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 
-    @ResponseBody
+  /*  @ResponseBody
     @GetMapping("/folder/{wishlist_folder_id}")
     public ResponseEntity<Map<String, Object>> searchByFolder(@PathVariable("wishlist_folder_id") int folderId)
             throws ParseException {
@@ -149,20 +151,20 @@ public class WishlistController {
 
         System.out.println("[ 폴더 조회(상품 리턴) ( folderId : "+folderId +")]");
 
-        List<ProductDto> products =  wishlistService.findFolder(folderId);
+        List<FolderDto> products =  wishlistService.findFolder(folderId);
 
         result.put("folderList",products);
         //ok상태코드 리턴
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
-    }
+    }*/
 /**
  * Post /product/like 상품 좋아요(위시리스트 추가)
  * Post /product/cancel 상품 좋아요 취소
  * Post /folder/create 위시리스트 폴더 생성
  * Post /folder/delete 위시리스트 폴더 삭제
  * Post /folder/list 위시리스트 폴더 조회(목록)
- * ===============================================
  * Get /folder/{wishlist_folder_id}위시리스트 상품 조회(상품)
+ * ===============================================
  * * Post /wishlist/product/check 상품 구매 여부 체크
  * Post /folder/{wishlist_folder_id}위시리스트 제품 폴더 간 이동
  *
