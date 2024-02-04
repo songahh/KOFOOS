@@ -23,5 +23,9 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
             "ORDER BY SUM(p.hit) DESC limit 7")
     List<String> ranking();
 
+    @Query("select c.id from Category c where c.cat1 = :cat1 and c.cat2 = :cat2 and c.cat3 = :cat3")
+    int findId(String cat1, String cat2, String cat3);
+
+
 
 }
