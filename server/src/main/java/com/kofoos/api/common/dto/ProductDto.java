@@ -48,7 +48,6 @@ public class ProductDto {
                 .hit(product.getHit())
                 .convenienceStore(product.getConvenienceStore())
                 .categoryDto(CategoryDto.of(product.getCategory()))
-                .wishlistItemDto(WishlistItemDto.of(product.getWishlistItem()))
                 .historyDto(HistoryDto.of(product.getHistory()))
                 .productMaterialDtos(productMaterialDtos)
                 .editorProductsListDtos(editorProductsListDtos)

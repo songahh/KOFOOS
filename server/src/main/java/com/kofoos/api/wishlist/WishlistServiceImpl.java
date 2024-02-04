@@ -1,14 +1,13 @@
 package com.kofoos.api.wishlist;
 
-import com.kofoos.api.common.dto.ProductDto;
+import com.kofoos.api.wishlist.dto.FolderDto;
+import com.kofoos.api.wishlist.dto.ProductDto;
 import com.kofoos.api.common.dto.WishlistFolderDto;
-import com.kofoos.api.common.dto.WishlistItemDto;
 import com.kofoos.api.entity.*;
+import com.kofoos.api.wishlist.dto.WishlistDto;
 import com.kofoos.api.wishlist.repo.FolderRepository;
 import com.kofoos.api.wishlist.repo.ProductRepository;
 import com.kofoos.api.wishlist.repo.UserRepository;
-import io.lettuce.core.ScriptOutputType;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -150,33 +149,24 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     @Override
-    public List<WishlistFolderDto> findFolderList(String deviceId) {
+    public List<FolderDto> findFolderList(String deviceId) {
+
         User user = userRepository.findUserIdByDeviceId(deviceId).get();
+        List<FolderDto> folders = folderRepository.findFolderByUserId(user.getId());
 
-        //user
-        List<WishlistFolder> folderList = folderRepository.findFolderByUserId(user.getId());
-         List<WishlistFolderDto> folderDtos = new ArrayList<>();
+        for(FolderDto folder : folders){
+            folder.setItems(wishlistRepository.findItemsWithImagesByUserId(folder.getFolderId()));
 
-        for(WishlistFolder folder : folderList){
-            WishlistFolderDto folderDto = WishlistFolderDto.of(folder);
-            folderDtos.add(folderDto);
         }
 
-        return folderDtos;
+
+        return folders;
     }
+
 
     @Override
     public List<ProductDto> findFolder(int folderId) {
-        List<Product> productIds = folderRepository.findProductsByFolderId(folderId);
-        List<ProductDto> products = new ArrayList<>();
-
-        for(Product id: productIds){
-            ProductDto productDto = ProductDto.of(id);
-            products.add(productDto);
-        }
-
-
-        return products;
+        return wishlistRepository.findProductsByFolderId(folderId);
     }
 
 
