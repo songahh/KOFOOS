@@ -1,18 +1,17 @@
 package com.kofoos.api.redis;
 
+import com.kofoos.api.product.dto.ProductDetailDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -33,15 +32,26 @@ public class RedisService {
         return redisTemplate.opsForZSet().reverseRange(key, 0, 9);
     }
 
-    public Map<String,Set<Object>> getAllRecentViewedItems() {
-        Map<String, Set<Object>> recentItems = new HashMap<>();
-        Set<String> keys = redisTemplate.keys("*");
-        if (keys != null) {
-            keys.stream()
-                    .map(key -> recentItems.put(key,redisTemplate.opsForZSet().reverseRange(key, 0, 9)));
-        }
-        return recentItems;
 
+
+public Map<String, ProductDetailDto> getAllRedisHistories() {
+    Map<String, ProductDetailDto> recentItems = new HashMap<>();
+    Set<String> keys = redisTemplate.keys("*");
+    if (keys != null) {
+        keys.forEach(key -> {
+            Set<Object> objects = redisTemplate.opsForZSet().reverseRange(key, 0, 9);
+            objects.forEach(o -> {
+                RedisEntity redisEntity = (RedisEntity) o;
+                ProductDetailDto productDetailDto = ProductDetailDto.builder()
+                        .barcode(redisEntity.getBarcode())
+                        .itemNo(redisEntity.getItemNo())
+                        .imgurl(redisEntity.getImgUrl())
+                        .build();
+                recentItems.put(redisEntity.getDeviceId(), productDetailDto);
+            });
+        });
     }
+    return recentItems;
+}
 
 }
