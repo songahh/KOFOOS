@@ -9,8 +9,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,12 +44,15 @@ public class ProductService {
     }
 
 
-    public List<Product> findProductsOrder(int id, String order){
+    public List<ProductDetailDto> findProductsOrder(int id, String order){
+
         if(order.equals("좋아요")){
-            return productRepository.findProductsOrderByLike(id);
+            List<Product> products = productRepository.findProductsOrderByLike(id);
+            return products.stream().map(ProductDetailDto::of).collect(Collectors.toList());
         }
         else{
-            return productRepository.findProductsOrderByHit(id);
+            List<Product> products = productRepository.findProductsOrderByHit(id);
+            return products.stream().map(ProductDetailDto::of).collect(Collectors.toList());
         }
     }
 
