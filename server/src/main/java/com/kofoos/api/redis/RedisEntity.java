@@ -13,8 +13,6 @@ import java.time.LocalDateTime;
 @RedisHash(value = "product", timeToLive = 30)
 public class RedisEntity {
 
-    @Id
-    private int id;
     private String barcode;
     private String name;
     private LocalDateTime createdAt;
