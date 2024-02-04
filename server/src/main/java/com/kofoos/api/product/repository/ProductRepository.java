@@ -16,6 +16,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("select p from Product p where p.barcode = :barcode")
     Optional<Product> findProductByBarcode(String barcode);
 
+    @Query("select p from  Product p where p.itemNo = :itemNo")
+    Optional<Product> findProductByItemNo(String itemNo);
+
     @Modifying
     @Query("update Product p set p.hit = p.hit + 1 where p.id = :id")
     void UpHit(int id);
