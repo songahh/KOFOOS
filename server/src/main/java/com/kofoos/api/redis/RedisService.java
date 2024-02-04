@@ -1,5 +1,6 @@
 package com.kofoos.api.redis;
 
+import com.kofoos.api.history.dto.HistoryProductDto;
 import com.kofoos.api.product.dto.ProductDetailDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,18 +35,18 @@ public class RedisService {
 
 
 
-public Map<String, ProductDetailDto> getAllRedisHistories() {
-    Map<String, ProductDetailDto> recentItems = new HashMap<>();
+public Map<String, HistoryProductDto> getAllRedisHistories() {
+    Map<String, HistoryProductDto> recentItems = new HashMap<>();
     Set<String> keys = redisTemplate.keys("*");
     if (keys != null) {
         keys.forEach(key -> {
             Set<Object> objects = redisTemplate.opsForZSet().reverseRange(key, 0, 9);
             objects.forEach(o -> {
                 RedisEntity redisEntity = (RedisEntity) o;
-                ProductDetailDto productDetailDto = ProductDetailDto.builder()
+                HistoryProductDto productDetailDto = HistoryProductDto.builder()
                         .barcode(redisEntity.getBarcode())
                         .itemNo(redisEntity.getItemNo())
-                        .imgurl(redisEntity.getImgUrl())
+//                        .imgurl(redisEntity.getImgUrl())
                         .build();
                 recentItems.put(redisEntity.getDeviceId(), productDetailDto);
             });

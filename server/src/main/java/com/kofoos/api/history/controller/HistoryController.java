@@ -1,6 +1,7 @@
 package com.kofoos.api.history.controller;
 
 import com.kofoos.api.entity.Product;
+import com.kofoos.api.history.dto.HistoryProductDto;
 import com.kofoos.api.history.service.HistoryService;
 import com.kofoos.api.product.dto.ProductDetailDto;
 import com.kofoos.api.product.dto.RequestId;
@@ -34,7 +35,7 @@ public class HistoryController {
     @PostMapping("/sql")
     public ResponseEntity<?> getHistoriesSql(@RequestBody RequestId requestId){
         System.out.println("++++++++++++++Controller deviceId = " + requestId.getDeviceId());
-        List<ProductDetailDto> productDetailDtos = historyService.HistoryDetail(requestId.getDeviceId());
+        List<HistoryProductDto> productDetailDtos = historyService.HistoryDetail(requestId.getDeviceId());
         return new ResponseEntity<>(productDetailDtos, HttpStatus.OK);
     }
 
@@ -48,32 +49,32 @@ public class HistoryController {
 
     @PostMapping("/all")
     public ResponseEntity<?> getHistories(@RequestBody RequestId requestId){
-        int count = 10;
-        List<ProductDetailDto> mysql = historyService.HistoryDetail(requestId.getDeviceId());
-        List<ProductDetailDto> allList = new ArrayList<>(mysql);
+
+        List<HistoryProductDto> mysql = historyService.HistoryDetail(requestId.getDeviceId());
+        List<HistoryProductDto> allList = new ArrayList<>(mysql);
         Set<Object> redis = redisService.getRecentViewedItems(requestId.getDeviceId());
         if (redis != null && !redis.isEmpty()) {
-            List<ProductDetailDto> redisProducts = redis.stream().map(o -> {
+            List<HistoryProductDto> redisProducts = redis.stream().map(o -> {
                 RedisEntity redisEntity = (RedisEntity) o;
-                return ProductDetailDto.builder()
+                return HistoryProductDto.builder()
                         .barcode(redisEntity.getBarcode())
-                        .imgurl(redisEntity.getImgUrl())
+//                        .imgurl(redisEntity.getImgUrl())
                         .itemNo(redisEntity.getDeviceId())
                         .build();
             }).collect(Collectors.toList());
             allList.addAll(redisProducts);
         }
-        List<ProductDetailDto> userHistories = allList.stream()
+        List<HistoryProductDto> userHistories = allList.stream()
                 .distinct()
                 .collect(Collectors.toList());
-
+        // 날짜별로 정렬 필요
         return new ResponseEntity<>(userHistories,HttpStatus.OK);
 
     }
 
-    @Scheduled(fixedDelay = 1000)
+//    @Scheduled(fixedDelay = 1000)
     public void updateSql(){
-        Map<String,ProductDetailDto> redisHistories = redisService.getAllRedisHistories();
+        Map<String,HistoryProductDto> redisHistories = redisService.getAllRedisHistories();
         // redisHistories에 있는 데이터를
         // mysql로 업데이트(mysql 삭제하고 삽입 or
         // 각각의 deviceId별 redisHistories의 길이만큼만 update)
