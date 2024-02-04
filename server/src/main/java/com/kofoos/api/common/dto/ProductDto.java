@@ -22,7 +22,6 @@ public class ProductDto {
     private String convenienceStore;
     private CategoryDto categoryDto;
     private WishlistItemDto wishlistItemDto;
-    private HistoryDto historyDto;
     private List<ProductMaterialDto> productMaterialDtos;
     private List<EditorProductsListDto> editorProductsListDtos;
 
@@ -49,7 +48,6 @@ public class ProductDto {
                 .convenienceStore(product.getConvenienceStore())
                 .categoryDto(CategoryDto.of(product.getCategory()))
                 .wishlistItemDto(WishlistItemDto.of(product.getWishlistItem()))
-                .historyDto(HistoryDto.of(product.getHistory()))
                 .productMaterialDtos(productMaterialDtos)
                 .editorProductsListDtos(editorProductsListDtos)
                 .build();

@@ -9,7 +9,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -18,50 +21,28 @@ import java.util.concurrent.TimeUnit;
 public class RedisService {
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void setValues(String key, String data) {
-        ValueOperations<String, Object> values = redisTemplate.opsForValue();
-        values.set(key, data);
+    public void addRecentViewedItem(String deviceId, RedisEntity product) {
+        String key = "recentViewed:" + deviceId;
+        double score = System.currentTimeMillis();
+        redisTemplate.opsForZSet().add(key, product, score);
+        //
     }
 
-    public void setValues(String key, String data, Duration duration) {
-        ValueOperations<String, Object> values = redisTemplate.opsForValue();
-        values.set(key, data, duration);
+    public Set<Object> getRecentViewedItems(String deviceId) {
+        String key = "recentViewed:" + deviceId;
+        return redisTemplate.opsForZSet().reverseRange(key, 0, 9);
     }
 
-    @Transactional(readOnly = true)
-    public String getValues(String key) {
-        ValueOperations<String, Object> values = redisTemplate.opsForValue();
-        if (values.get(key) == null) {
-            return "false";
+    public Map<String,Set<Object>> getAllRecentViewedItems() {
+        Map<String, Set<Object>> recentItems = new HashMap<>();
+        Set<String> keys = redisTemplate.keys("*");
+        if (keys != null) {
+            keys.stream()
+                    .map(key -> recentItems.put(key,redisTemplate.opsForZSet().reverseRange(key, 0, 9)));
         }
-        return (String) values.get(key);
+
+        return recentItems;
+
     }
 
-    public void deleteValues(String key) {
-        redisTemplate.delete(key);
-    }
-
-    public void expireValues(String key, int timeout) {
-        redisTemplate.expire(key, timeout, TimeUnit.MILLISECONDS);
-    }
-
-    public void setHashOps(String key, Map<String, String> data) {
-        HashOperations<String, Object, Object> values = redisTemplate.opsForHash();
-        values.putAll(key, data);
-    }
-
-    @Transactional(readOnly = true)
-    public String getHashOps(String key, String hashKey) {
-        HashOperations<String, Object, Object> values = redisTemplate.opsForHash();
-        return Boolean.TRUE.equals(values.hasKey(key, hashKey)) ? (String) redisTemplate.opsForHash().get(key, hashKey) : "";
-    }
-
-    public void deleteHashOps(String key, String hashKey) {
-        HashOperations<String, Object, Object> values = redisTemplate.opsForHash();
-        values.delete(key, hashKey);
-    }
-
-    public boolean checkExistsValue(String value) {
-        return !value.equals("false");
-    }
 }
