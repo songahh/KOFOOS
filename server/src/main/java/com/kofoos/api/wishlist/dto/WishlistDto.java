@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 @Data
-@JsonSerialize(using = ToStringSerializer.class)
 public class WishlistDto {
 
     private int bought;

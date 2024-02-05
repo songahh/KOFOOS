@@ -1,5 +1,7 @@
 package com.kofoos.api.wishlist;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kofoos.api.wishlist.dto.FolderDto;
 import com.kofoos.api.wishlist.dto.ProductDto;
 import com.kofoos.api.common.dto.WishlistFolderDto;
@@ -127,7 +129,7 @@ public class WishlistController {
     @ResponseBody
     @PostMapping("/folder/list")
     public ResponseEntity<Map<String, Object>> findFolderList(@RequestBody Map<String, Object> req)
-            throws ParseException {
+            throws ParseException, JsonProcessingException {
         Map<String, Object> result = new HashMap<String, Object>();
 
         String deviceId = (String)  req.get("deviceId");
@@ -136,7 +138,10 @@ public class WishlistController {
 
        List<FolderDto> folderList =  wishlistService.findFolderList(deviceId);
 
-        result.put("folderList",folderList);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String folderListJson = objectMapper.writeValueAsString(folderList);
+
+        result.put("folderList", folderList);
         //ok상태코드 리턴
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }

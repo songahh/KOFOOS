@@ -23,11 +23,11 @@ public interface WishlistRepository extends JpaRepository<WishlistItem, Integer>
             "WHERE wi.wishlistFolder.id = :folderId")
     List<ProductDto> findProductsByFolderId(@Param("folderId") int folderId);
 
-    @Query("SELECT new com.kofoos.api.wishlist.dto.WishlistDto(wi.bought, wi.product.id,img.imgUrl) "
-            +"FROM WishlistItem wi " +
-            "JOIN wi.wishlistFolder wf " +
-            "JOIN wi.image img " +
-            "WHERE wi.id= :folderId")
+    @Query("SELECT new com.kofoos.api.wishlist.dto.WishlistDto(wi.bought, wi.product.id, img.imgUrl) " +
+            "FROM WishlistItem wi " +
+            "JOIN wi.product p " +
+            "JOIN p.image img " +
+            "WHERE wi.wishlistFolder.id = :folderId")
     List<WishlistDto> findItemsWithImagesByUserId(@Param("folderId") int folderId);
 
 
