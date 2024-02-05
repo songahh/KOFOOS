@@ -20,8 +20,8 @@ public class CategoryService {
         return categoryRepository.findCat3(cat1,cat2);
     }
 
-    public int findId(String cat1,String cat2,String cat3){
-        return categoryRepository.findId(cat1,cat2,cat3);
+    public List<Integer> findId(String cat1,String cat2){
+        return categoryRepository.findId(cat1,cat2);
     }
 
     public List<String> ranking(){

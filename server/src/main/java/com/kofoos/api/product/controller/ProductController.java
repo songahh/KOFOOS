@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/products")
@@ -77,13 +78,19 @@ public class ProductController {
     }
 
     // 상품 검색 및 정렬
-    @GetMapping("/list/{cat1}/{cat2}/{cat3}/{order}")
-    public ResponseEntity<?> findProductsOrder(@PathVariable String cat1,@PathVariable String cat2,@PathVariable String cat3, @PathVariable String order){
+    @GetMapping("/list")
+    public ResponseEntity<?> findProductsOrder(@RequestParam String cat1,@RequestParam String cat2, @RequestParam String order){
         System.out.println("cat1 = " + cat1);
-        int id = categoryService.findId(cat1,cat2,cat3);
-        System.out.println("id = " + id);
-        List<ProductDetailDto> productDetailDtos = productService.findProductsOrder(id,order);
-        return new ResponseEntity<>(productDetailDtos,HttpStatus.OK);
+        List<Integer> id = categoryService.findId(cat1,cat2);
+        List<ProductDetailDto> Dtos = new ArrayList<>();
+        for(int i :id){
+            List<ProductDetailDto> temp = productService.findProductsOrder(i,order);
+            for(ProductDetailDto p: temp){
+                Dtos.add(p);
+            }
+        }
+
+        return new ResponseEntity<>(Dtos,HttpStatus.OK);
     }
 
     //테스트
