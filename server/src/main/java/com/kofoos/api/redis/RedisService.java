@@ -35,23 +35,30 @@ public class RedisService {
 
 
 
-public Map<String, HistoryProductDto> getAllRedisHistories() {
-    Map<String, HistoryProductDto> recentItems = new HashMap<>();
-    Set<String> keys = redisTemplate.keys("*");
-    if (keys != null) {
-        keys.forEach(key -> {
-            Set<Object> objects = redisTemplate.opsForZSet().reverseRange(key, 0, 9);
-            objects.forEach(o -> {
-                RedisEntity redisEntity = (RedisEntity) o;
-                HistoryProductDto productDetailDto = HistoryProductDto.builder()
-                        .barcode(redisEntity.getBarcode())
-                        .itemNo(redisEntity.getItemNo())
+    public Map<String, List<HistoryProductDto>> getAllRedisHistories() {
+        Map<String, List<HistoryProductDto>> recentItems = new HashMap<>();
+        Set<String> keys = redisTemplate.keys("*");
+        if (keys != null) {
+            keys.forEach(key -> {
+                Set<Object> objects = redisTemplate.opsForZSet().reverseRange(key, 0, 9);
+                objects.forEach(o -> {
+                    RedisEntity redisEntity = (RedisEntity) o;
+                    HistoryProductDto productDetailDto = HistoryProductDto.builder()
+                            .barcode(redisEntity.getBarcode())
+                            .itemNo(redisEntity.getItemNo())
 //                        .imgurl(redisEntity.getImgUrl())
-                        .build();
-                recentItems.put(redisEntity.getDeviceId(), productDetailDto);
+                            .build();
+                    if(recentItems.containsKey(redisEntity.getDeviceId())){
+                        recentItems.get(redisEntity.getDeviceId()).add(productDetailDto);
+                    }
+                    else{
+                        List<HistoryProductDto> dtoList = new ArrayList<>();
+                        dtoList.add(productDetailDto);
+                        recentItems.put(redisEntity.getDeviceId(),dtoList);
+                    }
+                });
             });
-        });
-    }
+        }
     return recentItems;
 }
 

@@ -1,5 +1,6 @@
 package com.kofoos.api.history.service;
 
+import com.kofoos.api.common.dto.HistoryDto;
 import com.kofoos.api.history.dto.HistoryProductDto;
 import com.kofoos.api.history.repository.HistoryRepository;
 import com.kofoos.api.product.dto.ProductDetailDto;
@@ -26,13 +27,23 @@ public class HistoryService {
                 .map(history -> HistoryProductDto.of(history))
                 .collect(Collectors.toList());
         return dtoList;
-
     }
 
+    public List<HistoryDto> Histories(String deviceId){
+        List<HistoryDto> dtoList =
+                historyRepository.HistoryDetail(deviceId).stream()
+                        .map(history -> HistoryDto.of(history))
+                        .collect(Collectors.toList());
+        return dtoList;
+    }
 
+    public void removeHistory(int id){
+        historyRepository.removeHistoryById(id);
+        return;
+    }
 
-
-
-
-
+    //
+    public void insert(HistoryProductDto dto) {
+        //
+    }
 }

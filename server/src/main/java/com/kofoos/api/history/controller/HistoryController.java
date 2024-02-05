@@ -1,5 +1,7 @@
 package com.kofoos.api.history.controller;
 
+import com.kofoos.api.common.dto.HistoryDto;
+import com.kofoos.api.entity.History;
 import com.kofoos.api.entity.Product;
 import com.kofoos.api.history.dto.HistoryProductDto;
 import com.kofoos.api.history.service.HistoryService;
@@ -67,14 +69,31 @@ public class HistoryController {
         List<HistoryProductDto> userHistories = allList.stream()
                 .distinct()
                 .collect(Collectors.toList());
-        // 날짜별로 정렬 필요
+        // 날짜별로 정렬 확인필요
         return new ResponseEntity<>(userHistories,HttpStatus.OK);
 
     }
 
 //    @Scheduled(fixedDelay = 1000)
     public void updateSql(){
-        Map<String,HistoryProductDto> redisHistories = redisService.getAllRedisHistories();
+        Map<String, List<HistoryProductDto>> redisHistories = redisService.getAllRedisHistories();
+        for(String s:redisHistories.keySet()){
+            List<HistoryProductDto> keyRedis = redisHistories.get(s);
+            List<HistoryDto> histories = historyService.Histories(s);
+            int cnt = Math.max(histories.size() - keyRedis.size() , 0);
+            for(HistoryDto dto : histories.subList(0,10-cnt)){
+                historyService.removeHistory(dto.getId());
+            }
+
+            for(HistoryProductDto dto : keyRedis.subList(0,10-cnt)){
+                historyService.insert(dto);
+            }
+
+
+
+        }
+
+        // String은 deviceId
         // redisHistories에 있는 데이터를
         // mysql로 업데이트(mysql 삭제하고 삽입 or
         // 각각의 deviceId별 redisHistories의 길이만큼만 update)
