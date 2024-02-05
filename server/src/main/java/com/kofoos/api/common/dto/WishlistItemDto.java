@@ -25,4 +25,7 @@ public class WishlistItemDto {
                 .build();
     }
 
+    public void updateBought(Integer bought) {
+        this.bought=bought;
+    }
 }
