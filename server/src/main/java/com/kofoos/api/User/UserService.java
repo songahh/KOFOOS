@@ -114,17 +114,19 @@ public class UserService {
         System.out.println("언어정보:"+language);
         // 정보 변환 로직 구현
         // 비선호 식재료 변환
-        List<DislikedMaterialDto> dislikedMaterials = userDislikesMaterialsRepo.findByUserId(userId).stream()
-                .map(udm -> DislikedMaterialDto.of(udm.getDislikedMaterial()))
+        List<String> dislikedMaterials = userDislikesMaterialsRepo.findByUserId(userId).stream()
+                .map(udm -> (udm.getDislikedMaterial().getName()))
                 .collect(Collectors.toList());
 
         // 히스토리 변환 (최근 10개, 중복 제거)
         List<HistoryDto> histories = historyRepository.findTop10ByUserIdOrderByViewTimeDesc(userId).stream()
                 .distinct()
-                .map(history -> HistoryDto.fromEntity(history))
+                .map(history -> HistoryDto.of(history))
                 .collect(Collectors.toList());
 
-        return new MyPageDto(language, dislikedMaterials, histories);
+        List<Integer> products = histories.stream().map(historyDto -> historyDto.getProduct()).collect(Collectors.toList());
+
+        return new MyPageDto(language, dislikedMaterials, products);
     }
 
 

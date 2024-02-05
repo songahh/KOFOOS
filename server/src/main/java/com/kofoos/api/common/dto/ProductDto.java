@@ -25,7 +25,7 @@ public class ProductDto {
     public static ProductDto of(Product product) {
 
 //        List<ProductMaterialDto> productMaterialDtos = new ArrayList<>();
-//        List<EditorProductsListDto> editorProductsListDtos = new ArrayList<>();
+//        List<EditorProductListDto> editorProductsListDtos = new ArrayList<>();
 //
 //        for(ProductMaterial productMaterial : product.getProductMaterials()){
 //            productMaterialDtos.add(ProductMaterialDto.of(productMaterial));
@@ -52,17 +52,4 @@ public class ProductDto {
 
     }
 
-    public static ProductDto fromEntity(Product entity) {
-        return ProductDto.builder()
-                .id(entity.getId())
-                .barcode(entity.getBarcode())
-                .name(entity.getName())
-                .description(entity.getDescription())
-                .imageDto(ImageDto.of(entity.getImage()))
-                .like(entity.getLike())
-                .hit(entity.getHit())
-                .convenienceStore(entity.getConvenienceStore())
-                .categoryDto(CategoryDto.of(entity.getCategory())) // Category 엔티티를 CategoryDto로 변환
-                .build();
-    }
 }
