@@ -58,8 +58,8 @@ public class ProductController {
     }
 
     // 카테고리 3 조회 (카테고리 3 선택)
-    @GetMapping("/category/{cat1}/{cat2}")
-    public ResponseEntity<?> getCat3(@PathVariable String cat1,@PathVariable String cat2){
+    @GetMapping("/category")
+    public ResponseEntity<?> getCat3(@RequestParam String cat1,@RequestParam String cat2){
         List<String> cat3List = categoryService.findCat3(cat1,cat2);
         return new ResponseEntity<>(cat3List,HttpStatus.OK);
     }
