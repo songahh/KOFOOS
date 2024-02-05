@@ -1,6 +1,7 @@
 package com.kofoos.api.history.service;
 
 import com.kofoos.api.common.dto.HistoryDto;
+import com.kofoos.api.entity.History;
 import com.kofoos.api.history.dto.HistoryProductDto;
 import com.kofoos.api.history.repository.HistoryRepository;
 import com.kofoos.api.product.dto.ProductDetailDto;
@@ -44,6 +45,7 @@ public class HistoryService {
 
     //
     public void insert(HistoryProductDto dto) {
-        //
+        historyRepository.addHistory(dto.getCreatedAt(),dto.getProductId(),dto.getUserId());
+        return;
     }
 }

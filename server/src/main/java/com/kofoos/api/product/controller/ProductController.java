@@ -31,8 +31,8 @@ public class ProductController {
     private final RedisService redisService;
 
     // 상품 조회 바코드
-    @GetMapping("/detail/{barcode}/{deviceId}")
-    public ResponseEntity<?> findProductDetailBarcode(@PathVariable String barcode,@PathVariable String deviceId){
+    @GetMapping("/detail/{barcode}/{deviceId}/{userId}")
+    public ResponseEntity<?> findProductDetailBarcode(@PathVariable String barcode,@PathVariable String deviceId,@PathVariable int userId){
         ProductDetailDto productDetailDto = productService.findProductByBarcode(barcode);
         RedisEntity redisEntity = RedisEntity.builder()
                 .barcode(barcode)
@@ -40,6 +40,8 @@ public class ProductController {
                 .name(productDetailDto.getName())
                 .imgUrl(productDetailDto.getImgurl())
                 .deviceId(deviceId)
+                .productId(productDetailDto.getProductId())
+                .userId(userId)
                 .itemNo(productDetailDto.getItemNo())
                 .build();
         redisService.addRecentViewedItem(deviceId,redisEntity);

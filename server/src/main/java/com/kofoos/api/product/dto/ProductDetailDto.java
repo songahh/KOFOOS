@@ -29,6 +29,7 @@ public class ProductDetailDto {
     private CategorySearchDto categorySearchDto;
     private List<String> dislikedMaterials;
     private String imgurl;
+    private int productId;
 
 
     @Override
@@ -63,6 +64,7 @@ public class ProductDetailDto {
                 .dislikedMaterials(dislikedMaterials)
                 .itemNo(product.getItemNo())
                 .like(product.getLike())
+                .productId(product.getId())
 //                .imgurl(product.getImage().getImgUrl())
                 .build();
 
