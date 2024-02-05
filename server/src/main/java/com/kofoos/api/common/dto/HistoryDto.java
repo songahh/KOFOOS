@@ -13,16 +13,17 @@ import java.time.LocalDateTime;
 @Builder
 public class HistoryDto {
 
-
+    private int Id;
     private LocalDateTime viewTime;
-    private UserDto user;
-    private ProductDto product;
+    private String deviceId;
+    private String ItemNo;
 
     public static HistoryDto of(History history){
 
         return HistoryDto.builder()
-                .user(UserDto.of(history.getUser()))
-                .product(ProductDto.of((history.getProduct())))
+                .Id(history.getId())
+                .deviceId(history.getUser().getDeviceId())
+                .ItemNo(history.getProduct().getItemNo())
                 .build();
     }
 
