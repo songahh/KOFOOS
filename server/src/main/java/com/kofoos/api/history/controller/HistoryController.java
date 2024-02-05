@@ -9,6 +9,7 @@ import com.kofoos.api.product.dto.ProductDetailDto;
 import com.kofoos.api.product.dto.RequestId;
 import com.kofoos.api.redis.RedisEntity;
 import com.kofoos.api.redis.RedisService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -75,28 +76,37 @@ public class HistoryController {
     }
 
 //    @Scheduled(fixedDelay = 1000)
+    @Transactional
     public void updateSql(){
         Map<String, List<HistoryProductDto>> redisHistories = redisService.getAllRedisHistories();
         for(String s:redisHistories.keySet()){
-            List<HistoryProductDto> keyRedis = redisHistories.get(s);
-            List<HistoryDto> histories = historyService.Histories(s);
-            int cnt = Math.max(histories.size() - keyRedis.size() , 0);
-            for(HistoryDto dto : histories.subList(0,10-cnt)){
-                historyService.removeHistory(dto.getId());
+            List<HistoryProductDto> keyRedis = redisHistories.get(s);   // 레디스
+            List<HistoryDto> histories = historyService.Histories(s);   // sql
+            for(HistoryProductDto dto: keyRedis){
+                System.out.println("dto.toString() = " + dto.getProductId());
+                System.out.println("dto.getUserId() = " + dto.getUserId());
+                System.out.println("dto.getCreatedAt() = " + dto.getCreatedAt());
             }
-
-            for(HistoryProductDto dto : keyRedis.subList(0,10-cnt)){
-                historyService.insert(dto);
+            
+            if(keyRedis.size()>=histories.size()){
+                for(HistoryDto dto : histories.subList(0,histories.size())){
+                    historyService.removeHistory(dto.getId());
+                }
+                for(HistoryProductDto dto : keyRedis.subList(0,keyRedis.size())){
+                    historyService.insert(dto);
+                }
             }
-
-
+            else{
+                for(HistoryDto dto : histories.subList(0,keyRedis.size())){
+                    historyService.removeHistory(dto.getId());
+                }
+                for(HistoryProductDto dto : keyRedis.subList(0,keyRedis.size())){
+                    historyService.insert(dto);
+                }
+            }
 
         }
-
-        // String은 deviceId
-        // redisHistories에 있는 데이터를
-        // mysql로 업데이트(mysql 삭제하고 삽입 or
-        // 각각의 deviceId별 redisHistories의 길이만큼만 update)
+        System.out.println("++++++++++++++++성공?");
     }
 
 

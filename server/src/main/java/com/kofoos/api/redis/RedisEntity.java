@@ -19,6 +19,8 @@ public class RedisEntity {
     private String imgUrl;
     private String deviceId;
     private String itemNo;
+    private int productId;
+    private int userId;
 
 
 }
