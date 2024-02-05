@@ -58,7 +58,8 @@ public class Product {
     private List<EditorProductsList> editorProductsLists = new ArrayList<>();
 
     @Builder
-    public Product(String barcode, String name, String description,String itemNo, Image image, int like, int hit, String convenienceStore, Category category) {
+    public Product(int id, String barcode, String name,String itemNo, String description, Image image, int like, int hit, String convenienceStore, Category category) {
+        this.id = id;
         this.barcode = barcode;
         this.name = name;
         this.description = description;
@@ -79,9 +80,6 @@ public class Product {
         this.image = image;
         image.setProduct(this);
     }
-
-
-
 
 
     public void setWishlistItem(WishlistItem wishlistItem){
