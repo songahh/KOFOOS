@@ -8,7 +8,6 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.kofoos.api.entity.Image;
 import com.kofoos.api.entity.Product;
 import com.kofoos.api.image.ImageException;
-import com.kofoos.api.image.config.ImageConfig;
 import com.kofoos.api.image.repository.ImageRepository;
 import com.kofoos.api.product.repository.ProductRepository;
 import jakarta.transaction.Transactional;
@@ -43,7 +42,11 @@ public class ImageServiceImpl implements ImageService {
         // 3. S3버킷에 저장
         String originalName = multipartFile.getOriginalFilename();
         String itemNo = originalName.substring(0, originalName.indexOf("_"));
-        Product searchedProduct = pr.findProductByItemNo(itemNo).orElseThrow(()->new ImageException("해당 제품의 이미지는 이미 업로드 되었습니다."));
+        Product searchedProduct = pr.findProductByItemNo(itemNo).orElseThrow(()->
+                    new ImageException("DB에 존재하지 않는 아이템입니다."));
+        if(searchedProduct.getImage()!=null){
+            throw new ImageException("해당 제품의 이미지는 이미 업로드 되었습니다.");
+        }
 
         String ext = originalName.substring(originalName.lastIndexOf("."));
         String newName = UUID.randomUUID().toString().concat(String.format("_%s", originalName));
