@@ -3,6 +3,7 @@ package com.kofoos.api.product.repository;
 import com.kofoos.api.entity.Category;
 import com.kofoos.api.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -25,7 +26,6 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
     @Query("select c.id from Category c where c.cat1 = :cat1 and c.cat2 = :cat2")
     List<Integer> findId(String cat1, String cat2);
-
 
 
 }

@@ -25,6 +25,9 @@ public class Product {
     @Column(length = 600)
     private String  description;
 
+    @Column(name = "tag_string")
+    private String tagString;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
     private Image image;
@@ -58,9 +61,10 @@ public class Product {
     private List<EditorProductsList> editorProductsLists = new ArrayList<>();
 
     @Builder
-    public Product(String barcode, String name, String description,String itemNo, Image image, int like, int hit, String convenienceStore, Category category) {
+    public Product(String barcode, String name, String tagString, String description,String itemNo, Image image, int like, int hit, String convenienceStore, Category category) {
         this.barcode = barcode;
         this.name = name;
+        this.tagString = tagString;
         this.description = description;
         setImage(image);
         this.like = like;

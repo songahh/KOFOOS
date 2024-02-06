@@ -8,6 +8,7 @@ import com.kofoos.api.product.service.CategoryService;
 import com.kofoos.api.product.service.ProductService;
 import com.kofoos.api.redis.RedisEntity;
 import com.kofoos.api.redis.RedisService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,7 @@ public class ProductController {
                 .deviceId(deviceId)
                 .productId(productDetailDto.getProductId())
                 .userId(userId)
+                .imgUrl(productDetailDto.getImgurl())
                 .itemNo(productDetailDto.getItemNo())
                 .build();
         redisService.addRecentViewedItem(deviceId,redisEntity);
@@ -77,6 +80,11 @@ public class ProductController {
         return new ResponseEntity<>(rankList,HttpStatus.OK);
     }
 
+    @PutMapping("/test")
+    public void test() throws IOException {
+        productService.updateGptTag();
+    }
+
     // 상품 검색 및 정렬
     @GetMapping("/list")
     public ResponseEntity<?> findProductsOrder(@RequestParam String cat1,@RequestParam String cat2, @RequestParam String order){
@@ -94,7 +102,7 @@ public class ProductController {
     }
 
     //테스트
-    
+
 
 
 
