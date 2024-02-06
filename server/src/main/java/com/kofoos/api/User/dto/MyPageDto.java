@@ -1,5 +1,7 @@
 package com.kofoos.api.User.dto;
 
+import com.kofoos.api.common.dto.DislikedMaterialDto;
+import com.kofoos.api.common.dto.HistoryDto;
 import lombok.Builder;
 import lombok.Data;
 
