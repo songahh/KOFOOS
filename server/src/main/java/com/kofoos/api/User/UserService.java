@@ -2,6 +2,7 @@ package com.kofoos.api.User;
 
 import com.kofoos.api.User.Repository.HistoryRepository;
 import com.kofoos.api.User.Repository.UserDislikesMaterialRepository;
+import com.kofoos.api.common.dto.DislikedMaterialDto;
 import com.kofoos.api.common.dto.HistoryDto;
 import com.kofoos.api.User.dto.MyPageDto;
 import com.kofoos.api.entity.DislikedMaterial;
