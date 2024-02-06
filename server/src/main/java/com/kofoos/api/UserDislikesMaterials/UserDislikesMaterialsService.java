@@ -1,11 +1,11 @@
 package com.kofoos.api.UserDislikesMaterials;
 
-import com.kofoos.api.User.Repository.UserDislikesMaterialRepository;
-import com.kofoos.api.User.UserRepository;
-import com.kofoos.api.User.Repository.DislikedMaterialRepository;
+import com.kofoos.api.repository.UserDislikesMaterialRepository;
+import com.kofoos.api.repository.DislikedMaterialRepository;
 import com.kofoos.api.entity.User;
 import com.kofoos.api.entity.DislikedMaterial;
 import com.kofoos.api.entity.UserDislikesMaterial;
+import com.kofoos.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.kofoos.api.image.repository;
+package com.kofoos.api.repository;
 
 import com.kofoos.api.entity.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
