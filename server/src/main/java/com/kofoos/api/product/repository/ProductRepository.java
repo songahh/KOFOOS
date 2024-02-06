@@ -16,8 +16,12 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("select p from Product p where p.barcode = :barcode")
     Optional<Product> findProductByBarcode(String barcode);
 
-    @Query("select p from Product p where p.itemNo = :itemNo")
+    @Query("select p from  Product p where p.itemNo = :itemNo")
     Optional<Product> findProductByItemNo(String itemNo);
+
+    @Modifying
+    @Query("update Product p set p.hit = p.hit + 1 where p.id = :id")
+    void UpHit(int id);
 
 
     @Modifying
@@ -29,6 +33,8 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("update Product p set p.like = p.like - 1 where p.id = :id")
     void DownLike(int id);
 
+    @Query(value="select * from product where category_id = :category_id order by RAND(:seed) limit 10", nativeQuery = true)
+    List<Product> findProductsOrderByRandom(int category_id, int seed);
 
     @Query("select p from Product p join p.category c on c.cat1 = :cat1 and c.cat2 = :cat2 and c.cat3 = :cat3")
     List<Product> findProductsByCategory(String cat1, String cat2,String cat3);

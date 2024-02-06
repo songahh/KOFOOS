@@ -16,6 +16,9 @@ public class Product {
     @Column(name = "product_id")
     private int id;
 
+    @Column(name = "item_no")
+    private String itemNo;
+
     @Column(length = 45)
     private String  barcode;
 
@@ -58,9 +61,10 @@ public class Product {
     private List<EditorProductsList> editorProductsLists = new ArrayList<>();
 
     @Builder
-    public Product(int id, String barcode, String name,String itemNo, String description, Image image, int like, int hit, String convenienceStore, Category category) {
+    public Product(int id, String barcode, String name, String itemNo, String description, Image image, int like, int hit, String convenienceStore, Category category) {
         this.id = id;
         this.barcode = barcode;
+        this.itemNo = itemNo;
         this.name = name;
         this.description = description;
         setImage(image);
