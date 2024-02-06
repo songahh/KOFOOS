@@ -1,5 +1,6 @@
 package com.kofoos.api.product.controller;
 
+import com.kofoos.api.User.UserService;
 import com.kofoos.api.common.dto.ProductDto;
 import com.kofoos.api.entity.Product;
 import com.kofoos.api.product.dto.ProductDetailDto;
@@ -32,11 +33,14 @@ public class ProductController {
     private final ProductService productService;
     private final CategoryService categoryService;
     private final RedisService redisService;
+    private final UserService userService;
+
 
     // 상품 조회 바코드
-    @GetMapping("/detail/{barcode}/{deviceId}/{userId}")
-    public ResponseEntity<?> findProductDetailBarcode(@PathVariable String barcode,@PathVariable String deviceId,@PathVariable int userId){
+    @GetMapping("/detail/{barcode}/{deviceId}")
+    public ResponseEntity<?> findProductDetailBarcode(@PathVariable String barcode,@PathVariable String deviceId){
         ProductDetailDto productDetailDto = productService.findProductByBarcode(barcode);
+        int userId = userService.getUserId(deviceId);
         RedisEntity redisEntity = RedisEntity.builder()
                 .barcode(barcode)
                 .createdAt(LocalDateTime.now())
