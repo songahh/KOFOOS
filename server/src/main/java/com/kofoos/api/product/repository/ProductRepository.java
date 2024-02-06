@@ -13,10 +13,11 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
-    @Query("select p from Product p where p.barcode = :barcode")
+    @Query("select distinct p from Product p join fetch p.image join fetch p.productMaterials where p.barcode = :barcode")
     Optional<Product> findProductByBarcode(String barcode);
 
-    @Query("select p from  Product p where p.itemNo = :itemNo")
+
+    @Query("select distinct p from Product p join fetch p.image join fetch p.productMaterials where p.itemNo = :itemNo")
     Optional<Product> findProductByItemNo(String itemNo);
 
     @Modifying
@@ -36,13 +37,16 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query(value="select * from product where category_id = :category_id order by RAND(:seed) limit 10", nativeQuery = true)
     List<Product> findProductsOrderByRandom(int category_id, int seed);
 
-    @Query("select p from Product p join p.category c on c.cat1 = :cat1 and c.cat2 = :cat2 and c.cat3 = :cat3")
+    @Query("select p from Product p join fetch p.productMaterials join fetch p.image join p.category c on c.cat1 = :cat1 and c.cat2 = :cat2 and c.cat3 = :cat3")
     List<Product> findProductsByCategory(String cat1, String cat2,String cat3);
 
-    @Query("select p from Product p join p.category on p.category.id = :id ORDER BY p.like")
+    @Query("select p from Product p join fetch p.productMaterials join fetch p.image join p.category on p.category.id = :id ORDER BY p.like")
     List<Product> findProductsOrderByLike(int id);
-    @Query("select p from Product p join p.category on p.category.id = :id ORDER BY p.hit")
+    @Query("select p from Product p join fetch  p.productMaterials join fetch p.image join p.category on p.category.id = :id ORDER BY p.hit")
     List<Product> findProductsOrderByHit(int id);
 
+    @Modifying
+    @Query(value = "update product set description = :description, tag_string = :tagString where item_no = :itemNo",nativeQuery = true)
+    void updateGptTag(String itemNo, String tagString, String description);
 
 }

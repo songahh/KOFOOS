@@ -3,6 +3,7 @@ package com.kofoos.api.product.repository;
 import com.kofoos.api.entity.Category;
 import com.kofoos.api.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -23,9 +24,8 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
             "ORDER BY SUM(p.hit) DESC limit 7")
     List<String> ranking();
 
-    @Query("select c.id from Category c where c.cat1 = :cat1 and c.cat2 = :cat2 and c.cat3 = :cat3")
-    int findId(String cat1, String cat2, String cat3);
-
+    @Query("select c.id from Category c where c.cat1 = :cat1 and c.cat2 = :cat2")
+    List<Integer> findId(String cat1, String cat2);
 
 
 }

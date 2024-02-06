@@ -28,6 +28,9 @@ public class Product {
     @Column(length = 600)
     private String  description;
 
+    @Column(name = "tag_string")
+    private String tagString;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
     private Image image;
@@ -66,6 +69,7 @@ public class Product {
         this.barcode = barcode;
         this.itemNo = itemNo;
         this.name = name;
+        this.tagString = tagString;
         this.description = description;
         setImage(image);
         this.like = like;
