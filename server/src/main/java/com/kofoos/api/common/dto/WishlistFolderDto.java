@@ -17,14 +17,14 @@ public class WishlistFolderDto {
     private int id;
     private String name;
     private UserDto userDto;
-    private List<WishlistItemDto> wishlistItemDtos;
+    private List<Integer> wishlistItemDtos;
 
     public static WishlistFolderDto of(WishlistFolder wishlistFolder){
 
-        List<WishlistItemDto> wishlistItemDtos = new ArrayList<>();
+        List<Integer> wishlistItemDtos = new ArrayList<>();
 
         for(WishlistItem wishlistItem : wishlistFolder.getWishlistitems()){
-            wishlistItemDtos.add(WishlistItemDto.of(wishlistItem));
+            wishlistItemDtos.add(wishlistItem.getId());
         }
 
         return WishlistFolderDto.builder()

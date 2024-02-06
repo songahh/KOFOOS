@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### secret ###
+aws_s3.properties
