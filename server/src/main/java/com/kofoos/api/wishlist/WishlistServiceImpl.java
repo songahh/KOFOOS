@@ -1,5 +1,6 @@
 package com.kofoos.api.wishlist;
 
+import com.kofoos.api.common.dto.WishlistItemDto;
 import com.kofoos.api.wishlist.dto.FolderDto;
 import com.kofoos.api.wishlist.dto.ProductDto;
 import com.kofoos.api.common.dto.WishlistFolderDto;
@@ -9,6 +10,7 @@ import com.kofoos.api.wishlist.repo.FolderRepository;
 import com.kofoos.api.wishlist.repo.ProductRepository;
 import com.kofoos.api.wishlist.repo.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,28 +35,19 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     public void like(int id, String deviceId) {
 
-        Optional<User> optionalUser = userRepository.findUserIdByDeviceId(deviceId);
-        User currentUser = optionalUser.get();
+        User currentUser = userRepository.findUserIdByDeviceId(deviceId);
         System.out.println("==============" + currentUser.getId());
-        int userId = optionalUser.map(User::getId).orElse(0);
 
+        WishlistFolder folder = folderRepository.findFolderByUserIdAndName(currentUser.getId(), DEFAULT);
 
-        Optional<WishlistFolder> folderByUserIdAndName = folderRepository.findFolderByUserIdAndName(userId, DEFAULT);
-
-        WishlistFolder folder;
-        if (!folderByUserIdAndName.isPresent()) {
-            // 폴더가 없는 경우, 새로운 폴더 생성 및 저장
+        if (folder == null) {
             WishlistFolder newfolder = WishlistFolder.builder()
                     .name(DEFAULT)
                     .user(currentUser)
                     .build();
 
-
             folder = folderRepository.save(newfolder);
 
-            System.out.println("folderId: " + folder.getId());
-        } else {
-            folder = folderByUserIdAndName.get();
         }
 
         Optional<Product> productById = productRepository.findById(id);
@@ -65,40 +58,30 @@ public class WishlistServiceImpl implements WishlistService {
                 .product(currentProduct)
                 .wishlistFolder(folder)
                 .image(currentProduct.getImage())
+                .bought(0)
                 .build();
 
-        System.out.println("dd: " + wishlistItem.getId());
-        System.out.println(wishlistItem.getBought());
-        System.out.println(wishlistItem.getImage());
-        System.out.println(wishlistItem.getWishlistFolder().getId());
-        WishlistItem wishItem = wishlistRepository.save(wishlistItem);
+        wishlistRepository.save(wishlistItem);
 
     }
 
+
+
+    @Transactional
     @Override
-    public void moveItem() {
-
-    }
-
-    @Override
-    public void moveItems() {
-
+    public void moveItems(List<Integer> itemIds, int targetFolderId) {
+        for (int itemId : itemIds) {
+            wishlistRepository.updateFolderId(itemId, targetFolderId);
+        }
     }
 
     @Override
     public void cancel(int id, String deviceId) {
-        Optional<User> optionalUser = userRepository.findUserIdByDeviceId(deviceId);
-        User currentUser = optionalUser.orElseThrow(() -> new IllegalArgumentException("User not found"));
-        int userId = currentUser.getId();
+        User currentUser = userRepository.findUserIdByDeviceId(deviceId);
 
         String folderName = DEFAULT;
 
-        Optional<WishlistFolder> folderByUserIdAndName = folderRepository.findFolderByUserIdAndName(userId, folderName);
-        if (!folderByUserIdAndName.isPresent()) {
-            System.out.println("폴더없음");
-            return;
-        }
-        WishlistFolder folder = folderByUserIdAndName.get();
+        WishlistFolder folder = folderRepository.findFolderByUserIdAndName(currentUser.getId(), folderName);
 
         Optional<Product> productById = productRepository.findById(id);
         Product currentProduct = productById.orElseThrow(() -> new IllegalArgumentException("Product not found"));
@@ -114,23 +97,23 @@ public class WishlistServiceImpl implements WishlistService {
         wishlistRepository.delete(wishlistItem.get());
     }
 
+
+    @Transactional
     @Override
-    public void check(int itemId, Integer bought) {
-        // wishlist_item 테이블을 itemId로 조회해서 bought값으로 변경
-        Optional<WishlistItem> wishlistItemOptional = wishlistRepository.findById(itemId);
+    public void check(int wishlistItemId, int bought) {
+        // wishlist_item 테이블을 itemId로 조회해서 현재 bought값으로 변경
 
 
-        if (wishlistItemOptional.isPresent()) {
-            WishlistItem item = wishlistItemOptional.get();
+        int result = wishlistRepository.updateBought( wishlistItemId, bought);
 
-
-        }
+        System.out.println("업데이트 결과: "+result);
+       // return result;
     }
 
     @Override
     public void create(String folderName, String deviceId) {
 
-        User currentUser = userRepository.findUserIdByDeviceId(deviceId).get();
+        User currentUser = userRepository.findUserIdByDeviceId(deviceId);
 
         WishlistFolder newFolder = WishlistFolder.builder()
                 .name(folderName)
@@ -151,7 +134,7 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     public List<FolderDto> findFolderList(String deviceId) {
 
-        User user = userRepository.findUserIdByDeviceId(deviceId).get();
+        User user = userRepository.findUserIdByDeviceId(deviceId);
         List<FolderDto> folders = folderRepository.findFolderByUserId(user.getId());
 
         for(FolderDto folder : folders){

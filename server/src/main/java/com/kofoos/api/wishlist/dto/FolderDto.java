@@ -8,7 +8,6 @@ import java.util.List;
 
 
 @Data
-@JsonSerialize(using = ToStringSerializer.class)
 public class FolderDto {
     private int folderId;
     private String folderName;
