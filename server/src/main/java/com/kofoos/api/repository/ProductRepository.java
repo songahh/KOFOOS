@@ -22,7 +22,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     Optional<Product> findProductByBarcode(String barcode);
 
 
-    @Query("select distinct p from Product p join fetch p.image join fetch p.productMaterials where p.itemNo = :itemNo")
+    @Query("select p from Product p where p.itemNo = :itemNo")
     Optional<Product> findProductByItemNo(String itemNo);
 
     @Modifying
