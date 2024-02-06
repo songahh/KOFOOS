@@ -2,7 +2,6 @@ package com.kofoos.api.User;
 
 import com.kofoos.api.User.Repository.HistoryRepository;
 import com.kofoos.api.User.Repository.UserDislikesMaterialRepository;
-import com.kofoos.api.common.dto.DislikedMaterialDto;
 import com.kofoos.api.common.dto.HistoryDto;
 import com.kofoos.api.User.dto.MyPageDto;
 import com.kofoos.api.entity.DislikedMaterial;
@@ -34,7 +33,6 @@ public class UserService {
     }
 
     //비선호 음식 추가
-    // UserService.java
     public void addUserDislikedMaterials(int userId, List<Integer> materialIds) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -50,15 +48,6 @@ public class UserService {
             userDislikesMaterialsRepo.save(userDislikesMaterials);
         }
     }
-
-
-//    //유저의 비선호 음식 리스트 조회
-//    public List<DislikedMaterial> getUserDislikedMaterials(int userId) {
-//        List<UserDislikesMaterial> userDislikes = userDislikesMaterialsRepo.findByUserId(userId);
-//        return userDislikes.stream()
-//                .map(UserDislikesMaterial::getDislikedMaterial)
-//                .collect(Collectors.toList());
-//    }
 
     // 사용자 ID를 기반으로 비선호 식재료 ID 목록 조회
     public List<Integer> getUserDislikedMaterials(int userId) {
@@ -98,11 +87,6 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // 회원을 삭제하는 대신 여기에서 비활성화 상태로 설정하거나 특별한 플래그를 설정할 수 있습니다.
-        // user.setDeleted(true);
-        // userRepository.save(user);
-
-        // 또는 실제로 삭제하려면 아래와 같이 사용할 수 있습니다.
         userRepository.delete(user);
     }
 
@@ -112,19 +96,23 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         String language = user.getLanguage();
         System.out.println("언어정보:"+language);
-        // 정보 변환 로직 구현
-        // 비선호 식재료 변환
-        List<DislikedMaterialDto> dislikedMaterials = userDislikesMaterialsRepo.findByUserId(userId).stream()
-                .map(udm -> DislikedMaterialDto.of(udm.getDislikedMaterial()))
+
+        // 비선호 식재료 ID 목록 조회
+        List<Integer> dislikedMaterials = userDislikesMaterialsRepo.findByUserId(userId).stream()
+                .map(udm -> udm.getDislikedMaterial().getId()) // material_id를 직접 사용
                 .collect(Collectors.toList());
 
         // 히스토리 변환 (최근 10개, 중복 제거)
         List<HistoryDto> histories = historyRepository.findTop10ByUserIdOrderByViewTimeDesc(userId).stream()
                 .distinct()
-                .map(history -> HistoryDto.fromEntity(history))
+                .map(history -> HistoryDto.of(history))
                 .collect(Collectors.toList());
 
-        return new MyPageDto(language, dislikedMaterials, histories);
+        List<String> products = histories.stream()
+                .map(historyDto -> historyDto.getProductUrl())
+                .collect(Collectors.toList());
+
+        return new MyPageDto(language, dislikedMaterials, products);
     }
 
 

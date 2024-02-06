@@ -15,26 +15,21 @@ public class HistoryDto {
 
     private int id;
     private LocalDateTime viewTime;
-    private UserDto user;
-    private ProductDto product;
+    private int user;
+    private String productUrl;
 
-    public HistoryDto(int id, LocalDateTime viewTime, UserDto user, ProductDto product) {
+    public HistoryDto(int id, LocalDateTime viewTime, int user, String productUrl) {
         this.id = id;
         this.viewTime = viewTime;
         this.user = user;
-        this.product = product;
-    }
-
-
-    public static HistoryDto fromEntity(History entity) {
-        return new HistoryDto(entity.getId(), entity.getViewTime(), UserDto.of(entity.getUser()),ProductDto.fromEntity(entity.getProduct()));
+        this.productUrl = productUrl;
     }
 
     public static HistoryDto of(History history){
 
         return HistoryDto.builder()
-                .user(UserDto.of(history.getUser()))
-                .product(ProductDto.of((history.getProduct())))
+                .user(history.getUser().getId())
+                .productUrl(history.getProduct().getImage().getImgUrl())
                 .build();
     }
 

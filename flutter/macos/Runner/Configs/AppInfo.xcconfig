@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = kofoos
+PRODUCT_NAME = stf_navbar
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.kofoos.kofoos
+PRODUCT_BUNDLE_IDENTIFIER = com.example.stfNavbar
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2024 com.kofoos. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2024 com.example. All rights reserved.

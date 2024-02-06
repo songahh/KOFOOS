@@ -1,7 +1,5 @@
 package com.kofoos.api.User.dto;
 
-import com.kofoos.api.common.dto.DislikedMaterialDto;
-import com.kofoos.api.common.dto.HistoryDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,14 +8,13 @@ import java.util.List;
 @Data
 public class MyPageDto {
     private String language;
-    private List<String> dislikedMaterials;
-    private List<Integer> products;
-    private List<Integer> users;
+    private List<Integer> dislikedMaterials;
+    private List<String> products;
 
     @Builder
-    public MyPageDto(String language, List<String> dislikedMaterials, List<Integer> products,List<Integer> users) {
+    public MyPageDto(String language, List<Integer> dislikedMaterials, List<String> products) {
         this.language = language;
         this.dislikedMaterials = dislikedMaterials;
-
+        this.products = products;
     }
 }
