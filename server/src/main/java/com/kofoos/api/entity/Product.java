@@ -56,7 +56,7 @@ public class Product {
     private WishlistItem wishlistItem;
 
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
-    private List<History> history;
+    private List<History> history = new ArrayList<>();
 
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private List<ProductMaterial> productMaterials = new ArrayList<>();
