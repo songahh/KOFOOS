@@ -3,19 +3,25 @@ package com.kofoos.api.product.service;
 import com.kofoos.api.common.dto.ProductDto;
 import com.kofoos.api.entity.Product;
 import com.kofoos.api.product.dto.ProductDetailDto;
+import com.kofoos.api.product.dto.ProductGpt;
 import com.kofoos.api.product.repository.ProductRepository;
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -33,7 +39,6 @@ public class ProductService {
     }
     @Transactional
     public ProductDetailDto findProductByItemNo(String itemNo){
-        System.out.println("barcode = " + itemNo);
         Optional<Product> optional = productRepository.findProductByItemNo(itemNo);
         if(optional.isEmpty()){
             throw new EntityNotFoundException();
@@ -55,5 +60,30 @@ public class ProductService {
             return products.stream().map(ProductDetailDto::of).collect(Collectors.toList());
         }
     }
+
+
+//    @PostConstruct
+    public void updateGptTag() throws IOException {
+            ClassPathResource resource = new ClassPathResource("snack.csv");
+            List<ProductGpt> gpt = Files.readAllLines(resource.getFile().toPath(), StandardCharsets.UTF_8)
+                    .stream()
+                    .map(line -> {
+                        String[] split = line.split(",");
+                        return ProductGpt.builder()
+                                .itemNo(split[0])
+                                .tagString(split[2])
+                                .description(split[3])
+                                .build();
+                    }).collect(Collectors.toList());
+            for(ProductGpt productGpt : gpt){
+                System.out.println("productGpt.getItemNo() = " + productGpt.getItemNo());
+                productRepository.updateGptTag(productGpt.getItemNo(),productGpt.getTagString(),productGpt.getDescription());
+//                System.out.println("productGpt.getItemNo().length()+ productGpt.getTagString().length()+productGpt.getDescription().length() = " + productGpt.getItemNo().length()+ productGpt.getTagString().length()+productGpt.getDescription().length());
+//                System.out.println("productGpt.getTagString().length() = " + productGpt.getDescription().length());
+            }   
+        }
+
+
+
 
 }

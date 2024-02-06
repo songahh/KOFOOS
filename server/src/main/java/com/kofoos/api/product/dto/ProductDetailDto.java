@@ -29,6 +29,7 @@ public class ProductDetailDto {
     private CategorySearchDto categorySearchDto;
     private List<String> dislikedMaterials;
     private String imgurl;
+    private String tagString;
     private int productId;
 
 
@@ -55,6 +56,7 @@ public class ProductDetailDto {
                 .collect(Collectors.toList());
 
         return ProductDetailDto.builder()
+                .tagString(product.getTagString())
                 .barcode(product.getBarcode())
                 .name(product.getName())
                 .description(product.getDescription())
@@ -65,8 +67,9 @@ public class ProductDetailDto {
                 .itemNo(product.getItemNo())
                 .like(product.getLike())
                 .productId(product.getId())
-//                .imgurl(product.getImage().getImgUrl())
+                .imgurl(product.getImage() != null ? product.getImage().getImgUrl()+"?width=200&height=200" : "hoho")
                 .build();
+
 
     }
 
