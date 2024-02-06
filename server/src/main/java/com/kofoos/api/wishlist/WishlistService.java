@@ -10,13 +10,12 @@ import java.util.List;
 public interface WishlistService {
     void like(int productId, String deviceId);
 
-    void moveItem();
-    void moveItems();
+    void moveItems(List<Integer> items, int wishlistFolderId);
 
     void cancel(int productId, String deviceId);
 
 
-    void check(int itemId, Integer bought);
+    void check(int itemId, int bought);
 
     void create(String folderName, String deviceId);
 

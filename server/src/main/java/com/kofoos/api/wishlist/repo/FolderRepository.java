@@ -18,7 +18,7 @@ public interface FolderRepository extends JpaRepository<WishlistFolder, Integer>
     @Query("SELECT wf FROM WishlistFolder wf " +
             "JOIN wf.user u " +
             "WHERE u.id = :userId AND wf.name = :name")
-    Optional<WishlistFolder> findFolderByUserIdAndName(
+    WishlistFolder findFolderByUserIdAndName(
             @Param("userId") int userId,
             @Param("name") String name
     );

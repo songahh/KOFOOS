@@ -1,5 +1,7 @@
 package com.kofoos.api.wishlist;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kofoos.api.wishlist.dto.FolderDto;
 import com.kofoos.api.wishlist.dto.ProductDto;
 import com.kofoos.api.common.dto.WishlistFolderDto;
@@ -77,8 +79,9 @@ public class WishlistController {
             throws ParseException {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        int itemId = (Integer) req.get("wishlist_itemId");
+        int itemId = (Integer) req.get("wishlistItemId");
         int bought = (Integer)  req.get("bought");
+        String deviceId = (String)req.get("deviceId");
 
         System.out.println("[ 구매여부 체크 ("+itemId+" / "+ bought + " )]");
 
@@ -127,7 +130,7 @@ public class WishlistController {
     @ResponseBody
     @PostMapping("/folder/list")
     public ResponseEntity<Map<String, Object>> findFolderList(@RequestBody Map<String, Object> req)
-            throws ParseException {
+            throws ParseException, JsonProcessingException {
         Map<String, Object> result = new HashMap<String, Object>();
 
         String deviceId = (String)  req.get("deviceId");
@@ -136,27 +139,31 @@ public class WishlistController {
 
        List<FolderDto> folderList =  wishlistService.findFolderList(deviceId);
 
-        result.put("folderList",folderList);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String folderListJson = objectMapper.writeValueAsString(folderList);
+
+        result.put("folderList", folderList);
         //ok상태코드 리턴
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 
-  /*  @ResponseBody
-    @GetMapping("/folder/{wishlist_folder_id}")
-    public ResponseEntity<Map<String, Object>> searchByFolder(@PathVariable("wishlist_folder_id") int folderId)
-            throws ParseException {
+    @ResponseBody
+    @PostMapping("/folder/move")
+    public ResponseEntity<Map<String, Object>> moveItems(@RequestBody Map<String, Object> req)
+            throws ParseException, JsonProcessingException {
         Map<String, Object> result = new HashMap<String, Object>();
 
+        List<Integer> items = (List<Integer>) req.get("wishlistItemId");
+        int folderId = (Integer) req.get("wishlistFolderId");
 
+        System.out.println("[ 폴더 이동 ( folderId : "+folderId +"/"+items.toString()+")]");
 
-        System.out.println("[ 폴더 조회(상품 리턴) ( folderId : "+folderId +")]");
+        wishlistService.moveItems(items,folderId);
 
-        List<FolderDto> products =  wishlistService.findFolder(folderId);
-
-        result.put("folderList",products);
         //ok상태코드 리턴
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
-    }*/
+    }
+
 /**
  * Post /product/like 상품 좋아요(위시리스트 추가)
  * Post /product/cancel 상품 좋아요 취소
@@ -164,9 +171,10 @@ public class WishlistController {
  * Post /folder/delete 위시리스트 폴더 삭제
  * Post /folder/list 위시리스트 폴더 조회(목록)
  * Get /folder/{wishlist_folder_id}위시리스트 상품 조회(상품)
- * ===============================================
  * * Post /wishlist/product/check 상품 구매 여부 체크
+ * ===============================================
  * Post /folder/{wishlist_folder_id}위시리스트 제품 폴더 간 이동
+ * Post /wishlist/upload
  *
  */
 
