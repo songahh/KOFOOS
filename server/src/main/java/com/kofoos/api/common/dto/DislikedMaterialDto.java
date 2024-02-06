@@ -15,10 +15,13 @@ import java.util.List;
 @Builder
 public class DislikedMaterialDto {
 
+
+    private int id;
     private String name;
     private List<ProductMaterialDto> productMaterialDtos;
     private List<UserDislikesMaterialDto> userDislikesMaterialDtos;
     private List<DislikedMaterialDetailDto> dislikedMaterialdetailDtos;
+
 
     public static DislikedMaterialDto of(DislikedMaterial dislikedMaterial){
 
