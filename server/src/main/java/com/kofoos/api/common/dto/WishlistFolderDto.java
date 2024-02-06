@@ -17,6 +17,7 @@ public class WishlistFolderDto {
     private int id;
     private String name;
     private UserDto userDto;
+
     private List<Integer> wishlistItemDtos;
 
     public static WishlistFolderDto of(WishlistFolder wishlistFolder){

@@ -16,8 +16,6 @@ public class Product {
     @Column(name = "product_id")
     private int id;
 
-    @Column(name = "item_no")
-    private String itemNo;
 
     @Column(length = 45)
     private String  barcode;
@@ -27,6 +25,7 @@ public class Product {
 
     @Column(length = 600)
     private String  description;
+
 
     @Column(name = "tag_string")
     private String tagString;
@@ -41,6 +40,7 @@ public class Product {
     @Column(name = "hit")
     private Integer hit;
 
+
     @Column(name = "item_no",length = 10)
     private String itemNo;
 
@@ -50,6 +50,7 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
 
     @OneToOne(mappedBy = "product",fetch = FetchType.LAZY)
     private WishlistItem wishlistItem;
