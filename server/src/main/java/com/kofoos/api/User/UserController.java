@@ -24,7 +24,6 @@ public class UserController {
         return ResponseEntity.ok(isRegistered);
     }
 
-
     //유저 등록
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user){
@@ -44,7 +43,6 @@ public class UserController {
         return ResponseEntity.ok(myPageInfo);
     }
 
-
     //비선호 식재료 목록 조회 API
     @GetMapping("/{userId}/dislikes")
     public ResponseEntity<List<Integer>> getUserDislikedMaterials(@PathVariable int userId) {
@@ -56,8 +54,6 @@ public class UserController {
         }
     }
 
-
-
     //회원 가입 후 비선호 음식 등록
     @PostMapping("/{userId}/dislikes")
     public ResponseEntity<?> addUserDislikedMaterials(@PathVariable int userId, @RequestBody Map<String, List<Integer>> request) {
@@ -66,7 +62,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    // 비선호 식재료 목록 업데이트 (POST 방식)
+    // 비선호 식재료 목록 업데이트
     @PostMapping("/update")
     public ResponseEntity<?> updateUserDislikedMaterialsPost(@RequestBody Map<String, Object> request) {
         try {
@@ -79,12 +75,9 @@ public class UserController {
         }
     }
 
-
-
     //회원 탈퇴
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable int userId) {
-        System.out.println("여긴 옴??"+userId);
         userService.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
