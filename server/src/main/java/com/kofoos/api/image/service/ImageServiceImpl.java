@@ -8,8 +8,8 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.kofoos.api.entity.Image;
 import com.kofoos.api.entity.Product;
 import com.kofoos.api.image.ImageException;
-import com.kofoos.api.image.repository.ImageRepository;
-import com.kofoos.api.product.repository.ProductRepository;
+import com.kofoos.api.repository.ImageRepository;
+import com.kofoos.api.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

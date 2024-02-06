@@ -80,10 +80,10 @@ public class ProductController {
         return new ResponseEntity<>(rankList,HttpStatus.OK);
     }
 
-    @PutMapping("/test")
-    public void test() throws IOException {
-        productService.updateGptTag();
-    }
+//    @PutMapping("/test")
+//    public void test() throws IOException {
+//        productService.updateGptTag();
+//    }
 
     // 상품 검색 및 정렬
     @GetMapping("/list")

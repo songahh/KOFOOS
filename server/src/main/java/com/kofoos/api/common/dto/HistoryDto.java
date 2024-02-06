@@ -20,6 +20,18 @@ public class HistoryDto {
     private String deviceId;
     private String ItemNo;
 
+    public HistoryDto() {
+    }
+
+    public HistoryDto(int id, LocalDateTime viewTime, int user, String productUrl, String deviceId, String itemNo) {
+        this.id = id;
+        this.viewTime = viewTime;
+        this.user = user;
+        this.productUrl = productUrl;
+        this.deviceId = deviceId;
+        ItemNo = itemNo;
+    }
+
     public HistoryDto(int id, LocalDateTime viewTime, int user, String productUrl) {
         this.id = id;
         this.viewTime = viewTime;

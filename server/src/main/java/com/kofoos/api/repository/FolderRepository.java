@@ -1,4 +1,4 @@
-package com.kofoos.api.wishlist.repo;
+package com.kofoos.api.repository;
 
 import com.kofoos.api.common.dto.ProductDto;
 import com.kofoos.api.entity.Product;

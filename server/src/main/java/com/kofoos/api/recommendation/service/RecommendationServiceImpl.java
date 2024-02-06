@@ -2,10 +2,10 @@ package com.kofoos.api.recommendation.service;
 
 import com.kofoos.api.entity.Category;
 import com.kofoos.api.entity.Product;
-import com.kofoos.api.product.repository.ProductRepository;
 
 import com.kofoos.api.recommendation.RecommendationException;
 import com.kofoos.api.recommendation.dto.RecommendationDto;
+import com.kofoos.api.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,6 +1,6 @@
 package com.kofoos.api.product.service;
 
-import com.kofoos.api.product.repository.CategoryRepository;
+import com.kofoos.api.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

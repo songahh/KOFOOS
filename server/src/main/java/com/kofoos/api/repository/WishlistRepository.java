@@ -1,4 +1,4 @@
-package com.kofoos.api.wishlist;
+package com.kofoos.api.repository;
 
 import com.kofoos.api.entity.WishlistItem;
 import com.kofoos.api.wishlist.dto.ProductDto;
