@@ -1,4 +1,4 @@
-package com.kofoos.api.product.repository;
+package com.kofoos.api.repository;
 
 import com.kofoos.api.entity.Category;
 import com.kofoos.api.entity.Product;
