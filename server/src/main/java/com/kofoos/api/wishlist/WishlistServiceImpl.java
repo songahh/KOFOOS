@@ -95,17 +95,7 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
 
-    @Transactional
-    @Override
-    public void check(int wishlistItemId, int bought) {
-        // wishlist_item 테이블을 itemId로 조회해서 현재 bought값으로 변경
 
-
-        int result = wishlistRepository.updateBought( wishlistItemId, bought);
-
-        System.out.println("업데이트 결과: "+result);
-       // return result;
-    }
 
     @Override
     public void create(String folderName, String deviceId) {
@@ -147,6 +137,19 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     public List<ProductDto> findFolder(int folderId) {
         return wishlistRepository.findProductsByFolderId(folderId);
+    }
+
+    @Transactional
+    @Override
+
+    public void check(List<Integer> itemIds, int bought) {
+        for(int wishlistItemId: itemIds){
+
+            int result = wishlistRepository.updateBought( wishlistItemId, bought);
+
+            System.out.println("업데이트 결과: "+result);
+        }
+
     }
 
 

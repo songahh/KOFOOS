@@ -15,8 +15,7 @@ public interface WishlistService {
     void cancel(int productId, String deviceId);
 
 
-    void check(int itemId, int bought);
-
+   
     void create(String folderName, String deviceId);
 
     void delete(Integer folderId, String deviceId);
@@ -24,4 +23,6 @@ public interface WishlistService {
     List<FolderDto> findFolderList(String deviceId);
 
     List<ProductDto> findFolder(int folderId);
+
+    void check(List<Integer> itemIds, int bought);
 }
