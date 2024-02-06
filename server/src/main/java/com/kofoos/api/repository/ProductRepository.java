@@ -18,7 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
 
 
-    @Query("select distinct p from Product p join fetch p.image join fetch p.productMaterials where p.barcode = :barcode")
+    @Query("select p from Product p where p.barcode = :barcode")
     Optional<Product> findProductByBarcode(String barcode);
 
 

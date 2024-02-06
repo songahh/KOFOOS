@@ -116,5 +116,9 @@ public class UserService {
         return new MyPageDto(language, dislikedMaterials, products);
     }
 
+    public int getUserId(String deviceId){
+        return userRepository.findUserIdByDeviceId(deviceId).getId();
+    }
+
 
 }
