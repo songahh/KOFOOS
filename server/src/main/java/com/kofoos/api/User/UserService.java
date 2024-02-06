@@ -1,16 +1,16 @@
 package com.kofoos.api.User;
 
-import com.kofoos.api.User.Repository.HistoryRepository;
-import com.kofoos.api.User.Repository.UserDislikesMaterialRepository;
-import com.kofoos.api.common.dto.DislikedMaterialDto;
+import com.kofoos.api.repository.HistoryRepository;
+import com.kofoos.api.repository.UserDislikesMaterialRepository;
 import com.kofoos.api.common.dto.HistoryDto;
 import com.kofoos.api.User.dto.MyPageDto;
 import com.kofoos.api.entity.DislikedMaterial;
 import com.kofoos.api.entity.User;
 import com.kofoos.api.entity.UserDislikesMaterial;
+import com.kofoos.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.kofoos.api.User.Repository.DislikedMaterialRepository;
+import com.kofoos.api.repository.DislikedMaterialRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

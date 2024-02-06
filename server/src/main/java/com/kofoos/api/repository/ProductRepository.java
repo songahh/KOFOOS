@@ -1,17 +1,22 @@
-package com.kofoos.api.product.repository;
+package com.kofoos.api.repository;
 
-import com.kofoos.api.common.dto.ProductDto;
 import com.kofoos.api.entity.Product;
+import com.kofoos.api.entity.WishlistFolder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
+
+    Optional<Product> findById(int id);
+    @Query("SELECT p, i FROM Product p JOIN p.image i WHERE p.id IN :productIds")
+    List<Object[]> findProductsWithImagesByIds(@Param("productIds") List<Integer> productIds);
+
+
 
     @Query("select distinct p from Product p join fetch p.image join fetch p.productMaterials where p.barcode = :barcode")
     Optional<Product> findProductByBarcode(String barcode);
@@ -48,5 +53,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Modifying
     @Query(value = "update product set description = :description, tag_string = :tagString where item_no = :itemNo",nativeQuery = true)
     void updateGptTag(String itemNo, String tagString, String description);
+
+
 
 }

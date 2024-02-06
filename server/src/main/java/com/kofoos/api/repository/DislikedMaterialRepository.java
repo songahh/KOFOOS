@@ -1,5 +1,5 @@
 // DislikedMaterialRepository.java
-package com.kofoos.api.User.Repository;
+package com.kofoos.api.repository;
 
 import com.kofoos.api.entity.DislikedMaterial;
 import com.kofoos.api.entity.UserDislikesMaterial;

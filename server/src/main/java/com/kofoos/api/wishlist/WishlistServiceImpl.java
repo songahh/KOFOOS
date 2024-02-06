@@ -1,18 +1,15 @@
 package com.kofoos.api.wishlist;
 
-import com.kofoos.api.common.dto.WishlistItemDto;
+import com.kofoos.api.repository.WishlistRepository;
 import com.kofoos.api.wishlist.dto.FolderDto;
 import com.kofoos.api.wishlist.dto.ProductDto;
-import com.kofoos.api.common.dto.WishlistFolderDto;
 import com.kofoos.api.entity.*;
-import com.kofoos.api.wishlist.dto.WishlistDto;
-import com.kofoos.api.wishlist.repo.FolderRepository;
-import com.kofoos.api.wishlist.repo.ProductRepository;
-import com.kofoos.api.wishlist.repo.UserRepository;
+import com.kofoos.api.repository.FolderRepository;
+import com.kofoos.api.repository.ProductRepository;
+import com.kofoos.api.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
