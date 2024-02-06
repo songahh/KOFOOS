@@ -18,19 +18,29 @@ public class UserDto {
     private int id;
     private String deviceId;
     private String language;
-    private List<WishlistFolderDto> wishlistFolderDtos;
+//    private List<WishlistFolderDto> wishlistFolderDtos;
+//    private List<UserDislikesMaterialDto> userDislikesMaterialDtos;
+    private List<Integer> wishlistFolderDtos;
     private List<HistoryDto> historyDtos;
-    private List<UserDislikesMaterialDto> userDislikesMaterialDtos;
+    private List<Integer> userDislikesMaterialDtos;
 
 
     public static UserDto of(User user){
 
-        List<WishlistFolderDto> wishlistFolderDtos = new ArrayList<>();
+
+//        List<WishlistFolderDto> wishlistFolderDtos = new ArrayList<>();
+//        List<HistoryDto> historyDtos = new ArrayList<>();
+//        List<UserDislikesMaterialDto> userDislikesMaterialDtos = new ArrayList<>();
+//
+//        for(WishlistFolder wishlistFolder : user.getWishlistFolders()){
+//            wishlistFolderDtos.add(WishlistFolderDto.of(wishlistFolder));
+
+        List<Integer> wishlistFolderDtos = new ArrayList<>();
         List<HistoryDto> historyDtos = new ArrayList<>();
-        List<UserDislikesMaterialDto> userDislikesMaterialDtos = new ArrayList<>();
+        List<Integer> userDislikesMaterialDtos = new ArrayList<>();
 
         for(WishlistFolder wishlistFolder : user.getWishlistFolders()){
-            wishlistFolderDtos.add(WishlistFolderDto.of(wishlistFolder));
+            wishlistFolderDtos.add(wishlistFolder.getId());
         }
 
         for(History history : user.getHistories()){
@@ -38,7 +48,9 @@ public class UserDto {
         }
 
         for(UserDislikesMaterial userDislikesMaterial : user.getUserDislikesMaterials()){
-            userDislikesMaterialDtos.add(UserDislikesMaterialDto.of(userDislikesMaterial));
+//            userDislikesMaterialDtos.add(UserDislikesMaterialDto.of(userDislikesMaterial));
+            userDislikesMaterialDtos.add(userDislikesMaterial.getId());
+
         }
 
         return UserDto.builder()

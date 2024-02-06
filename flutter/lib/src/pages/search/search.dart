@@ -1,95 +1,77 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:kofoos/src/pages/search/api/search_api.dart';
-import 'package:kofoos/src/pages/search/search_categoey_page.dart';
 
-class Search extends StatefulWidget {
-  Search({Key? key}) : super(key: key);
+class Search extends StatelessWidget {
+  Search({super.key});
 
-  @override
-  _SearchState createState() => _SearchState();
-}
+  Widget _rankingWidget(BuildContext context) {
+    List<Widget> rankingCircles = [];
+    List<int> rankingOrders = [1, 2, 3, 4, 5, 6, 7];
+    rankingOrders.shuffle();
 
-class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-  SearchApi searchApi = SearchApi();
+    for (int i = 0; i < rankingOrders.length; i++) {
+      int ranking = rankingOrders[i];
+      double size = 100.0 - (ranking * 5.0);
+      if (ranking == 1) {
+        size += 80.0;
+      } else if (ranking == 2) {
+        size += 40.0;
+      } else if (ranking == 3) {
+        size += 20.0;
+      } else if (ranking == 4) {
+        size += 5.0;
+      } else if (ranking == 5) {
+        size += 5.0;
+      } else if (ranking == 6) {
+        size += 5.0;
+      } else if (ranking == 7) {
+        size -= 5.0;
+      }
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 1),
-    );
-    _animation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-    _controller.forward();
-  }
-
-  Widget _floatingActionButton(BuildContext context) {
-    return Positioned(
-      bottom: 30.0,
-      right: 30.0,
-      child: ElevatedButton(
-        onPressed: () {
-          print('카테고리 전체보기로 이동');
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SearchCategoryPage(),
-            ),
-          );
+      Widget circleWidget = GestureDetector(
+        onTap: () {
+          print('$ranking번 랭킹 클릭: 해당하는 소분류 카테고리 검색 이동 구현 필요');
         },
-        style: ElevatedButton.styleFrom(
-          primary: Color(0xff343F56),
-          onPrimary: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+        child: Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.grey,
           ),
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Center(
+            child: Text(
+              '$ranking',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         ),
-        child: Text('All  >', style: TextStyle(fontSize: 16)),
-      ),
-    );
-  }
+      );
 
-  Widget _rankingData(BuildContext context) {
-    return FutureBuilder<List<String>>(
-      future: searchApi.getRanking(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text('');
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else {
-          List<String> ranking = snapshot.data!;
-          return ListView.builder(
-            itemCount: ranking.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(ranking[index]),
-              );
-            },
-          );
-        }
-      },
+      double x = 12.0 + Random().nextDouble() *
+          (MediaQuery.of(context).size.width - 2 * 12.0 - size);
+
+      double y = Random().nextDouble() *
+          (MediaQuery.of(context).size.height - 300 - size);
+
+      rankingCircles.add(Positioned(
+        left: x,
+        top: y,
+        child: circleWidget,
+      ));
+    }
+
+    return Stack(
+      children: rankingCircles,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        _rankingData(context),
-        _floatingActionButton(context),
-      ],
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+    return _rankingWidget(context);
   }
 }

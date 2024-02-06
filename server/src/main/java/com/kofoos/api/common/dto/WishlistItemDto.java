@@ -14,15 +14,18 @@ public class WishlistItemDto {
     private int id;
     private Integer bought;
     private ProductDto productDto;
-    private String imgurl;
-    private int wishlistFolderId;
+    private ImageDto imageDto;
+    private WishlistFolderDto wishlistFolderDto;
 
     public static WishlistItemDto of(WishlistItem wishlistItem){
         return WishlistItemDto.builder()
                 .bought(wishlistItem.getBought())
-                .imgurl((wishlistItem.getImage().getImgUrl()))
-                .wishlistFolderId(((wishlistItem.getWishlistFolder().getId())))
+                .imageDto(ImageDto.of(wishlistItem.getImage()))
+                .wishlistFolderDto(WishlistFolderDto.of((wishlistItem.getWishlistFolder())))
                 .build();
     }
 
+    public void updateBought(Integer bought) {
+        this.bought=bought;
+    }
 }

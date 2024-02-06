@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kofoos/src/root/root_controller.dart';
+import 'package:kofoos/src/pages/home/home_editor_page_1.dart';
 
 class Wishlist extends StatelessWidget {
   const Wishlist({Key? key}) : super(key: key);
@@ -7,7 +9,6 @@ class Wishlist extends StatelessWidget {
     return Column(
       children: [
         Container(
-          height: 70,
           color: Color(0xff343F56),
           child: Padding(
             padding: const EdgeInsets.all(12.0),
@@ -16,7 +17,7 @@ class Wishlist extends StatelessWidget {
                 Icon(
                   Icons.favorite,
                   color: Colors.white,
-                  size: 30,
+                  size: 32,
                 ),
                 Text(
                   ' Wishlist',
@@ -30,30 +31,31 @@ class Wishlist extends StatelessWidget {
             ),
           ),
         ),
+
         DefaultTabController(
-          length: 3,
-          initialIndex: 0,
+          length: 3, // 탭의 수
+          initialIndex: 0, // 초기 선택 탭의 인덱스
           child: Column(
             children: [
               TabBar(
                 tabs: [
                   Tab(text: 'default'),
-                  Tab(text: 'folder'),
-                  Tab(text: 'folder'),
+                  Tab(text: 'Tab 2'),
+                  Tab(text: 'Tab 3'),
                 ],
               ),
               Container(
-                height: 900,
+                height: 300,
                 child: TabBarView(
                   children: [
                     Container(
-                      color: Colors.blue,
+                      color: Colors.red,
                     ),
                     Container(
                       color: Colors.green,
                     ),
                     Container(
-                      color: Colors.amber,
+                      color: Colors.blue,
                     ),
                   ],
                 ),
@@ -65,48 +67,10 @@ class Wishlist extends StatelessWidget {
     );
   }
 
-  Widget _wishlistFolderButton(BuildContext context) {
-    return Positioned(
-      bottom: 100.0,
-      right: 30.0,
-      child: FloatingActionButton(
-        onPressed: () {
-          print('위시리스트 폴더 수정 기능 추가 필요');
-        },
-        child: Icon(Icons.folder),
-        backgroundColor: Color(0xffECECEC),
-        foregroundColor: Color(0xff343F56),
-      ),
-    );
-  }
-
-  Widget _wishlistUploadButton(BuildContext context) {
-    return Positioned(
-      bottom: 30.0,
-      right: 30.0,
-      child: FloatingActionButton(
-        onPressed: () {
-          print('위시리스트 업로드 기능 추가 필요');
-        },
-        child: Icon(Icons.cloud_upload),
-        backgroundColor: Color(0xffECECEC),
-        foregroundColor: Color(0xff343F56),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          child: Column(children: [
-            _wishlistWidget(context),
-          ]),
-        ),
-        _wishlistFolderButton(context),
-        _wishlistUploadButton(context),
-      ],
-    );
+    return Column(children: [
+      _wishlistWidget(context),
+    ]);
   }
 }

@@ -15,6 +15,7 @@ import java.util.List;
 @Builder
 public class DislikedMaterialDto {
 
+
     private int id;
     private String name;
     private List<ProductMaterialDto> productMaterialDtos;
@@ -48,9 +49,5 @@ public class DislikedMaterialDto {
                 .build();
 
     }
-
-//    public static DislikedMaterialDto fromEntity(DislikedMaterial entity) {
-//        return new DislikedMaterialDto(entity.getId(), entity.getName());
-//    }
 
 }

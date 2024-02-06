@@ -16,6 +16,8 @@ public class ImageDto {
     private String imgUrl;
 //    private WishlistItemDto wishlistItemDto;
 
+
+
     public static ImageDto of(Image image){
         return ImageDto.builder()
                 .imgUrl(image.getImgUrl())
@@ -23,4 +25,6 @@ public class ImageDto {
     }
 
 
+
 }
+
