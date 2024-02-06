@@ -31,16 +31,12 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # 필요한 디펜던시는 여기에 추가하세요
+  # added dependencies
   cupertino_icons: ^1.0.2
   get: ^4.6.6
   fluttertoast: ^8.2.4
   carousel_slider: ^4.0.0
   change_app_package_name: ^1.1.0
-  animation_list: ^2.2.1
-  dio: ^4.0.0
-  http: ^0.13.3
-  device_info: ^2.0.3
 
 dev_dependencies:
   flutter_test:

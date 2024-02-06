@@ -17,6 +17,8 @@ public class HistoryDto {
     private LocalDateTime viewTime;
     private int user;
     private String productUrl;
+    private String deviceId;
+    private String ItemNo;
 
     public HistoryDto(int id, LocalDateTime viewTime, int user, String productUrl) {
         this.id = id;
@@ -30,6 +32,9 @@ public class HistoryDto {
         return HistoryDto.builder()
                 .user(history.getUser().getId())
                 .productUrl(history.getProduct().getImage().getImgUrl())
+                .id(history.getId())
+                .deviceId(history.getUser().getDeviceId())
+                .ItemNo(history.getProduct().getItemNo())
                 .build();
     }
 

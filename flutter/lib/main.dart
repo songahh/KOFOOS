@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kofoos/src/pages/register/register.dart';
+import 'package:kofoos/src/pages/home/home.dart';
 import 'package:kofoos/src/root/root.dart';
 import 'package:kofoos/src/root/root_controller.dart';
 
@@ -14,7 +14,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
       title: 'KOFOOS',
       initialBinding: BindingsBuilder(() {
         Get.put(RootController());
@@ -22,7 +21,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: StartApp(), //Root(), StartApp()으로 변경하여 앱 시작점을 변경할 수 있습니다.
+      home: Root(),
+      // getPages: [GetPage(name: '/detailPage', page: () => const Home())],
     );
   }
 }

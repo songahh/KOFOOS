@@ -11,34 +11,21 @@ class HomeEditorPage1 extends StatelessWidget {
     return Material(
       child: Stack(
         children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                Text('신라면 - HomeEditorPage1'),
-                Container(
-                  child: Image.asset('assets/editor/e0.jpg'),
-                ),
-                Container(
-                  child: Image.asset('assets/editor/e0.jpg'),
-                ),
-                Container(
-                  child: Image.asset('assets/editor/e0.jpg'),
-                ),
-              ],
-            ),
+          Column(
+            children: [
+              Text('신라면 - HomeEditorPage1'),
+            ],
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 30.0, right: 30.0),
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(Icons.arrow_back),
-                backgroundColor: Color(0xffECECEC),
-                foregroundColor: Color(0xff343F56),
-              ),
+          Positioned(
+            bottom: 30.0, // 조절 가능
+            right: 30.0, // 조절 가능
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Icon(Icons.arrow_back),
+              backgroundColor: Color(0xffECECEC),
+              foregroundColor: Color(0xff343F56),
             ),
           ),
         ],
