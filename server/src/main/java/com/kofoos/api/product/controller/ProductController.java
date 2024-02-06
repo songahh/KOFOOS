@@ -1,5 +1,6 @@
 package com.kofoos.api.product.controller;
 
+import com.kofoos.api.common.dto.ProductDto;
 import com.kofoos.api.entity.Product;
 import com.kofoos.api.product.dto.ProductDetailDto;
 import com.kofoos.api.product.dto.RequestId;
@@ -7,6 +8,7 @@ import com.kofoos.api.product.service.CategoryService;
 import com.kofoos.api.product.service.ProductService;
 import com.kofoos.api.redis.RedisEntity;
 import com.kofoos.api.redis.RedisService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,9 +16,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/products")
@@ -29,8 +34,8 @@ public class ProductController {
     private final RedisService redisService;
 
     // 상품 조회 바코드
-    @GetMapping("/detail/{barcode}/{deviceId}")
-    public ResponseEntity<?> findProductDetailBarcode(@PathVariable String barcode,@PathVariable String deviceId){
+    @GetMapping("/detail/{barcode}/{deviceId}/{userId}")
+    public ResponseEntity<?> findProductDetailBarcode(@PathVariable String barcode,@PathVariable String deviceId,@PathVariable int userId){
         ProductDetailDto productDetailDto = productService.findProductByBarcode(barcode);
         RedisEntity redisEntity = RedisEntity.builder()
                 .barcode(barcode)
@@ -38,6 +43,10 @@ public class ProductController {
                 .name(productDetailDto.getName())
                 .imgUrl(productDetailDto.getImgurl())
                 .deviceId(deviceId)
+                .productId(productDetailDto.getProductId())
+                .userId(userId)
+                .imgUrl(productDetailDto.getImgurl())
+                .itemNo(productDetailDto.getItemNo())
                 .build();
         redisService.addRecentViewedItem(deviceId,redisEntity);
         return new ResponseEntity<>(productDetailDto, HttpStatus.OK);
@@ -71,16 +80,29 @@ public class ProductController {
         return new ResponseEntity<>(rankList,HttpStatus.OK);
     }
 
+    @PutMapping("/test")
+    public void test() throws IOException {
+        productService.updateGptTag();
+    }
+
     // 상품 검색 및 정렬
-    @GetMapping("/products/list/{cat1}/{cat2}/{cat3}/{order}")
-    public ResponseEntity<?> findProductsOrder(@PathVariable String cat1,@PathVariable String cat2,@PathVariable String cat3, @PathVariable String order){
-        int id = categoryService.findId(cat1,cat2,cat3);
-        List<Product> products = productService.findProductsOrder(id,order);
-        return new ResponseEntity<>(products,HttpStatus.OK);
+    @GetMapping("/list")
+    public ResponseEntity<?> findProductsOrder(@RequestParam String cat1,@RequestParam String cat2, @RequestParam String order){
+        System.out.println("cat1 = " + cat1);
+        List<Integer> id = categoryService.findId(cat1,cat2);
+        List<ProductDetailDto> Dtos = new ArrayList<>();
+        for(int i :id){
+            List<ProductDetailDto> temp = productService.findProductsOrder(i,order);
+            for(ProductDetailDto p: temp){
+                Dtos.add(p);
+            }
+        }
+
+        return new ResponseEntity<>(Dtos,HttpStatus.OK);
     }
 
     //테스트
-    
+
 
 
 
