@@ -23,6 +23,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("update Product p set p.hit = p.hit + 1 where p.id = :id")
     void UpHit(int id);
 
+
     @Modifying
     @Query("update Product p set p.like = p.like + 1 where p.id = :id")
     void UpLike(int id);

@@ -12,12 +12,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 
 import java.io.*;
 
 
 @Slf4j
+@EnableScheduling
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @RequiredArgsConstructor
 public class ApiApplication {

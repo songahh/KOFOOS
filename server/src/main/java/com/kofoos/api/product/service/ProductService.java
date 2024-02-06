@@ -5,6 +5,7 @@ import com.kofoos.api.entity.Product;
 import com.kofoos.api.product.dto.ProductDetailDto;
 import com.kofoos.api.product.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +18,29 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
+    @Transactional
     public ProductDetailDto findProductByBarcode(String barcode){
         System.out.println("barcode = " + barcode);
         Optional<Product> optional = productRepository.findProductByBarcode(barcode);
         if(optional.isEmpty()){
             throw new EntityNotFoundException();
         }
-        return ProductDetailDto.of(optional.get());
+        Product product = optional.get();
+        product.addHit();
+        return ProductDetailDto.of(product);
+    }
+    @Transactional
+    public ProductDetailDto findProductByItemNo(String itemNo){
+        System.out.println("barcode = " + itemNo);
+        Optional<Product> optional = productRepository.findProductByItemNo(itemNo);
+        if(optional.isEmpty()){
+            throw new EntityNotFoundException();
+        }
+        Product product = optional.get();
+        product.addHit();
+        return ProductDetailDto.of(product);
     }
 
-    public void upHit(int id){
-        productRepository.UpHit(id);
-    }
 
     public List<Product> findProductsOrder(int id, String order){
         if(order.equals("좋아요")){
