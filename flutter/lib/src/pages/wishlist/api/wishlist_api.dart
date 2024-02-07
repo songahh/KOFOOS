@@ -8,10 +8,10 @@ import 'model/FolderDto.dart';
 class WishlistApi {
   var wishlistDio = Dio(
     BaseOptions(
-      baseUrl: "http://i10a309.p.ssafy.io:8080",
       // baseUrl: "http://10.0.2.2:8080",
-      connectTimeout: 5000000000,
-      receiveTimeout: 5000000000,
+      baseUrl: "http://i10a309.p.ssafy.io:8080",
+      connectTimeout: 5000,
+      receiveTimeout: 5000,
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.acceptHeader: 'application/json'
@@ -44,15 +44,15 @@ class WishlistApi {
     }
   }
   Future<void> sendSelectedItemsToServer(Set wishlist_item_ids ) async {
-    print('api호출 준비 완료!!!!!!!!!!!!!');
     print(wishlist_item_ids);
+    await wishlistDio.post('/wishlist/product/check', data: {"wishlistItemIds": wishlist_item_ids.toList(), "bought":1});
+  }
+  Future<void> deleteWishlistItems(Set wishlist_item_ids ) async {
+    await wishlistDio.post('/wishlist/product/cancel', data: {"wishlistItemIds": wishlist_item_ids.toList()});
+  }
 
-    try{
-      //var response = await wishlistDio.post('/wishlist/product/check', data: {"wishlistItemIds:"});
-    } catch (e) {
-      // 네트워크 오류 또는 요청 실패
-      print("Error sending data: $e");
-    }
+  Future<void> restoreWishlistItems(Set wishlist_item_ids ) async {
+    await wishlistDio.post('/wishlist/product/check', data: {"wishlistItemIds": wishlist_item_ids.toList(),"bought":0});
   }
 }
 
