@@ -40,6 +40,7 @@ dependencies:
   camera: ^0.10.5+9
   flutter_speed_dial: ^7.0.0
   image: ^4.1.6
+  pytorch_lite: ^4.2.4
 
 dev_dependencies:
   flutter_test:
@@ -65,8 +66,10 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/best.torchscript
     - assets/labels.txt
-    - assets/kofoos.tflite
+    - assets/label_classification_imageNet.txt
+    - assets/model_classification.pt
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
