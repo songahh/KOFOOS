@@ -9,14 +9,14 @@ public class WishlistDto {
 
     private int wishlistItemId;
     private int bought;
-    private int productId;
+    private String itemNo;
     private String imageUrl;
 
 
-    public WishlistDto(int wishlistItemId, int bought, int productId, String imageUrl) {
+    public WishlistDto(int wishlistItemId, int bought, String itemNo, String imageUrl) {
         this.wishlistItemId = wishlistItemId;
         this.bought = bought;
-        this.productId = productId;
+        this.itemNo = itemNo;
         this.imageUrl = imageUrl;
     }
 }
