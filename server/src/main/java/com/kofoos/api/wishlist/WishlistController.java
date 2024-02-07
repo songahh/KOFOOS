@@ -60,12 +60,12 @@ public class WishlistController {
             throws ParseException {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        int productId = (Integer) req.get("productId");
+        List<Integer> itemIds = (List<Integer>) req.get("wishlistItemIds");
         String deviceId = (String)  req.get("deviceId");
 
-        System.out.println("[ 좋아요 취소 ("+productId+" / "+ deviceId + " )]");
+        System.out.println("[ 좋아요 취소 ("+ itemIds.toString()+" )]");
 
-        wishlistService.cancel(productId,deviceId);
+        wishlistService.cancel(itemIds);
 
 
         //ok상태코드 리턴
@@ -79,13 +79,13 @@ public class WishlistController {
             throws ParseException {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        int itemId = (Integer) req.get("wishlistItemId");
+        List<Integer> itemIds = (List<Integer>) req.get("wishlistItemIds");
         int bought = (Integer)  req.get("bought");
         String deviceId = (String)req.get("deviceId");
 
-        System.out.println("[ 구매여부 체크 ("+itemId+" / "+ bought + " )]");
+        System.out.println("[ 구매여부 체크 ("+itemIds.toString()+" / "+ bought + " )]");
 
-        wishlistService.check(itemId,bought);
+        wishlistService.check(itemIds,bought);
 
 
         //ok상태코드 리턴
