@@ -18,9 +18,9 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     @Query("select c.cat3 from Category c where c.cat1 = :cat1 and c.cat2 = :cat2")
     List<String> findCat3(String cat1,String cat2);
 
-    @Query("SELECT c.cat3 FROM Category c " +
+    @Query("SELECT c.cat1, c.cat2 FROM Category c " +
             "LEFT JOIN c.products p " +
-            "GROUP BY c.cat3 " +
+            "GROUP BY c.cat1, c.cat2 " +
             "ORDER BY SUM(p.hit) DESC limit 7")
     List<String> ranking();
 
