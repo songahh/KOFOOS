@@ -72,28 +72,14 @@ public class WishlistServiceImpl implements WishlistService {
         }
     }
 
+    @Transactional
     @Override
-    public void cancel(int id, String deviceId) {
-        User currentUser = userRepository.findUserIdByDeviceId(deviceId);
+    public void cancel(List<Integer> itemIds) {
+        for(Integer itemId: itemIds){
+            wishlistRepository.deleteById(itemId);
 
-        String folderName = DEFAULT;
-
-        WishlistFolder folder = folderRepository.findFolderByUserIdAndName(currentUser.getId(), folderName);
-
-        Optional<Product> productById = productRepository.findById(id);
-        Product currentProduct = productById.orElseThrow(() -> new IllegalArgumentException("Product not found"));
-
-
-        // WishlistItem 찾기
-        Optional<WishlistItem> wishlistItem = wishlistRepository.findWishlistItemByWishlistFolderIdAndProductId(folder.getId(), currentProduct.getId());
-
-        // 존재하는 경우 삭제
-        if (!wishlistItem.isPresent()) {
-            System.out.println("sorry!!");
         }
-        wishlistRepository.delete(wishlistItem.get());
     }
-
 
 
 

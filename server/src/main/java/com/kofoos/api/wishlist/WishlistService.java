@@ -12,7 +12,7 @@ public interface WishlistService {
 
     void moveItems(List<Integer> items, int wishlistFolderId);
 
-    void cancel(int productId, String deviceId);
+    void cancel(List<Integer> itemIds);
 
 
    
