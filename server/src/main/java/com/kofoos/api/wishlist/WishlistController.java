@@ -60,12 +60,12 @@ public class WishlistController {
             throws ParseException {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        int productId = (Integer) req.get("productId");
+        List<Integer> itemIds = (List<Integer>) req.get("wishlistItemIds");
         String deviceId = (String)  req.get("deviceId");
 
-        System.out.println("[ 좋아요 취소 ("+productId+" / "+ deviceId + " )]");
+        System.out.println("[ 좋아요 취소 ("+ itemIds.toString()+" )]");
 
-        wishlistService.cancel(productId,deviceId);
+        wishlistService.cancel(itemIds);
 
 
         //ok상태코드 리턴
