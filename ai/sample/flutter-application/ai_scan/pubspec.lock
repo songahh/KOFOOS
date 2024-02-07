@@ -89,6 +89,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
+  computer:
+    dependency: transitive
+    description:
+      name: computer
+      sha256: "34176c612a02ebf3e5eaa3e9b40e2b1df495043c46614999639d19e66823232d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.1"
   convert:
     dependency: transitive
     description:
@@ -440,6 +448,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.7.4"
+  pytorch_lite:
+    dependency: "direct main"
+    description:
+      name: pytorch_lite
+      sha256: "72c226c87025ec05f22e8b0f0280a8d6bc30d2161153e67209ab4f8e3a6c5cd8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.4"
   sky_engine:
     dependency: transitive
     description: flutter
