@@ -33,21 +33,21 @@ class _RunModelByImageDemoState extends State<RunModelByImageDemo> {
 
   //load your model
   Future loadModel() async {
-    String pathImageModel = "assets/models/model_classification.pt";
+    //String pathImageModel = "assets/models/model_classification.pt";
     //String pathCustomModel = "assets/models/custom_model.ptl";
-    String pathObjectDetectionModel = "assets/models/yolov5s.torchscript";
+    String pathObjectDetectionModel = "assets/best.torchscript";
     // String pathObjectDetectionModelYolov8 = "assets/models/yolov8s.torchscript";
     String pathObjectDetectionModelYolov8 = "assets/best.torchscript";
     try {
-      _imageModel = await PytorchLite.loadClassificationModel(
-          pathImageModel, 224, 224, 1000,
-          labelPath: "assets/labels/label_classification_imageNet.txt");
+      // _imageModel = await PytorchLite.loadClassificationModel(
+      //     pathImageModel, 224, 224, 1000,
+      //     labelPath: "assets/labels/label_classification_imageNet.txt");
       //_customModel = await PytorchLite.loadCustomModel(pathCustomModel);
       _objectModel = await PytorchLite.loadObjectDetectionModel(
-          pathObjectDetectionModel, 80, 640, 640,
-          labelPath: "assets/labels/labels_objectDetection_Coco.txt");
+          pathObjectDetectionModel, 100, 640, 640,
+          labelPath: "assets/labels.txt");
       _objectModelYoloV8 = await PytorchLite.loadObjectDetectionModel(
-          pathObjectDetectionModelYolov8, 80, 640, 640,
+          pathObjectDetectionModelYolov8, 100, 640, 640,
           labelPath: "assets/labels.txt",
           objectDetectionModelType: ObjectDetectionModelType.yolov8);
     } catch (e) {
@@ -260,54 +260,54 @@ class _RunModelByImageDemoState extends State<RunModelByImageDemo> {
             ),
             */
 
-            TextButton(
-              onPressed: runClassification,
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.blue,
-              ),
-              child: const Text(
-                "Run Classification",
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: runObjectDetection,
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.blue,
-              ),
-              child: const Text(
-                "Run object detection with labels",
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
+            // TextButton(
+            //   onPressed: runClassification,
+            //   style: TextButton.styleFrom(
+            //     backgroundColor: Colors.blue,
+            //   ),
+            //   child: const Text(
+            //     "Run Classification",
+            //     style: TextStyle(
+            //       color: Colors.white,
+            //     ),
+            //   ),
+            // ),
+            // TextButton(
+            //   onPressed: runObjectDetection,
+            //   style: TextButton.styleFrom(
+            //     backgroundColor: Colors.blue,
+            //   ),
+            //   child: const Text(
+            //     "Run object detection with labels",
+            //     style: TextStyle(
+            //       color: Colors.white,
+            //     ),
+            //   ),
+            // ),
             TextButton(
               onPressed: runObjectDetectionYoloV8,
               style: TextButton.styleFrom(
                 backgroundColor: Colors.blue,
               ),
               child: const Text(
-                "Run object detection YoloV8 with labels",
+                "KOFOOS!!!!!!!!!!!!!!!!!!!!!!!!!!",
                 style: TextStyle(
                   color: Colors.white,
                 ),
               ),
             ),
-            TextButton(
-              onPressed: runObjectDetectionWithoutLabels,
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.blue,
-              ),
-              child: const Text(
-                "Run object detection without labels",
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
+            // TextButton(
+            //   onPressed: runObjectDetectionWithoutLabels,
+            //   style: TextButton.styleFrom(
+            //     backgroundColor: Colors.blue,
+            //   ),
+            //   child: const Text(
+            //     "Run object detection without labels",
+            //     style: TextStyle(
+            //       color: Colors.white,
+            //     ),
+            //   ),
+            // ),
             Center(
               child: Visibility(
                 visible: _prediction != null,
