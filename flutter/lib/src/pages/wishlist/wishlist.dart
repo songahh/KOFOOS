@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../root/root_controller.dart';
 import 'api/model/FolderDto.dart';
 import 'api/wishlist_api.dart';
@@ -226,6 +225,7 @@ class _WishlistState extends State<Wishlist> {
           ),
         ),
         DefaultTabController(
+
           length: folderList.length,
           initialIndex: 0,
           child: Column(
@@ -242,6 +242,7 @@ class _WishlistState extends State<Wishlist> {
       ],
     );
   }
+
 
   Widget _buildItemCountAndEditButton() {
     return Container(
@@ -266,6 +267,7 @@ class _WishlistState extends State<Wishlist> {
       ),
     );
   }
+
 
   Widget _buildEditingBottomBar(BuildContext context) {
     return BottomAppBar(
@@ -314,6 +316,7 @@ class _WishlistState extends State<Wishlist> {
 
   @override
   Widget build(BuildContext context) {
+
     // GetX 컨트롤러 인스턴스를 얻습니다.
     final RootController rootController = Get.find<RootController>();
 
