@@ -254,7 +254,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
     // log("will start prediction");
     // log("Converted camera image");
 
-    runClassification(cameraImage);
+    //runClassification(cameraImage);
     runObjectDetection(cameraImage);
 
     // log("done prediction camera image");
