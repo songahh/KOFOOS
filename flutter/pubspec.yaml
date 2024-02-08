@@ -40,6 +40,12 @@ dependencies:
   animation_list: ^2.2.1
   dio: ^4.0.0
   animations: ^2.0.0
+  flutter_vision: ^1.1.4
+  image_picker: ^1.0.7
+  camera: ^0.10.5+9
+  flutter_speed_dial: ^7.0.0
+  image: ^4.1.6
+  pytorch_lite: ^4.2.4
 
 dev_dependencies:
   flutter_test:
@@ -70,7 +76,7 @@ flutter:
     - assets/editor/
     - assets/ranking/
     - assets/test/
-
+    - assets/ai/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
