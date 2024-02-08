@@ -17,12 +17,28 @@ public class RecommendationController {
     private final RecommendationService rs;
 
     /**
-    * 유사한 상품 추천 & 카테고리별 추천
-    * */
+    * [상품 페이지] 유사한 상품 추천
+    **/
     @GetMapping("/product/{product_id}")
     public List<RecommendationDto> getRelatedProductsByCategory(@PathVariable("product_id") int productId){
         return rs.getRelatedProductsByCategory(productId);
     }
+
+
+    /**
+    * [메인 페이지] 히스토리 기반
+    * 사용자 히스토리에서 특정 기간 동안 가장 많이 나왔던 카테고리 (대분류, 중분류) 내에서 인기순 추천 (알러지 필터링 적용)
+    * 히스토리가 없는 경우, 현재 1위 랭킹에 해당하는 카테고리 내에서 인기순 추천 (알러지 필터링 적용)
+    **/
+
+
+    /**
+     * [메인 페이지] What's HOT in Korea?
+     * 인기순 + 조회순 추천 (알러지 필터링 적용 X)
+     **/
+
+
+
 
     /**
      * 에디터 추천
