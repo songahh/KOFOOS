@@ -39,7 +39,14 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("update Product p set p.like = p.like - 1 where p.id = :id")
     void DownLike(int id);
 
-    @Query("select p from Product p join fetch p.image join fetch p.category c where c.cat1 = :cat1 and c.cat2 = :cat2 order by p.like desc limit 10")
+    @Query("select p from Product p " +
+            "join fetch p.image " +
+            "join fetch p.productMaterials pm " +
+            "join fetch pm.dislikedMaterial dm " +
+            "join fetch p.category c " +
+            "where c.cat1 = :cat1 and c.cat2 = :cat2 " +
+            "order by p.like desc " +
+            "limit 10 ")
     List<Product> findRelatedProductsOrderByLike(String cat1, String cat2);
 
     @Query("select p from Product p join fetch p.productMaterials join fetch p.image join p.category c on c.cat1 = :cat1 and c.cat2 = :cat2 and c.cat3 = :cat3")

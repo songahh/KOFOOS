@@ -17,7 +17,7 @@ public class RecommendationController {
     private final RecommendationService rs;
 
     /**
-    * [상품 페이지] 유사한 상품 추천
+    * [상품 페이지] 유사한 상품 추천 (알러지 필터링 X)
     **/
     @GetMapping("/product/{product_id}")
     public List<RecommendationDto> getRelatedProductsByCategory(@PathVariable("product_id") int productId){
