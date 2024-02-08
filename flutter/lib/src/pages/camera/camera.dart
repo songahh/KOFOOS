@@ -10,6 +10,7 @@ import 'camera_view.dart';
 class Camera extends StatefulWidget {
   const Camera({Key? key}) : super(key: key);
 
+
   @override
   State<Camera> createState() => _CameraState();
 }
@@ -23,6 +24,7 @@ class _CameraState extends State<Camera> {
   Duration? classificationInferenceTime;
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+
 
 
   @override

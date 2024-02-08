@@ -27,6 +27,7 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
     _controller.forward();
   }
 
+
   Widget _rankingTitle(BuildContext context) {
     return Container(
       height: 70,
@@ -206,7 +207,9 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
               ),
             ],
           ),
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         ),
+
       );
     }
   }
