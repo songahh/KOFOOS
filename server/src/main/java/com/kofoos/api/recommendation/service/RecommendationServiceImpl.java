@@ -16,7 +16,6 @@ import java.util.List;
 public class RecommendationServiceImpl implements RecommendationService {
 
     private final ProductRepository pr;
-    private final Integer randomSeed;
 
     @Transactional(readOnly = true)
     @Override
@@ -25,8 +24,8 @@ public class RecommendationServiceImpl implements RecommendationService {
         Product searchedProduct = pr.findById(productId).orElseThrow(()->new RecommendationException("item이 존재하지 않습니다."));
         Category category = searchedProduct.getCategory();
 
-        // 2. 해당 카테고리에 해당하는 아이템을 랜덤으로 최대 10개까지 보낸다
-        List<RecommendationDto> recommendationDtos = pr.findProductsOrderByRandom(category.getId(), randomSeed).stream().map((entity)-> RecommendationDto.of(entity)).toList();
+        // 2. 해당 대분류-중분류 카테고리에 해당하는 아이템을 인기순으로 최대 10개까지 보낸다
+        List<RecommendationDto> recommendationDtos = pr.findRelatedProductsOrderByLike(category.getCat1(), category.getCat2()).stream().map((entity)-> RecommendationDto.of(entity)).toList();
         return recommendationDtos;
     }
 }
