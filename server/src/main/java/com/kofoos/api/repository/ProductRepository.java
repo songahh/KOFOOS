@@ -39,8 +39,49 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("update Product p set p.like = p.like - 1 where p.id = :id")
     void DownLike(int id);
 
-    @Query(value="select * from product where category_id = :category_id order by RAND(:seed) limit 10", nativeQuery = true)
-    List<Product> findProductsOrderByRandom(int category_id, int seed);
+    @Query("select p from Product p " +
+            "join fetch p.image " +
+            "join fetch p.productMaterials pm " +
+            "left join fetch pm.dislikedMaterial " +
+            "join fetch p.category c " +
+            "where c.cat1 = :cat1 and c.cat2 = :cat2 " +
+            "order by p.like desc " +
+            "limit 10 ")
+    List<Product> findRelatedProductsOrderByLike(String cat1, String cat2);
+
+    @Query("select p from Product p " +
+            "join fetch p.image " +
+            "join fetch p.productMaterials pm " +
+            "left join fetch pm.dislikedMaterial dm " +
+            "join fetch p.category c " +
+            "where c.cat1 = :cat1 and c.cat2 = :cat2 and " +
+            "   dm.id not in ( " +
+            "       select udm.id " +
+            "       from UserDislikesMaterial udm " +
+            "       join udm.user u " +
+            "       where u.deviceId = :deviceId " +
+            "   ) " +
+            "order by p.like desc " +
+            "limit 10 ")
+    List<Product> findRelatedProductsOrderByLikeWithAllergyFiltering(String cat1, String cat2, String deviceId);
+
+
+    @Query("select p from Product p " +
+            "join fetch p.image " +
+            "join fetch p.editorProductsLists epl " +
+            "join fetch epl.editorRecommendationArticle era " +
+            "where era.id = :rArticleId " +
+            "order by p.id " +
+            "limit 5 ")
+    List<Product> findProductsByArticleId(int rArticleId);
+
+    @Query("select p from Product p " +
+            "join fetch p.image " +
+            "join fetch p.productMaterials pm " +
+            "left join fetch pm.dislikedMaterial " +
+            "order by coalesce(p.like,0)*0.7 + coalesce(p.hit)*0.3 desc " +
+            "limit 10 ")
+    List<Product> findHotProductsOrderByLikeAndHit();
 
     @Query("select p from Product p join fetch p.productMaterials join fetch p.image join p.category c on c.cat1 = :cat1 and c.cat2 = :cat2 and c.cat3 = :cat3")
     List<Product> findProductsByCategory(String cat1, String cat2,String cat3);

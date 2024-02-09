@@ -40,12 +40,12 @@ public class WishlistItem {
 
     private void setProduct(Product product) {
         this.product = product;
-        product.setWishlistItem(this);
+//        product.setWishlistItem(this);
     }
 
     private void setImage(Image image){
         this.image = image;
-        image.setWishlistItem(this);
+//        image.setWishlistItem(this);
     }
 
 
