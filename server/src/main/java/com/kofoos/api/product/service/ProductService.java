@@ -25,6 +25,7 @@ public class ProductService {
         Optional<Product> optional = productRepository.findProductByBarcode(barcode);
         if(optional.isEmpty()){
             ProductDetailDto product = ProductDetailDto.builder()
+                    .name("-")
                     .build();
             return product;
         }
