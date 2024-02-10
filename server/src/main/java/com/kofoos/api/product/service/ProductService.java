@@ -24,7 +24,9 @@ public class ProductService {
         System.out.println("barcode = " + barcode);
         Optional<Product> optional = productRepository.findProductByBarcode(barcode);
         if(optional.isEmpty()){
-            throw new EntityNotFoundException();
+            ProductDetailDto product = ProductDetailDto.builder()
+                    .build();
+            return product;
         }
         Product product = optional.get();
         product.addHit();
