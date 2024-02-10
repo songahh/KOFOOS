@@ -13,13 +13,14 @@ class MyPageNotifier with ChangeNotifier {
     fetchMyPageInfo(14); // 유저 ID는 동적으로 설정해야 함
   }
 
-  void fetchMyPageInfo(int userId) async
+  void fetchMyPageInfo(int userId) async {
     try {
       myPageInfo = await _api.fetchMyPageInfo(userId);
+      print('데이터 로드 성공: $myPageInfo'); // 성공적으로 데이터 로드 시 콘솔에 출력
       notifyListeners();
     } catch (e) {
       // 에러 처리
-      print(e);
+      print('데이터 로드 실패: $e'); // 데이터 로드 실패 시 에러 메시지 출력
     }
   }
 
