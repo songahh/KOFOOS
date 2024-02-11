@@ -18,11 +18,11 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
 
 
-    @Query("select distinct p from Product p join fetch p.image join fetch p.productMaterials where p.barcode = :barcode")
+    @Query("select distinct p from Product p join fetch p.image left join fetch p.productMaterials where p.barcode = :barcode")
     Optional<Product> findProductByBarcode(String barcode);
 
 
-    @Query("select distinct p from Product p join fetch p.image join fetch p.productMaterials where p.itemNo = :itemNo")
+    @Query("select distinct p from Product p join fetch p.image left join fetch p.productMaterials where p.itemNo = :itemNo")
     Optional<Product> findProductByItemNo(String itemNo);
 
     @Modifying
@@ -45,9 +45,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("select p from Product p join fetch p.productMaterials join fetch p.image join p.category c on c.cat1 = :cat1 and c.cat2 = :cat2 and c.cat3 = :cat3")
     List<Product> findProductsByCategory(String cat1, String cat2,String cat3);
 
-    @Query("select p from Product p join fetch p.productMaterials join fetch p.image join p.category on p.category.id = :id ORDER BY p.like")
+    @Query("select p from Product p left join fetch p.productMaterials join fetch p.image join p.category on p.category.id = :id ORDER BY p.like")
     List<Product> findProductsOrderByLike(int id);
-    @Query("select p from Product p join fetch  p.productMaterials join fetch p.image join p.category on p.category.id = :id ORDER BY p.hit")
+    @Query("select p from Product p left join fetch p.productMaterials join fetch p.image join p.category on p.category.id = :id ORDER BY p.hit")
     List<Product> findProductsOrderByHit(int id);
 
     @Modifying
