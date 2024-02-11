@@ -10,6 +10,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: Colors.white,
       leadingWidth: 120.0,
       leading: Builder(
         builder: (BuildContext context) {

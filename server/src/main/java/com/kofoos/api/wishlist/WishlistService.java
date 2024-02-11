@@ -12,11 +12,10 @@ public interface WishlistService {
 
     void moveItems(List<Integer> items, int wishlistFolderId);
 
-    void cancel(int productId, String deviceId);
+    void cancel(List<Integer> itemIds);
 
 
-    void check(int itemId, int bought);
-
+   
     void create(String folderName, String deviceId);
 
     void delete(Integer folderId, String deviceId);
@@ -24,4 +23,6 @@ public interface WishlistService {
     List<FolderDto> findFolderList(String deviceId);
 
     List<ProductDto> findFolder(int folderId);
+
+    void check(List<Integer> itemIds, int bought);
 }

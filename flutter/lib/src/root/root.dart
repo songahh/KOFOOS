@@ -16,13 +16,13 @@ class Root extends GetView<RootController> {
     return WillPopScope(
       onWillPop: controller.onWillPop,
       child: Obx(
-        () => Scaffold(
+            () => Scaffold(
+          backgroundColor: Colors.white,
           appBar: MyAppBar(),
           body: IndexedStack(
             index: controller.rootPageIndex.value,
             children: [
               Navigator(
-                // key: controller.navigatorKey,
                 key: UniqueKey(),
                 onGenerateRoute: (routeSettings) {
                   return MaterialPageRoute(
@@ -43,36 +43,44 @@ class Root extends GetView<RootController> {
               const Mypage(),
             ],
           ),
-          bottomNavigationBar: BottomNavigationBar(
+          bottomNavigationBar: controller.isEditing.isTrue
+              ? null // isEditing가 true일 때는 바텀 네비게이션 바를 표시하지 않습니다.
+              : BottomNavigationBar(
+            backgroundColor: Colors.white,
             currentIndex: controller.rootPageIndex.value,
             showSelectedLabels: false,
             showUnselectedLabels: false,
             onTap: controller.changeRootPageIndex,
             items: const [
               BottomNavigationBarItem(
+                backgroundColor: Colors.white,
                 icon: Icon(Icons.home, color: Color(0xffCACACA)),
                 label: 'home',
-                activeIcon: Icon(Icons.home, color: Colors.black),
+                activeIcon: Icon(Icons.home, color: Color(0xff343F56)),
               ),
               BottomNavigationBarItem(
+                backgroundColor: Colors.white,
                 icon: Icon(Icons.search, color: Color(0xffCACACA)),
                 label: 'search',
-                activeIcon: Icon(Icons.search, color: Colors.black),
+                activeIcon: Icon(Icons.search, color: Color(0xff343F56)),
               ),
               BottomNavigationBarItem(
+                backgroundColor: Colors.white,
                 icon: Icon(Icons.camera_alt, color: Color(0xffCACACA)),
                 label: 'camera',
-                activeIcon: Icon(Icons.camera_alt, color: Colors.black),
+                activeIcon: Icon(Icons.camera_alt, color: Color(0xff343F56)),
               ),
               BottomNavigationBarItem(
+                backgroundColor: Colors.white,
                 icon: Icon(Icons.favorite, color: Color(0xffCACACA)),
                 label: 'wishlist',
-                activeIcon: Icon(Icons.favorite, color: Colors.black),
+                activeIcon: Icon(Icons.favorite, color: Color(0xff343F56)),
               ),
               BottomNavigationBarItem(
+                backgroundColor: Colors.white,
                 icon: Icon(Icons.person, color: Color(0xffCACACA)),
                 label: 'mypage',
-                activeIcon: Icon(Icons.person, color: Colors.black),
+                activeIcon: Icon(Icons.person, color: Color(0xff343F56)),
               ),
             ],
           ),
