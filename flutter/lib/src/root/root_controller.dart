@@ -9,8 +9,16 @@ class RootController extends GetxController {
   RxBool isMultiplePageOpen = false.obs;
   DateTime? currentBackPressTime;
 
+
+  var isEditing = false.obs; // 편집 모드 상태를 관리하는 Observable 변수
+
+  void toggleEditing() {
+    isEditing.value = !isEditing.value; // 편집 모드 상태를 토글합니다.
+  }
+
   void changeRootPageIndex(int index) {
     rootPageIndex(index);
+    print("Current Root Page Index: ${rootPageIndex.value}");
   }
 
   Future<bool> onWillPop() async {

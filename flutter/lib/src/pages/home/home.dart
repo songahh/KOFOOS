@@ -44,13 +44,13 @@ class Home extends StatelessWidget {
                 ),
               );
             }
-          },
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 300,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.contain,
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: 300,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover,
                 image: AssetImage('assets/editor/e$index.jpg'),
               ),
             ),

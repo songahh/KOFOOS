@@ -1,5 +1,7 @@
 package com.kofoos.api.User;
 
+import com.kofoos.api.User.dto.ProductDto;
+import com.kofoos.api.entity.Product;
 import com.kofoos.api.repository.HistoryRepository;
 import com.kofoos.api.repository.UserDislikesMaterialRepository;
 import com.kofoos.api.common.dto.HistoryDto;
@@ -104,16 +106,27 @@ public class UserService {
                 .collect(Collectors.toList());
 
         // 히스토리 변환 (최근 10개, 중복 제거)
-        List<HistoryDto> histories = historyRepository.findTop10ByUserIdOrderByViewTimeDesc(userId).stream()
+        List<ProductDto> products = historyRepository.findTop10ByUserIdOrderByViewTimeDesc(userId).stream()
                 .distinct()
-                .map(history -> HistoryDto.of(history))
+                .map(history -> {
+                    Product product = history.getProduct();
+                    String imageUrl = product.getImage() != null ? product.getImage().getImgUrl() : null; // Image 엔티티가 null이 아닐 경우 URL 추출
+                    return ProductDto.builder()
+                            .productItemNo(product.getItemNo())
+                            .productUrl(imageUrl)
+                            .build();
+                })
                 .collect(Collectors.toList());
 
-        List<String> products = histories.stream()
-                .map(historyDto -> historyDto.getProductUrl())
-                .collect(Collectors.toList());
+        return MyPageDto.builder()
+                .language(language)
+                .dislikedMaterials(dislikedMaterials)
+                .products(products) // ProductDto 리스트 전달
+                .build();
+    }
 
-        return new MyPageDto(language, dislikedMaterials, products);
+    public int getUserId(String deviceId){
+        return userRepository.findUserIdByDeviceId(deviceId).getId();
     }
 
 
