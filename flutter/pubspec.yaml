@@ -50,6 +50,10 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   image: ^4.1.6
   pytorch_lite: ^4.2.4
+  simple_barcode_scanner:
+    git:
+      url: https://github.com/ms-7365/simple_barcode_scanner.git
+      ref: main
 
 dev_dependencies:
   flutter_test:

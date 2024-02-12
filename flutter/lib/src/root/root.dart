@@ -7,19 +7,41 @@ import 'package:kofoos/src/pages/home/home.dart';
 import 'package:kofoos/src/pages/camera/camera.dart';
 import 'package:kofoos/src/pages/wishlist/wishlist.dart';
 import 'package:kofoos/src/root/root_controller.dart';
+import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 class Root extends GetView<RootController> {
   Root({Key? key}) : super(key: key);
 
+  Widget _cameraTemp(BuildContext context) {
+
+    return Center(
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const Camera()),
+          );
+        },
+        child: Text('Temp'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
-      onWillPop: controller.onWillPop,
+      onWillPop: () async {
+        bool canPop = controller.onBack();
+        return !canPop;
+      },
+      //
       child: Obx(
             () => Scaffold(
           backgroundColor: Colors.white,
           appBar: MyAppBar(),
-          body: IndexedStack(
+          body: LazyLoadIndexedStack(
             index: controller.rootPageIndex.value,
             children: [
               Navigator(
@@ -38,7 +60,7 @@ class Root extends GetView<RootController> {
                   );
                 },
               ),
-              const Camera(),
+              Camera(),
               const Wishlist(),
               const Mypage(),
             ],
@@ -50,7 +72,16 @@ class Root extends GetView<RootController> {
             currentIndex: controller.rootPageIndex.value,
             showSelectedLabels: false,
             showUnselectedLabels: false,
-            onTap: controller.changeRootPageIndex,
+            onTap: (index) {
+              if (index == 2) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Camera()),
+                );
+              } else {
+                controller.changeRootPageIndex(index);
+              }
+            },
             items: const [
               BottomNavigationBarItem(
                 backgroundColor: Colors.white,
