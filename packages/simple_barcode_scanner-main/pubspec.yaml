@@ -25,6 +25,8 @@ dependencies:
   path: ^1.8.2
   #checking permissions
   permission_handler: ^11.2.0
+  kofoos:
+    path: ../flutter/
 dev_dependencies:
   flutter_test:
     sdk: flutter
