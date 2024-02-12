@@ -1,14 +1,10 @@
 package com.kofoos.api.User;
 
 import com.kofoos.api.User.dto.ProductDto;
-import com.kofoos.api.entity.Product;
+import com.kofoos.api.entity.*;
 import com.kofoos.api.repository.HistoryRepository;
 import com.kofoos.api.repository.UserDislikesMaterialRepository;
-import com.kofoos.api.common.dto.HistoryDto;
 import com.kofoos.api.User.dto.MyPageDto;
-import com.kofoos.api.entity.DislikedMaterial;
-import com.kofoos.api.entity.User;
-import com.kofoos.api.entity.UserDislikesMaterial;
 import com.kofoos.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -82,7 +78,6 @@ public class UserService {
             userDislikesMaterialsRepo.save(newUserDislikesMaterial);
         }
     }
-
 
 
     //회원 삭제
