@@ -34,67 +34,61 @@ class _SearchProductPageState extends State<SearchProductPage> {
       future: data,
       builder: (context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return Text('Error');
+          return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
           var products = snapshot.data as List<dynamic>;
-
-          return Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    color: Colors.white,
-                    child: Text(
-                      ' Products(${products.length})',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: NotificationListener<ScrollNotification>(
-                      onNotification: (ScrollNotification scrollInfo) {
-                        if (scrollInfo.metrics.pixels ==
-                            scrollInfo.metrics.maxScrollExtent) {
-                          setState(() {
-                            visibleItemCount =
-                                (visibleItemCount + 15).clamp(0, products.length);
-                          });
-                        }
-                        return false;
-                      },
-                      child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
+          var length = products.length;
+          return Material(
+            child: Stack(
+              children: [
+                NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollInfo) {
+                    if (scrollInfo.metrics.pixels ==
+                        scrollInfo.metrics.maxScrollExtent) {
+                      setState(() {
+                        visibleItemCount =
+                            (visibleItemCount + 15).clamp(0, products.length);
+                      });
+                    }
+                    return false;
+                  },
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Text(
+                          'Product($length)',
+                          style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black
+                          ),),
+                        SizedBox(height: 30),
+                        Center(
+                          child: Wrap(
+                            spacing: 8.0,
+                            runSpacing: 4.0,
+                            children: products
+                                .sublist(
+                                0, visibleItemCount.clamp(0, products.length))
+                                .map((product) => _product(context, product))
+                                .toList(),
+                          ),
                         ),
-                        itemCount: visibleItemCount,
-                        itemBuilder: (context, index) {
-                          return _product(context, products[index]);
-                        },
-                      ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-              // 추가된 부분
-              Positioned(
-                child: BackButtonWidget(),
-              ),
-            ],
+                ),
+                BackButtonWidget(),
+              ],
+            ),
           );
         }
         return Text('Error');
       },
     );
   }
-
-
 }
 
 Widget _product(BuildContext context, dynamic item) {
@@ -111,15 +105,23 @@ Widget _product(BuildContext context, dynamic item) {
       );
     },
     child: Container(
-      margin: const EdgeInsets.all(8),
-      width: 100,
-      height: 100,
+      width: 120,
+      height: 150,
+      margin: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 7,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(5.0),
-        child: Image.network(
-          httpImgUrl,
-          fit: BoxFit.cover,
-        ),
+        borderRadius: BorderRadius.circular(8),
+        child: Image.network(httpImgUrl, fit: BoxFit.cover),
       ),
     ),
   );
