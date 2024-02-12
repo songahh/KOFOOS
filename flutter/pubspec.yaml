@@ -39,6 +39,10 @@ dependencies:
   change_app_package_name: ^1.1.0
   animation_list: ^2.2.1
   dio: ^4.0.0
+  http: ^0.13.3
+  device_info: ^2.0.3
+  provider: ^6.0.1
+  cached_network_image: ^3.0.0
   animations: ^2.0.0
   flutter_vision: ^1.1.4
   image_picker: ^1.0.7
@@ -46,7 +50,9 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   image: ^4.1.6
   pytorch_lite: ^4.2.4
-  cached_network_image: ^3.2.0
+  simple_barcode_scanner:
+    path: ../packages/simple_barcode_scanner-main/
+  lazy_load_indexed_stack: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -74,9 +80,7 @@ flutter:
   assets:
     - assets/icon/
     - assets/logo/
-    - assets/editor/carousel/
-    - assets/editor/content/
-    - assets/editor/related_products/
+    - assets/editor/
     - assets/ranking/
     - assets/test/
     - assets/ai/
