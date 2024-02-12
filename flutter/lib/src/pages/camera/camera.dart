@@ -1,7 +1,11 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:kofoos/src/pages/home/home.dart';
 import 'package:pytorch_lite/pytorch_lite.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
+import '../../root/root_controller.dart';
 import '../search/api/search_api.dart';
 import '../search/search_detail_page.dart';
 import 'box_widget.dart';
@@ -23,25 +27,36 @@ class _CameraState extends State<Camera> {
   String? classification;
   Duration? classificationInferenceTime;
 
-  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
       backgroundColor: Colors.black,
-      body: Stack(
-        children: <Widget>[
-          // Camera View
-          CameraView(resultsCallback, resultsCallbackClassification),
-
-          // Bounding boxes
-          boundingBoxes2(results),
-
-        ],
+      body: Center(
+        child: Stack(
+          children: <Widget>[
+            // Camera View
+            CameraView(resultsCallback, resultsCallbackClassification),
+            // Bounding boxes
+            boundingBoxes2(results),
+          ],
+        ),
       ),
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(bottom: 20.0),
+        child: FloatingActionButton(  // 카메라 전환 버튼
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => SimpleBarcodeScannerPage()),
+            );
+          },
+          child: Icon(Icons.barcode_reader),
+          backgroundColor: Color(0xffECECEC),
+          foregroundColor: Color(0xff343F56),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
@@ -67,45 +82,46 @@ class _CameraState extends State<Camera> {
       data = await searchApi.getProductDetail(itemNo);
     }
 
-  if (showMoreDetail && data != null) {
-    final snackBar = SnackBar(
-      content: Container(
-        height: 250.0,
-        child: Center(
-          child: GestureDetector(
-            onTap: (){
-              CameraController? cameraController;
-              cameraController!.stopImageStream();
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                  builder: (context) => ProductDetailView(
-                itemNo: data['itemNo'],
-              ),
-              )).then((value) =>
-                cameraController?.startImageStream((image) {
-                  onLatestImageAvailable;})
-              );
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Is this the right product?", style: TextStyle(fontSize: 20.0),),
-                Image.network(data['imgurl'],height: 200),
+    if (showMoreDetail && data != null) {
+      final snackBar = SnackBar(
+        content: Container(
+          height: 250.0,
+          child: Center(
+            child: GestureDetector(
+              onTap: (){
+                CameraController? cameraController;
+                // cameraController!.stopImageStream();
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                // RootController.to.goToProductDetail(data['itemNo']);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetailView(
+                        itemNo: data['itemNo'],
+                      ),
+                    )).then((value) =>
+                    cameraController?.startImageStream((image) {
+                      onLatestImageAvailable;})
+                );
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Is this the right product?", style: TextStyle(fontSize: 20.0),),
+                  Image.network(data['imgurl'],height: 200),
                 ],
               ),
+            ),
           ),
-          ),
-      ),
-      duration: Duration(seconds: 3),
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(24.0),
-      ),
-  );
+        ),
+        duration: Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24.0),
+        ),
+      );
 
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
