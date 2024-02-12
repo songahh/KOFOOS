@@ -15,6 +15,7 @@ class HomeApi {
     ),
   );
 
+  // 데이
   Future<List<String>> getRanking(int barcode) async {
     try {
       var response = await homeDio.get('/detail/$barcode');
@@ -25,27 +26,4 @@ class HomeApi {
     }
   }
 
-  Future<List<dynamic>> getRecommendHot() async {
-    try {
-      var response = await homeDio.get('/recommend/hot');
-      List<dynamic> recommendHotList = response.data;
-      return recommendHotList;
-    } catch (e) {
-      throw Exception('getRecommendHot error: $e');
-    }
-  }
-
-  Future<List<dynamic>> getRecommendHistory() async {
-    try {
-      var response = await homeDio.post(
-        '/recommend/history',
-        // deviceId 수정 필요
-        data: {'deviceId': 'rayeon'},
-      );
-      List<dynamic> recommendHistoryList = response.data;
-      return recommendHistoryList;
-    } catch (e) {
-      throw Exception('getRecommendHot error: $e');
-    }
-  }
 }
