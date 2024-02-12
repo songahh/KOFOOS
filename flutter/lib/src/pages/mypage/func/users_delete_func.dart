@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../api/mypage_api.dart';
 
-void usersDeleteFunc(BuildContext context, int userId) {
+void usersDeleteFunc(BuildContext context, String deviceId) {
   final api = MyPageApi(); // MyPageApi 인스턴스 생성
   showDialog(
     context: context,
@@ -26,7 +26,7 @@ void usersDeleteFunc(BuildContext context, int userId) {
             ),
             onPressed: () async {
               try {
-                await api.deleteUser(userId); // 회원 탈퇴 API 호출
+                await api.deleteUser(deviceId); // 회원 탈퇴 API 호출
                 // 회원 탈퇴 성공 후 감사 메시지 표시
                 Navigator.of(context).pop(); // 현재 대화 상자 닫기
                 _showThankYouDialog(context); // 감사 메시지 대화 상자 표시
