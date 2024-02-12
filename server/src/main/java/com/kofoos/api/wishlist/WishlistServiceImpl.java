@@ -72,40 +72,16 @@ public class WishlistServiceImpl implements WishlistService {
         }
     }
 
-    @Override
-    public void cancel(int id, String deviceId) {
-        User currentUser = userRepository.findUserIdByDeviceId(deviceId);
-
-        String folderName = DEFAULT;
-
-        WishlistFolder folder = folderRepository.findFolderByUserIdAndName(currentUser.getId(), folderName);
-
-        Optional<Product> productById = productRepository.findById(id);
-        Product currentProduct = productById.orElseThrow(() -> new IllegalArgumentException("Product not found"));
-
-
-        // WishlistItem 찾기
-        Optional<WishlistItem> wishlistItem = wishlistRepository.findWishlistItemByWishlistFolderIdAndProductId(folder.getId(), currentProduct.getId());
-
-        // 존재하는 경우 삭제
-        if (!wishlistItem.isPresent()) {
-            System.out.println("sorry!!");
-        }
-        wishlistRepository.delete(wishlistItem.get());
-    }
-
-
     @Transactional
     @Override
-    public void check(int wishlistItemId, int bought) {
-        // wishlist_item 테이블을 itemId로 조회해서 현재 bought값으로 변경
+    public void cancel(List<Integer> itemIds) {
+        for(Integer itemId: itemIds){
+            wishlistRepository.deleteById(itemId);
 
-
-        int result = wishlistRepository.updateBought( wishlistItemId, bought);
-
-        System.out.println("업데이트 결과: "+result);
-       // return result;
+        }
     }
+
+
 
     @Override
     public void create(String folderName, String deviceId) {
@@ -147,6 +123,19 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     public List<ProductDto> findFolder(int folderId) {
         return wishlistRepository.findProductsByFolderId(folderId);
+    }
+
+    @Transactional
+    @Override
+
+    public void check(List<Integer> itemIds, int bought) {
+        for(int wishlistItemId: itemIds){
+
+            int result = wishlistRepository.updateBought( wishlistItemId, bought);
+
+            System.out.println("업데이트 결과: "+result);
+        }
+
     }
 
 

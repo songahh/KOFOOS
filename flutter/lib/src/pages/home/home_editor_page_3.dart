@@ -12,6 +12,7 @@ class HomeEditorPage3 extends StatelessWidget {
           SingleChildScrollView(
             child: Column(
               children: [
+
                 Container(
                   child: Image.asset('assets/editor/e2.jpg'),
                 ),
@@ -22,6 +23,7 @@ class HomeEditorPage3 extends StatelessWidget {
                   child: Image.asset('assets/editor/e2.jpg'),
                 ),
               ],
+
             ),
           ),
           BackButtonWidget(),
