@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kofoos/src/pages/search/api/search_api.dart';
 import 'package:kofoos/src/pages/search/search_category_page.dart';
+import 'package:kofoos/src/pages/search/search_product_page.dart';
 
 class Search extends StatefulWidget {
   Search({Key? key}) : super(key: key);
@@ -27,7 +28,6 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
     _controller.forward();
   }
 
-
   Widget _rankingTitle(BuildContext context) {
     return Container(
       height: 70,
@@ -42,7 +42,7 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
               size: 32,
             ),
             Text(
-              ' Weekly Ranking',
+              ' Daily Ranking',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -94,20 +94,27 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
 
     // 대분류 이름
     String categoryName = categoryList[index];
-    // 랭킹 목록(중분류)
+    // 중분류 이름(랭킹 목록)
     String subCategoryName = subCategoryList[index];
 
     if (index == 0 || index == 1 || index == 2) {
       // 랭킹 1, 2, 3위
       return GestureDetector(
         onTap: () {
-          print('랭킹 ${index + 1} 클릭: $categoryName');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SearchProductPage(
+                  cat1: categoryName, cat2:subCategoryName,
+                  order: " "
+              ),
+            ),
+          );
         },
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 60.0,
           margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-          // 좌우 마진 추가
           decoration: BoxDecoration(
             color: index == 0
                 ? Colors.amber[400]
@@ -140,7 +147,7 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Text(
-                    categoryName,
+                    subCategoryName,
                     style: TextStyle(
                       fontSize: 18.0,
                       color: Colors.black,
@@ -157,8 +164,15 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
       // 랭킹 4~7위
       return GestureDetector(
         onTap: () {
-          print('랭킹 ${index + 1} 클릭: $categoryName');
-        },
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SearchProductPage(
+                  cat1: categoryName, cat2:subCategoryName,
+                  order: " "
+              ),
+            ),
+          );        },
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 60.0,
@@ -196,7 +210,7 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Text(
-                    categoryName,
+                    subCategoryName,
                     style: TextStyle(
                       fontSize: 16.0,
                       color: Colors.black,
@@ -207,9 +221,7 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
               ),
             ],
           ),
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         ),
-
       );
     }
   }

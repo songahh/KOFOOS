@@ -1,14 +1,9 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pytorch_lite/pigeon.dart';
 
 import '../../root/root_controller.dart';
-import 'ImageScan.dart';
 import 'api/model/FolderDto.dart';
 import 'api/wishlist_api.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 class Wishlist extends StatefulWidget {
   const Wishlist({Key? key}) : super(key: key);
@@ -25,9 +20,6 @@ class _WishlistState extends State<Wishlist> {
   WishlistApi wishlistApi = WishlistApi();
   int _itemCount = 0;
   bool _isEditing = false; // 편집 모드 상태를 관리하는 변수
-  List<String> _imagePaths = []; // 이미지 파일 경로를 저장할 리스트
-  ImageScan imageScan = ImageScan();
-
 
   @override
   void initState() {
@@ -47,8 +39,6 @@ class _WishlistState extends State<Wishlist> {
     } catch (e) {
       print('폴더 목록 가져오기 실패: $e');
     }
-
-    await imageScan.initializeModel(); // 모델 초기화
   }
 
   Future<void> updateWishlistBought() async {
@@ -88,61 +78,6 @@ class _WishlistState extends State<Wishlist> {
   }
 
 
-
-  Future<void> _pickImages() async {
-    final ImagePicker picker = ImagePicker();
-    final List<XFile>? images = await picker.pickMultiImage();
-
-
-
-    if (images != null) {
-      List<File> imageFiles = images.map((xFile) => File(xFile.path)).toList();
-      List<ResultObjectDetection?> results = await imageScan.runObjectDetectionYoloV8(imageFiles);
-      // 여기에서 results를 처리합니다. 예를 들어 콘솔에 출력할 수 있습니다.
-      for (var result in results) {
-        if (result != null) {
-          print("진단 객체 ${result.className} 점수: ${result.score}");
-        } else {
-          print("실패용");
-        }
-      }
-    }
-  }
-
-  Widget _buildPhotoUploadWidget() {
-    // 이미지 업로드 위젯
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Text(
-            '이미지를 업로드하여',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16.0,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 8.0),
-          Text(
-            'AI가 진단하면 여기에 상품이 보여집니다.\n파일 업로드 아이콘',
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: _pickImages,
-            child: Text('이미지 업로드'),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildTabBar() {
     return TabBar(
       tabs: folderList.map((folder) => Tab(text: folder.folderName)).toList(),
@@ -156,12 +91,16 @@ class _WishlistState extends State<Wishlist> {
         _selectedItems.clear();
       }
     });
+    // RootController의 isEditing 상태도 업데이트
     RootController.to.isEditing.value = _isEditing;
 
+    // 편집 모드를 종료하면서 변경된 사항이 있다면 데이터를 새로고침
     if (!_isEditing) {
+      // 변경사항을 서버에 반영하는 로직 (필요한 경우)
       if (_selectedItems.isNotEmpty) {
         await updateWishlistBought(); // 선택된 아이템을 서버에 업데이트
       }
+      // 데이터를 새로고침
       await fetchWishlistFolders(); // 폴더 목록을 다시 가져옴
     }
   }
@@ -169,8 +108,8 @@ class _WishlistState extends State<Wishlist> {
   Widget _buildGridItem(FolderDto folder, int index) {
     final int wishlistItemId = folder.items[index].wishlistItemId;
     final bool isBought = folder.items[index].bought == 1;
+    // isSelected를 정의합니다. 여기서 _selectedItems는 선택된 아이템의 ID를 담고 있는 리스트입니다.
     final bool isSelected = _selectedItems.contains(wishlistItemId);
-
     return GestureDetector(
       onTap: () {
         if (_isEditing) {
@@ -262,31 +201,44 @@ class _WishlistState extends State<Wishlist> {
   Widget _wishlistWidget(BuildContext context) {
     return Column(
       children: [
-
-        _buildPhotoUploadWidget(),
-        Stack(
-          children: [
-            Card(
-              elevation: 2.0,
-              margin: EdgeInsets.all(8.0),
-              child: DefaultTabController(
-                length: folderList.length,
-                initialIndex: 0,
-                child: Column(
-                  children: [
-                    _buildTabBar(),
-                    _buildItemCountAndEditButton(),
-                    Container(
-                      height: 900,
-                      child: _buildTabBarView(),
-                    ),
-                  ],
+        Container(
+          height: 70,
+          color: Color(0xff343F56),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.favorite,
+                  color: Colors.white,
+                  size: 30,
                 ),
-              ),
+                Text(
+                  ' Wishlist',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
-          ],
-        )
-
+          ),
+        ),
+        DefaultTabController(
+          length: folderList.length,
+          initialIndex: 0,
+          child: Column(
+            children: [
+              _buildTabBar(), // TabBar
+              _buildItemCountAndEditButton(), // Add this line
+              Container(
+                height: 900,
+                child: _buildTabBarView(), // TabBarView
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -318,6 +270,7 @@ class _WishlistState extends State<Wishlist> {
   Widget _buildEditingBottomBar(BuildContext context) {
     return BottomAppBar(
       color: Colors.black,
+      height: 100,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -375,6 +328,7 @@ class _WishlistState extends State<Wishlist> {
           ],
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       bottomNavigationBar: Obx(
             () => Visibility(
           visible: rootController.isEditing.isTrue,
@@ -384,5 +338,4 @@ class _WishlistState extends State<Wishlist> {
       ), // Obx를 사용하여 BottomNavigationBar 추가
     );
   }
-
 }
