@@ -1,26 +1,34 @@
 // my_page_notifier.dart
 import 'package:flutter/material.dart';
+import '../../common/device_controller.dart';
 import 'dto/my_page_dto.dart';
 import 'api/mypage_api.dart';
+import 'package:get/get.dart';
 
 
 //상태 변경 반영용
 class MyPageNotifier with ChangeNotifier {
+  final DeviceController deviceController = Get.find<DeviceController>();
   MyPageDto? myPageInfo;
   final MyPageApi _api = MyPageApi();
 
   MyPageNotifier() {
-    fetchMyPageInfo(14); // 유저 ID는 동적으로 설정해야 함
+    initializeDeviceId(); // 객체 생성 후 deviceId 초기화
   }
 
-  void fetchMyPageInfo(int userId) async {
+  // deviceId를 비동기적으로 초기화하는 메서드
+  Future<void> initializeDeviceId() async {
+    String deviceId = deviceController.deviceId.value; // DeviceController에서 deviceId 가져오기
+    fetchMyPageInfo(deviceId); // 비동기적으로 deviceId를 설정한 후 API 호출
+  }
+
+  void fetchMyPageInfo(String deviceId) async {
     try {
-      myPageInfo = await _api.fetchMyPageInfo(userId);
-      print('데이터 로드 성공: $myPageInfo'); // 성공적으로 데이터 로드 시 콘솔에 출력
+      myPageInfo = await _api.fetchMyPageInfo(deviceId);
+      print('마이페이지 데이터 로드 성공: $myPageInfo');
       notifyListeners();
     } catch (e) {
-      // 에러 처리
-      print('데이터 로드 실패: $e'); // 데이터 로드 실패 시 에러 메시지 출력
+      print('마이페이지 데이터 로드 실패: $e');
     }
   }
 

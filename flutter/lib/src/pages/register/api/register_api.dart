@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
+import '../../../common/device_controller.dart';
 import '../../../root/root.dart';
 import '../func/show_consent_dialog.dart';
 import '../select_food.dart';
@@ -64,7 +65,10 @@ Future<void> checkUserRegistration(BuildContext context, String deviceId) async 
 // 선택된 음식들 db로 보내기
 Future<void> submitSelection(BuildContext context, List<Food> selectedFoods) async {
   print('Selected foods: $selectedFoods'); // 잘 들어갔는지 확인용
-  var url = '${baseUrl}14/dislikes'; // URL 재사용
+  final DeviceController deviceController = Get.find<DeviceController>();
+  String deviceId = deviceController.deviceId.value; // Getx를 통해 deviceId 값을 가져옴
+
+  var url = '${baseUrl}$deviceId/dislikes'; // URL 재사용
 
   try {
     var response = await dio.post(
@@ -78,9 +82,11 @@ Future<void> submitSelection(BuildContext context, List<Food> selectedFoods) asy
     if (response.statusCode == 200) {
       print('Disliked foods submitted successfully');
       // 다음 페이지로 이동
-      Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Root())); // Home으로 이동
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => Root()), // Home으로 이동
+            (Route<dynamic> route) => false, // 조건이 false를 반환하므로 이전의 모든 페이지를 제거
+      );
     } else {
       print('Failed to submit disliked foods');
     }
