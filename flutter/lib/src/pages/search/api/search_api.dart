@@ -6,7 +6,6 @@ class SearchApi {
   var searchDio = Dio(
     BaseOptions(
       baseUrl: "http://i10a309.p.ssafy.io:8080",
-      // baseUrl: "http://10.0.2.2:8080",
       connectTimeout: 5000,
       receiveTimeout: 5000,
       headers: {
@@ -57,12 +56,12 @@ class SearchApi {
     }
   }
 
-  Future<dynamic> getProductByBarcode(String barcode) async {
+  Future<List<dynamic>> getRecommendProducts(String productId) async {
     try {
-      final response = await searchDio.get('/products/detail/$barcode/reayeon');
-      return response.data;
+      final response = await searchDio.get('/recommend/product/$productId');
+      return List<dynamic>.from(response.data);
     } on DioError catch (e) {
-      throw Exception('getProductDetail error:$e');
+      throw Exception('getProduct error:$e');
     }
   }
 }
