@@ -4,10 +4,10 @@ import 'api/mypage_api.dart';
 
 // 사용자가 이전에 선택한 비선호 식재료 목록을 수정하는 페이지
 class DislikeFoodEditPage extends StatefulWidget {
-  final int userId; // 사용자 ID를 전달받기 위한 변수
+  final String deviceId; // 사용자 ID를 전달받기 위한 변수
 
   // 생성자를 통해 사용자 ID를 받습니다.
-  const DislikeFoodEditPage({Key? key, required this.userId}) : super(key: key);
+  const DislikeFoodEditPage({Key? key, required this.deviceId}) : super(key: key);
 
   @override
   _DislikeFoodEditPageState createState() => _DislikeFoodEditPageState();
@@ -28,7 +28,7 @@ class _DislikeFoodEditPageState extends State<DislikeFoodEditPage> {
   void _loadUserDislikedFoods() async {
     try {
       List<int> dislikedFoodsIds =
-          await _myPageApi.loadUserDislikedFoods(widget.userId);
+      await _myPageApi.loadUserDislikedFoods(widget.deviceId);
       setState(() {
         selectedFoods = foodList
             .where((food) => dislikedFoodsIds.contains(food.id))
@@ -123,9 +123,9 @@ class _DislikeFoodEditPageState extends State<DislikeFoodEditPage> {
       avatar: CircleAvatar(
         backgroundColor: Colors.transparent,
         child: Image.asset('assets/icon/${food.image}.png',
-            width: 20.0,
-            height: 20.0,
-            fit: BoxFit.cover,
+          width: 20.0,
+          height: 20.0,
+          fit: BoxFit.cover,
         ),
       ),
 
@@ -146,78 +146,78 @@ class _DislikeFoodEditPageState extends State<DislikeFoodEditPage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Column(
-              children: <Widget>[
-                const SizedBox(height: 70),
-                const Padding(
-                  padding: EdgeInsets.only(left: 40.0), // 왼쪽에 20 픽셀의 패딩을 추가
-                  child: Align(
-                    alignment: Alignment.centerLeft, // 텍스트를 왼쪽으로 정렬
-                    child: Text(
-                      "Update foods",
-                      style: TextStyle(
-                        fontSize: 30, // 폰트 크기 설정
-                        fontWeight: FontWeight.w600,
-                        // 추가적인 텍스트 스타일링 옵션
-                      ),
-                    ),
-                  ),
+        children: <Widget>[
+          const SizedBox(height: 70),
+          const Padding(
+            padding: EdgeInsets.only(left: 40.0), // 왼쪽에 20 픽셀의 패딩을 추가
+            child: Align(
+              alignment: Alignment.centerLeft, // 텍스트를 왼쪽으로 정렬
+              child: Text(
+                "Update foods",
+                style: TextStyle(
+                  fontSize: 30, // 폰트 크기 설정
+                  fontWeight: FontWeight.w600,
+                  // 추가적인 텍스트 스타일링 옵션
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 40.0), // 왼쪽에 20 픽셀의 패딩을 추가
-                  child: Align(
-                    alignment: Alignment.centerLeft, // 텍스트를 왼쪽으로 정렬
-                    child: Text(
-                      "you cannot eat ",
-                      style: TextStyle(
-                        fontSize: 28, // 폰트 크기 설정
-                        fontWeight: FontWeight.w600,
-                        // 추가적인 텍스트 스타일링 옵션
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: GridView.builder(
-                    padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 6,
-                      mainAxisSpacing: 6,
-                      childAspectRatio: 1.0,
-                    ),
-                    itemCount: foodList.length,
-                    itemBuilder: (context, index) {
-                      return SizedBox(
-                        width: gridItemSize,
-                        height: gridItemSize,
-                        child: foodButton(foodList[index]),
-                      );
-                    },
-                  ),
-                ),
-                if (selectedFoods.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Wrap(
-                      spacing: 8.0, // 칩 사이의 공간
-                      children: selectedFoods
-                          .map((food) => selectedFoodChip(food))
-                          .toList(),
-                    ),
-                  ),
-                Align(
-                  alignment: Alignment.bottomRight, // 우측 하단에 정렬
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 25, right: 40),
-                    child: ElevatedButton(
-                      onPressed: _submitSelection,
-                      child: const Text('Done'),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 55),
-              ],
+              ),
             ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 40.0), // 왼쪽에 20 픽셀의 패딩을 추가
+            child: Align(
+              alignment: Alignment.centerLeft, // 텍스트를 왼쪽으로 정렬
+              child: Text(
+                "you cannot eat ",
+                style: TextStyle(
+                  fontSize: 28, // 폰트 크기 설정
+                  fontWeight: FontWeight.w600,
+                  // 추가적인 텍스트 스타일링 옵션
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: GridView.builder(
+              padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 6,
+                mainAxisSpacing: 6,
+                childAspectRatio: 1.0,
+              ),
+              itemCount: foodList.length,
+              itemBuilder: (context, index) {
+                return SizedBox(
+                  width: gridItemSize,
+                  height: gridItemSize,
+                  child: foodButton(foodList[index]),
+                );
+              },
+            ),
+          ),
+          if (selectedFoods.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Wrap(
+                spacing: 8.0, // 칩 사이의 공간
+                children: selectedFoods
+                    .map((food) => selectedFoodChip(food))
+                    .toList(),
+              ),
+            ),
+          Align(
+            alignment: Alignment.bottomRight, // 우측 하단에 정렬
+            child: Padding(
+              padding: const EdgeInsets.only(top: 25, right: 40),
+              child: ElevatedButton(
+                onPressed: _submitSelection,
+                child: const Text('Done'),
+              ),
+            ),
+          ),
+          const SizedBox(height: 55),
+        ],
+      ),
     );
   }
 
@@ -225,7 +225,7 @@ class _DislikeFoodEditPageState extends State<DislikeFoodEditPage> {
   void _submitSelection() async {
     try {
       await _myPageApi.submitDislikedFoods(
-          widget.userId, selectedFoods.map((food) => food.id).toList());
+          widget.deviceId, selectedFoods.map((food) => food.id).toList());
       Navigator.pop(context,true); // 성공 시 이전 화면으로 돌아가기
     } catch (e) {
       print(e);

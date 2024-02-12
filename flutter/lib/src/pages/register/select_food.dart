@@ -249,6 +249,3 @@ List<Food> foodList = [
   Food(id: 19, name: 'mushroom', image: 'mushroom'),
   Food(id: 20, name: 'mustard', image: 'mustard'),
 ];
-
-// void main() => runApp(const MaterialApp(
-//     debugShowCheckedModeBanner: false, home: FoodSelectionPage()));

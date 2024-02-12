@@ -6,10 +6,12 @@ import 'package:kofoos/src/pages/mypage/api/mypage_api.dart';
 import 'package:kofoos/src/pages/mypage/dto/my_page_dto.dart';
 import 'package:kofoos/src/pages/mypage/update_materials_page.dart';
 import 'package:provider/provider.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../common/device_controller.dart';
 import '../register/select_food.dart';
+import 'func/mypage_history_func.dart';
 import 'mypage_notifier.dart';
+import 'package:get/get.dart';
 
 
 class Mypage extends StatefulWidget {
@@ -20,6 +22,25 @@ class Mypage extends StatefulWidget {
 }
 
 class _MypageState extends State<Mypage> {
+  final DeviceController deviceController = Get.find<DeviceController>(); // DeviceController 인스턴스 얻기
+
+  @override
+  Widget build(BuildContext context) {
+
+    // Provider를 사용하여 상태를 관리합니다.
+    return ChangeNotifierProvider<MyPageNotifier>(
+      create: (_) => MyPageNotifier(),
+      child: Consumer<MyPageNotifier>(
+        builder: (context, notifier, _) {
+          return Scaffold(
+            body: notifier.myPageInfo == null
+                ? const Center(child: CircularProgressIndicator())
+                : _myPageWidget(context, notifier.myPageInfo!),
+          );
+        },
+      ),
+    );
+  }
 
   Widget _historyCarouselWidget(List<ProductDto> products) {
     return SingleChildScrollView(
@@ -27,7 +48,7 @@ class _MypageState extends State<Mypage> {
       child: Row(
         children: products.map((productDto) => GestureDetector(
           onTap: () {
-            print('${productDto.productItemNo} 상품 상세보기 기능 추가 필요');
+            goToProductDetail(context, productDto.productItemNo);//제품 상세보기
           },
           child: Container(
             width: 125, // 이미지 컨테이너 너비 설정
@@ -49,6 +70,7 @@ class _MypageState extends State<Mypage> {
   Widget _myPageWidget(BuildContext context, MyPageDto info) {
     // Disliked Foods 섹션을 위한 위젯 구성
     Widget dislikedFoodsSection = _dislikedFoodsSection(info.dislikedMaterials);
+    String currentDeviceId = deviceController.deviceId.value;
 
     // History 섹션을 위한 위젯 구성
     Widget historySection = Container(
@@ -95,7 +117,7 @@ class _MypageState extends State<Mypage> {
                     onPressed: () {
                       // 유저 회원탈퇴 api
 
-                      usersDeleteFunc(context,29);
+                      usersDeleteFunc(context,currentDeviceId);
 
                     },
                     child: const Text(
@@ -167,10 +189,10 @@ class _MypageState extends State<Mypage> {
                 onPressed: () async {
                   final result = await Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => DislikeFoodEditPage(userId: 14)),
+                    MaterialPageRoute(builder: (context) => DislikeFoodEditPage(deviceId: currentDeviceId)),
                   );
                   if (result == true) {
-                    Provider.of<MyPageNotifier>(context, listen: false).fetchMyPageInfo(14);
+                    Provider.of<MyPageNotifier>(context, listen: false).fetchMyPageInfo(currentDeviceId);
                   }
                 },
                 child: const Text(
@@ -240,22 +262,7 @@ class _MypageState extends State<Mypage> {
   }
 
 
-  @override
-  Widget build(BuildContext context) {
-    // Provider를 사용하여 상태를 관리합니다.
-    return ChangeNotifierProvider<MyPageNotifier>(
-      create: (_) => MyPageNotifier(),
-      child: Consumer<MyPageNotifier>(
-        builder: (context, notifier, _) {
-          return Scaffold(
-            body: notifier.myPageInfo == null
-                ? const Center(child: CircularProgressIndicator())
-                : _myPageWidget(context, notifier.myPageInfo!),
-          );
-        },
-      ),
-    );
-  }
+
 
 
 }
