@@ -78,11 +78,13 @@ class HomeEditorPage1 extends StatelessWidget {
           SingleChildScrollView(
             child: Column(
               children: [
+
                 Container(
                   child: Image.asset('assets/editor/ec0.png'),
                 ),
                 _homeEditorRelatedGoodsWidget(context),
               ],
+
             ),
           ),
           BackButtonWidget(),
