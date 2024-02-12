@@ -1,5 +1,6 @@
-name: kofoos
-description: "KOFOOS"
+name: example
+description: Simple Barcode Scanner Package Example
+
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -11,15 +12,13 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # build by specifying --build-name and --build-number, respectively.
 # In Android, build-name is used as versionName while build-number used as versionCode.
 # Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-# In Windows, build-name is used as the major, minor, and patch parts
-# of the product and file versions while build-number is used as the build suffix.
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.2.4 <4.0.0'
+  sdk: ">=2.17.0 <3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -30,29 +29,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  # 필요한 디펜던시는 여기에 추가하세요
-  cupertino_icons: ^1.0.2
-  get: ^4.6.6
-  fluttertoast: ^8.2.4
-  carousel_slider: ^4.0.0
-  change_app_package_name: ^1.1.0
-  animation_list: ^2.2.1
-  dio: ^4.0.0
-  http: ^0.13.3
-  device_info: ^2.0.3
-  provider: ^6.0.1
-  cached_network_image: ^3.0.0
-  animations: ^2.0.0
-  flutter_vision: ^1.1.4
-  image_picker: ^1.0.7
-  camera: ^0.10.5+9
-  flutter_speed_dial: ^7.0.0
-  image: ^4.1.6
-  pytorch_lite: ^4.2.4
   simple_barcode_scanner:
-    path: ../packages/simple_barcode_scanner-main/
-  lazy_load_indexed_stack: ^1.1.0
+    path: ../
+  webview_flutter: ^3.0.4
+
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
 
 dev_dependencies:
   flutter_test:
@@ -77,13 +61,9 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  assets:
-    - assets/icon/
-    - assets/logo/
-    - assets/editor/
-    - assets/ranking/
-    - assets/test/
-    - assets/ai/
+  # assets:
+  #  - assets/barcode.html
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
