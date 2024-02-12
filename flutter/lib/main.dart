@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kofoos/src/common/device_controller.dart';
 import 'package:kofoos/src/pages/register/register.dart';
-import 'package:kofoos/src/root/root.dart';
 import 'package:kofoos/src/root/root_controller.dart';
 
 void main() {
@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'KOFOOS',
       initialBinding: BindingsBuilder(() {
+        Get.put(DeviceController());
         Get.put(RootController());
       }),
       theme: ThemeData(

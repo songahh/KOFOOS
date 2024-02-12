@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../common/device_controller.dart';
 import 'api/register_api.dart';
 import 'func/get_device_id.dart';
+import 'package:get/get.dart';
 
 class StartApp extends StatelessWidget {
   const StartApp({Key? key}) : super(key: key);
@@ -32,6 +34,10 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 2), () {
       // 로고 이미지가 2초간 표시된 후 동의 팝업을 표시합니다.
       getDeviceId().then((deviceId) {
+        // DeviceController 인스턴스를 얻고 deviceId를 설정
+        final deviceController = Get.find<DeviceController>();
+        deviceController.setDeviceId(deviceId);
+
         checkUserRegistration(context,deviceId);
       });
     });
