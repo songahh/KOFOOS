@@ -49,7 +49,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             "order by p.like desc ")
     List<Product> findRelatedProductsOrderByLike(String cat1, String cat2, Pageable pageable);
 
-    @Query("select p from Product p " +
+    @Query("select distinct(p) from Product p " +
             "join fetch p.image " +
             "join p.productMaterials pm " +
             "left join pm.dislikedMaterial dm " +
