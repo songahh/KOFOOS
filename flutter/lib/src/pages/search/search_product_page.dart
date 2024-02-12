@@ -39,7 +39,7 @@ class _SearchProductPageState extends State<SearchProductPage> {
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
           var products = snapshot.data as List<dynamic>;
-
+          var length = products.length;
           return Material(
             child: Stack(
               children: [
@@ -57,16 +57,24 @@ class _SearchProductPageState extends State<SearchProductPage> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Text('Product'),
+                        Text(
+                          'Product($length)',
+                          style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black
+                          ),),
                         SizedBox(height: 30),
-                        Wrap(
-                          spacing: 8.0,
-                          runSpacing: 4.0,
-                          children: products
-                              .sublist(
-                              0, visibleItemCount.clamp(0, products.length))
-                              .map((product) => _product(context, product))
-                              .toList(),
+                        Center(
+                          child: Wrap(
+                            spacing: 8.0,
+                            runSpacing: 4.0,
+                            children: products
+                                .sublist(
+                                0, visibleItemCount.clamp(0, products.length))
+                                .map((product) => _product(context, product))
+                                .toList(),
+                          ),
                         ),
                       ],
                     ),
@@ -99,7 +107,22 @@ Widget _product(BuildContext context, dynamic item) {
     child: Container(
       width: 120,
       height: 150,
-      child: Image.network(httpImgUrl),
+      margin: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 7,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Image.network(httpImgUrl, fit: BoxFit.cover),
+      ),
     ),
   );
 }
