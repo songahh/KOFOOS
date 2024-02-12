@@ -56,4 +56,13 @@ class SearchApi {
       throw Exception('getProduct error:$e');
     }
   }
+
+  Future<dynamic> getProductByBarcode(String barcode) async {
+    try {
+      final response = await searchDio.get('/products/detail/$barcode/reayeon');
+      return response.data;
+    } on DioError catch (e) {
+      throw Exception('getProductDetail error:$e');
+    }
+  }
 }
