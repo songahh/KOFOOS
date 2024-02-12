@@ -12,15 +12,16 @@ import 'camera_view_singleton.dart';
 class CameraView extends StatefulWidget {
   /// Callback to pass results after inference to [HomeView]
   final Function(
-      List<ResultObjectDetection> recognitions, Duration inferenceTime)
-  resultsCallback;
+          List<ResultObjectDetection> recognitions, Duration inferenceTime)
+      resultsCallback;
   final Function(String classification, Duration inferenceTime)
-  resultsCallbackClassification;
+      resultsCallbackClassification;
 
   /// Constructor
   const CameraView(this.resultsCallback, this.resultsCallbackClassification,
       {Key? key})
       : super(key: key);
+
   @override
   _CameraViewState createState() => _CameraViewState();
 }
@@ -44,6 +45,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
   bool classification = false;
   int _camFrameRotation = 0;
   String errorMessage = "";
+
   @override
   void initState() {
     super.initState();
@@ -84,22 +86,22 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
           errorMessage = ('You have denied camera access.');
           break;
         case 'CameraAccessDeniedWithoutPrompt':
-        // iOS only
+          // iOS only
           errorMessage = ('Please go to Settings app to enable camera access.');
           break;
         case 'CameraAccessRestricted':
-        // iOS only
+          // iOS only
           errorMessage = ('Camera access is restricted.');
           break;
         case 'AudioAccessDenied':
           errorMessage = ('You have denied audio access.');
           break;
         case 'AudioAccessDeniedWithoutPrompt':
-        // iOS only
+          // iOS only
           errorMessage = ('Please go to Settings app to enable audio access.');
           break;
         case 'AudioAccessRestricted':
-        // iOS only
+          // iOS only
           errorMessage = ('Audio access is restricted.');
           break;
         default:
@@ -119,7 +121,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
     cameras = await availableCameras();
 
     var idx =
-    cameras.indexWhere((c) => c.lensDirection == CameraLensDirection.back);
+        cameras.indexWhere((c) => c.lensDirection == CameraLensDirection.back);
     if (idx < 0) {
       log("No Back camera found - weird");
       return;
@@ -134,7 +136,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
             : ImageFormatGroup.bgra8888,
         enableAudio: false);
 
-      await cameraController?.initialize().then((_) async {
+    await cameraController?.initialize().then((_) async {
       // Stream of image passed to [onLatestImageAvailable] callback
       await cameraController?.startImageStream(onLatestImageAvailable);
 
@@ -162,7 +164,6 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
     }
 
     return CameraPreview(cameraController!);
-
   }
 
   runClassification(CameraImage cameraImage) async {
@@ -213,7 +214,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
       Stopwatch stopwatch = Stopwatch()..start();
 
       List<ResultObjectDetection> objDetect =
-      await _objectModel!.getCameraImagePrediction(
+          await _objectModel!.getCameraImagePrediction(
         cameraImage,
         _camFrameRotation,
         minimumScore: 0.3,
@@ -258,6 +259,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
       return;
     }
   }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (!mounted) {
@@ -275,6 +277,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
       default:
     }
   }
+
   // @override
   // void didChangeAppLifecycleState(AppLifecycleState state) async {
   //   super.didChangeAppLifecycleState(state);

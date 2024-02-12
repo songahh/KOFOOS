@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import '../pages/search/search_detail_page.dart';
 
 class RootController extends GetxController {
   static RootController get to => Get.find();
@@ -9,35 +8,17 @@ class RootController extends GetxController {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   RxBool isMultiplePageOpen = false.obs;
   DateTime? currentBackPressTime;
-  var indexHistory = <int>[0];
-  Rx<Type?> currentScreen = Rx<Type?>(null);
-  Rx<String?> currentItemNo = Rx<String?>(null);
 
-  var isEditing = false.obs; // 편집 모드 상태를 관리하는 Observable 변수
 
-  void goToProductDetail(String itemNo) {
-    currentScreen.value = ProductDetailView;
-    currentItemNo.value = itemNo;
-  }
+  var isEditing = false.obs;
 
   void toggleEditing() {
-    isEditing.value = !isEditing.value; // 편집 모드 상태를 토글합니다.
+    isEditing.value = !isEditing.value;
   }
 
   void changeRootPageIndex(int index) {
-    // rootPageIndex(index);
-    rootPageIndex.value = index;
-    indexHistory.add(index);
+    rootPageIndex(index);
     print("Current Root Page Index: ${rootPageIndex.value}");
-  }
-
-  bool onBack() {
-    if (indexHistory.length > 1) {
-      indexHistory.removeLast();
-      rootPageIndex.value = indexHistory.last;
-      return false;
-    }
-    return true;
   }
 
   Future<bool> onWillPop() async {

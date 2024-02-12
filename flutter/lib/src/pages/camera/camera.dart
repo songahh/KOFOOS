@@ -1,11 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:kofoos/src/pages/home/home.dart';
 import 'package:pytorch_lite/pytorch_lite.dart';
-import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
-import '../../root/root_controller.dart';
 import '../search/api/search_api.dart';
 import '../search/search_detail_page.dart';
 import 'box_widget.dart';
@@ -14,54 +10,37 @@ import 'camera_view.dart';
 class Camera extends StatefulWidget {
   const Camera({Key? key}) : super(key: key);
 
-
   @override
   State<Camera> createState() => _CameraState();
 }
 
 class _CameraState extends State<Camera> {
-
   List<ResultObjectDetection>? results;
   Duration? objectDetectionInferenceTime;
 
   String? classification;
   Duration? classificationInferenceTime;
 
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: Colors.black,
-      body: Center(
-        child: Stack(
-          children: <Widget>[
-            // Camera View
-            CameraView(resultsCallback, resultsCallbackClassification),
-            // Bounding boxes
-            boundingBoxes2(results),
-          ],
-        ),
+      body: Stack(
+        children: <Widget>[
+          // Camera View
+          CameraView(resultsCallback, resultsCallbackClassification),
+
+          // Bounding boxes5
+        ],
       ),
-      floatingActionButton: Padding(
-        padding: EdgeInsets.only(bottom: 20.0),
-        child: FloatingActionButton(  // 카메라 전환 버튼
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => SimpleBarcodeScannerPage()),
-            );
-          },
-          child: Icon(Icons.barcode_reader),
-          backgroundColor: Color(0xffECECEC),
-          foregroundColor: Color(0xff343F56),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
-
-  void showSnackBar(BuildContext context, List<ResultObjectDetection>? results) async {
+  void showSnackBar(
+      BuildContext context, List<ResultObjectDetection>? results) async {
     if (results == null || results.isEmpty) {
       return;
     }
@@ -88,27 +67,30 @@ class _CameraState extends State<Camera> {
           height: 250.0,
           child: Center(
             child: GestureDetector(
-              onTap: (){
+              onTap: () {
                 CameraController? cameraController;
                 // cameraController!.stopImageStream();
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                // RootController.to.goToProductDetail(data['itemNo']);
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProductDetailView(
-                        itemNo: data['itemNo'],
-                      ),
-                    )).then((value) =>
-                    cameraController?.startImageStream((image) {
-                      onLatestImageAvailable;})
-                );
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductDetailView(
+                            itemNo: data['itemNo'],
+                          ),
+                        ))
+                    .then(
+                        (value) => cameraController?.startImageStream((image) {
+                              onLatestImageAvailable;
+                            }));
               },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Is this the right product?", style: TextStyle(fontSize: 20.0),),
-                  Image.network(data['imgurl'],height: 200),
+                  Text(
+                    "Is this the right product?",
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                  Image.network(data['imgurl'], height: 200),
                 ],
               ),
             ),
@@ -134,7 +116,8 @@ class _CameraState extends State<Camera> {
     );
   }
 
-  void resultsCallback(List<ResultObjectDetection> results, Duration inferenceTime) {
+  void resultsCallback(
+      List<ResultObjectDetection> results, Duration inferenceTime) {
     if (!mounted) {
       return;
     }
@@ -157,7 +140,8 @@ class _CameraState extends State<Camera> {
     showSnackBar(context, results);
   }
 
-  void resultsCallbackClassification(String classification, Duration inferenceTime) {
+  void resultsCallbackClassification(
+      String classification, Duration inferenceTime) {
     if (!mounted) {
       return;
     }
@@ -166,6 +150,4 @@ class _CameraState extends State<Camera> {
       classificationInferenceTime = inferenceTime;
     });
   }
-
 }
-
