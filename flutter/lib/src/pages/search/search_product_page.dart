@@ -19,13 +19,13 @@ class SearchProductPage extends StatefulWidget {
 
 class _SearchProductPageState extends State<SearchProductPage> {
   SearchApi searchApi = SearchApi();
-  late Future<dynamic> data;
-  int visibleItemCount = 15;
+    late Future<dynamic> data;
+    int visibleItemCount = 15;
 
-  @override
-  void initState() {
-    super.initState();
-    data = searchApi.getProducts(widget.cat1, widget.cat2, widget.order);
+        @override
+        void initState() {
+      super.initState();
+      data = searchApi.getProducts(widget.cat1, widget.cat2, widget.order);
   }
 
   @override
@@ -75,7 +75,11 @@ class _SearchProductPageState extends State<SearchProductPage> {
                         ),
                         itemCount: visibleItemCount,
                         itemBuilder: (context, index) {
-                          return _product(context, products[index]);
+                          if (index < products.length) {
+                            return _product(context, products[index]);
+                          } else {
+                            return SizedBox.shrink();
+                          }
                         },
                       ),
                     ),
