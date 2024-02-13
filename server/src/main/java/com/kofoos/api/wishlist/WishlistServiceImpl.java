@@ -30,6 +30,7 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     @Override
+    @Transactional
     public void like(int id, String deviceId) {
 
         User currentUser = userRepository.findUserIdByDeviceId(deviceId);
@@ -50,18 +51,46 @@ public class WishlistServiceImpl implements WishlistService {
         Optional<Product> productById = productRepository.findById(id);
         Product currentProduct = productById.orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
+        Optional<WishlistItem> existWishlistItem = wishlistRepository.findWishlistItemByWishlistFolderIdAndProductId(id,folder.getId());
 
-        WishlistItem wishlistItem = WishlistItem.builder()
-                .product(currentProduct)
-                .wishlistFolder(folder)
-                .image(currentProduct.getImage())
-                .bought(0)
-                .build();
-
-        wishlistRepository.save(wishlistItem);
+        if (!existWishlistItem.isPresent()) {
+            WishlistItem wishlistItem = WishlistItem.builder()
+                    .product(currentProduct)
+                    .wishlistFolder(folder)
+                    .image(currentProduct.getImage())
+                    .bought(0)
+                    .build();
+            productRepository.upLike(currentProduct.getId());
+            wishlistRepository.save(wishlistItem);
+            System.out.println("Product " + id + " added to wishlist");
+        } else {
+            System.out.println("Product " + id + " already in wishlist");
+        }
 
     }
 
+    @Override
+    @Transactional
+    public void unlike(int id, String deviceId) {
+
+        User currentUser = userRepository.findUserIdByDeviceId(deviceId);
+        System.out.println("User ID: " + currentUser.getId());
+        WishlistFolder folder = folderRepository.findFolderByUserIdAndName(currentUser.getId(), DEFAULT);
+
+        if (folder == null) {
+            throw new IllegalArgumentException("Default wishlist folder not found");
+        }
+        System.out.println("folder.getId() = " + folder.getId());
+        System.out.println("id = " + id);
+        Optional<WishlistItem> wishlistItem = wishlistRepository.findWishlistItemByWishlistFolderIdAndProductId(id, folder.getId());
+
+        if (wishlistItem.isPresent()) {
+            productRepository.downLike(wishlistItem.get().getProduct().getId());
+            wishlistRepository.delete(wishlistItem.get());
+        } else {
+            throw new IllegalArgumentException("Wishlist item not found");
+        }
+    }
 
 
     @Transactional
@@ -81,7 +110,7 @@ public class WishlistServiceImpl implements WishlistService {
         }
     }
 
-
+    // 채팅으로 칠게
 
     @Override
     public void create(String folderName, String deviceId) {

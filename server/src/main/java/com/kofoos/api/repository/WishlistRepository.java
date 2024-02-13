@@ -15,7 +15,9 @@ import java.util.Optional;
 @Repository
 public interface WishlistRepository extends JpaRepository<WishlistItem, Integer> {
 
-    Optional<WishlistItem> findWishlistItemByWishlistFolderIdAndProductId(int wishlist_folder_id, int productId);
+
+    @Query("select wi from WishlistItem wi where wi.product.id = :productId and wi.wishlistFolder.id = :folderId")
+    Optional<WishlistItem> findWishlistItemByWishlistFolderIdAndProductId(int productId,int folderId);
 
     @Query("SELECT NEW com.kofoos.api.wishlist.dto.ProductDto(p.id, i.imgUrl) " +
             "FROM WishlistItem wi " +

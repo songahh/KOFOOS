@@ -1,6 +1,7 @@
 package com.kofoos.api.product.service;
 
 import com.kofoos.api.entity.Product;
+import com.kofoos.api.product.dto.ProductBoxDto;
 import com.kofoos.api.product.dto.ProductDetailDto;
 import com.kofoos.api.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -45,17 +46,19 @@ public class ProductService {
     }
 
 
-    public List<ProductDetailDto> findProductsOrder(int id, String order){
+    public List<ProductBoxDto> findProductsOrder(int id, String order){
 
         if(order.equals("좋아요")){
             List<Product> products = productRepository.findProductsOrderByLike(id);
-            return products.stream().map(ProductDetailDto::of).collect(Collectors.toList());
+            return products.stream().map(ProductBoxDto::of).collect(Collectors.toList());
         }
         else{
             List<Product> products = productRepository.findProductsOrderByHit(id);
-            return products.stream().map(ProductDetailDto::of).collect(Collectors.toList());
+            return products.stream().map(ProductBoxDto::of).collect(Collectors.toList());
         }
     }
+
+
 
 
 //    @PostConstruct
@@ -78,7 +81,6 @@ public class ProductService {
 ////                System.out.println("productGpt.getTagString().length() = " + productGpt.getDescription().length());
 //            }
 //        }
-
 
 
 

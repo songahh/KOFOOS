@@ -17,7 +17,7 @@ public class WishlistItem {
 
     private Integer bought;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
@@ -40,7 +40,7 @@ public class WishlistItem {
 
     private void setProduct(Product product) {
         this.product = product;
-//        product.setWishlistItem(this);
+        product.getWishlistItems().add(this);
     }
 
     private void setImage(Image image){
