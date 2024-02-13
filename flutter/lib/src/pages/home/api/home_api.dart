@@ -1,8 +1,12 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
+import 'package:kofoos/src/common/device_controller.dart';
 
 class HomeApi {
+  final DeviceController deviceController = Get.find<DeviceController>();
+
   var homeDio = Dio(
     BaseOptions(
       baseUrl: "http://i10a309.p.ssafy.io:8080",
@@ -36,11 +40,11 @@ class HomeApi {
   }
 
   Future<List<dynamic>> getRecommendHistory() async {
+    String currentDeviceId = deviceController.deviceId.value;
     try {
       var response = await homeDio.post(
         '/recommend/history',
-        // deviceId 수정 필요
-        data: {'deviceId': 'rayeon'},
+        data: {'deviceId': '$currentDeviceId'},
       );
       List<dynamic> recommendHistoryList = response.data;
       return recommendHistoryList;

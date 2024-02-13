@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:kofoos/src/pages/home/api/home_api.dart';
 import 'package:kofoos/src/pages/home/func/home_recommend_func.dart';
@@ -8,7 +7,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:kofoos/src/pages/home/home_editor_page_1.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:kofoos/src/pages/search/search_detail_page.dart';
-
 
 class Home extends StatelessWidget {
   Home({Key? key}) : super(key: key);
@@ -173,7 +171,87 @@ class Home extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Text('No data available');
+          // 제품 API로 변경 필요
+          List<dynamic> recommendHistoryList = snapshot.data!;
+          return Column(
+            children: [
+              SizedBox(
+                height: 10.0,
+              ),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  Text(
+                    'Just For You ✨',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Spacer(),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                    ),
+                    onPressed: () {
+                      print('해당 테마 상품 전체보기 기능 추가 필요');
+                      homeRecommendFunc(context, recommendHistoryList);
+                    },
+                    child: Text(
+                      'All  >',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                height: 120,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      for (int i = 0; i < recommendHistoryList.length; i++)
+                        GestureDetector(
+                          onTap: () {
+                            String itemNo = recommendHistoryList[i]['itemNo'];
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProductDetailView(
+                                  itemNo: itemNo,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.all(8),
+                            width: 100,
+                            height: 100,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: CachedNetworkImage(
+                                imageUrl: recommendHistoryList[i]['imgUrl'],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              Divider(
+                height: 40,
+                thickness: 0,
+                color: Color(0xffECECEC),
+              ),
+            ],
+          );
         } else {
           List<dynamic> recommendHistoryList = snapshot.data!;
           return Column(
@@ -273,7 +351,3 @@ class Home extends StatelessWidget {
     );
   }
 }
-
-
-
-
