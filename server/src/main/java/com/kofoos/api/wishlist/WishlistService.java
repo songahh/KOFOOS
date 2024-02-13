@@ -10,6 +10,8 @@ import java.util.List;
 public interface WishlistService {
     void like(int productId, String deviceId);
 
+    void unlike(int productId, String deviceId);
+
     void moveItems(List<Integer> items, int wishlistFolderId);
 
     void cancel(List<Integer> itemIds);

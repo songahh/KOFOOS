@@ -31,7 +31,7 @@ public class ProductDetailDto {
     private String imgurl;
     private String tagString;
     private int productId;
-
+    private List<String> wishList;
 
     @Override
     public boolean equals(Object o) {
@@ -55,6 +55,10 @@ public class ProductDetailDto {
                 .map(material -> material.getDislikedMaterial().getId())
                 .collect(Collectors.toList());
 
+        List<String> wishList = product.getWishlistItems().stream()
+                .map(wishlistItem -> wishlistItem.getWishlistFolder().getUser().getDeviceId())
+                .collect(Collectors.toList());
+
         return ProductDetailDto.builder()
                 .tagString(product.getTagString())
                 .barcode(product.getBarcode())
@@ -67,6 +71,7 @@ public class ProductDetailDto {
                 .itemNo(product.getItemNo())
                 .like(product.getLike())
                 .productId(product.getId())
+                .wishList(wishList)
                 .imgurl(product.getImage() != null ? product.getImage().getImgUrl()+"?width=200&height=200" : "hoho")
                 .build();
 
