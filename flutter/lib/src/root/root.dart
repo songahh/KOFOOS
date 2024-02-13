@@ -48,7 +48,7 @@ class Root extends GetView<RootController> {
                 key: UniqueKey(),
                 onGenerateRoute: (routeSettings) {
                   return MaterialPageRoute(
-                    builder: (context) => const Home(),
+                    builder: (context) => Home(),
                   );
                 },
               ),

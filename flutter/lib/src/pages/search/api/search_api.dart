@@ -65,4 +65,13 @@ class SearchApi {
       throw Exception('getProductDetail error:$e');
     }
   }
+
+  Future<List<dynamic>> getRecommendProducts(String productId) async {
+    try {
+      final response = await searchDio.get('/recommend/product/$productId');
+      return List<dynamic>.from(response.data);
+    } on DioError catch (e) {
+      throw Exception('getProduct error:$e');
+    }
+  }
 }

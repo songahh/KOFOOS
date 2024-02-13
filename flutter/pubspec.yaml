@@ -42,7 +42,7 @@ dependencies:
   http: ^0.13.3
   device_info: ^2.0.3
   provider: ^6.0.1
-  cached_network_image: ^3.0.0
+  cached_network_image: ^3.2.0
   animations: ^2.0.0
   flutter_vision: ^1.1.4
   image_picker: ^1.0.7
@@ -53,6 +53,7 @@ dependencies:
   simple_barcode_scanner:
     path: ../packages/simple_barcode_scanner-main/
   lazy_load_indexed_stack: ^1.1.0
+
 
 dev_dependencies:
   flutter_test:
