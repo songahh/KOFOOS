@@ -35,4 +35,10 @@ public class User {
         this.deviceId = deviceId;
         this.language = language;
     }
+
+    public void updateLanguage(String newLanguage) {
+        this.language = newLanguage;
+    }
+
+
 }
