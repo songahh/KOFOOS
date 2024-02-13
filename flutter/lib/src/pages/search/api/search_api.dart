@@ -70,7 +70,7 @@ class SearchApi {
     }
   }
 
-  Future<List<dynamic>> getRecommendProducts(String productId) async {
+  Future<List<dynamic>> getRecommendProducts(int productId) async {
     try {
       final response = await searchDio.get('/recommend/product/$productId');
       return List<dynamic>.from(response.data);
