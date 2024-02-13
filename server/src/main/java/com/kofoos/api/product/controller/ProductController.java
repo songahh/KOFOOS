@@ -3,6 +3,7 @@ package com.kofoos.api.product.controller;
 import com.kofoos.api.User.UserService;
 import com.kofoos.api.common.dto.ProductDto;
 import com.kofoos.api.entity.Product;
+import com.kofoos.api.product.dto.ProductBoxDto;
 import com.kofoos.api.product.dto.ProductDetailDto;
 import com.kofoos.api.product.dto.RequestId;
 import com.kofoos.api.product.service.CategoryService;
@@ -94,10 +95,10 @@ public class ProductController {
     public ResponseEntity<?> findProductsOrder(@RequestParam String cat1,@RequestParam String cat2, @RequestParam String order){
         System.out.println("cat1 = " + cat1);
         List<Integer> id = categoryService.findId(cat1,cat2);
-        List<ProductDetailDto> Dtos = new ArrayList<>();
+        List<ProductBoxDto> Dtos = new ArrayList<>();
         for(int i :id){
-            List<ProductDetailDto> temp = productService.findProductsOrder(i,order);
-            for(ProductDetailDto p: temp){
+            List<ProductBoxDto> temp = productService.findProductsOrder(i,order);
+            for(ProductBoxDto p: temp){
                 Dtos.add(p);
             }
         }
@@ -106,9 +107,6 @@ public class ProductController {
     }
 
     // like
-
-
-
 
 
 
