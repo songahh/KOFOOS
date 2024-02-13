@@ -391,7 +391,7 @@ class Stock extends StatelessWidget {
     return Container(
       width: 200,
       height: 200,
-      child: Image.asset('assets/warn/comingsoon.png'),
+      child: Text('준비중입니다'),
     );
   }
 }
