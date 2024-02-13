@@ -14,6 +14,8 @@ import com.kofoos.api.repository.ProductRepository;
 import com.kofoos.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +42,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         // 2. 해당 대분류-중분류 카테고리에 해당하는 아이템을 인기순으로 최대 10개까지 보낸다
         List<RecommendationResponseDto> recommendationDtos
-                = pr.findRelatedProductsOrderByLike(category.getCat1(), category.getCat2())
+                = pr.findRelatedProductsOrderByLike(category.getCat1(), category.getCat2(), PageRequest.of(0, 10))
                 .stream()
                     .map((entity)-> RecommendationResponseDto.of(entity))
                 .toList();
@@ -52,7 +54,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     public List<RecommendationResponseDto> getHotProducts() {
         // 제품을 인기순 + 조회순으로 정렬하여 최대 10개까지 보낸다.
         List<RecommendationResponseDto> recommendationDtos
-                = pr.findHotProductsOrderByLikeAndHit().stream()
+                = pr.findHotProductsOrderByLikeAndHit(PageRequest.of(0, 10)).stream()
                     . map((entity)-> RecommendationResponseDto.of(entity))
                 .toList();
         return recommendationDtos;
@@ -77,14 +79,14 @@ public class RecommendationServiceImpl implements RecommendationService {
                     .orElseThrow(() -> new RecommendationException("No History"));
 
             String[] categorySplited = entry.getKey().split("_");
-            recommendationDtos = pr.findRelatedProductsOrderByLikeWithAllergyFiltering(categorySplited[0], categorySplited[1], deviceId)
+            recommendationDtos = pr.findRelatedProductsOrderByLikeWithAllergyFiltering(categorySplited[0], categorySplited[1], deviceId, PageRequest.of(0, 10))
                     .stream()
                     .map((entity)-> RecommendationResponseDto.of(entity))
                     .toList();
         } catch (RecommendationException rx){
             log.info("err msg: {}, recommend products by hot category", rx.getMessage());
             List<String> hotCategory = cr.ranking();
-            recommendationDtos = pr.findRelatedProductsOrderByLikeWithAllergyFiltering(hotCategory.get(0), hotCategory.get(1), deviceId)
+            recommendationDtos = pr.findRelatedProductsOrderByLikeWithAllergyFiltering(hotCategory.get(0), hotCategory.get(1), deviceId, PageRequest.of(0, 10))
                     .stream()
                     .map((entity)-> RecommendationResponseDto.of(entity))
                     .toList();
@@ -98,7 +100,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     public List<RecommendationWithNoAllergyResponseDto> getEditorRecommendation(int rArticleId) {
 
         List<RecommendationWithNoAllergyResponseDto> recommendationDtos
-                = pr.findProductsByArticleId(rArticleId)
+                = pr.findProductsByArticleId(rArticleId, PageRequest.of(0, 5))
                 .stream()
                 .map((entity)-> RecommendationWithNoAllergyResponseDto.of(entity))
                 .toList();
