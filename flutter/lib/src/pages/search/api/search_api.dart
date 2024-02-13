@@ -51,7 +51,7 @@ class SearchApi {
     }
   }
 
-  Future<dynamic> getProducts(String cat1, String cat2, String order) async {
+  Future<List<dynamic>> getProducts(String cat1, String cat2, String order) async {
     try {
       final response = await searchDio
           .get('/products/list?cat1=$cat1&cat2=$cat2&order=$order');
