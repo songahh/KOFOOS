@@ -2,6 +2,7 @@ package com.kofoos.api.User;
 
 import com.kofoos.api.User.dto.ProductDto;
 import com.kofoos.api.entity.*;
+import com.kofoos.api.redis.RedisService;
 import com.kofoos.api.repository.HistoryRepository;
 import com.kofoos.api.repository.UserDislikesMaterialRepository;
 import com.kofoos.api.User.dto.MyPageDto;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.kofoos.api.repository.DislikedMaterialRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +22,7 @@ public class UserService {
     private final UserDislikesMaterialRepository userDislikesMaterialsRepo;
     private final DislikedMaterialRepository dislikedMaterialRepository;
     private final HistoryRepository historyRepository;
+    private final RedisService redisService;
 
     public void registerUser(User user){
         userRepository.save(user);
@@ -101,22 +103,26 @@ public class UserService {
                 .collect(Collectors.toList());
 
         // 히스토리 변환 (최근 10개, 중복 제거)
-        List<ProductDto> products = historyRepository.findTop10ByUserIdOrderByViewTimeDesc(userId).stream()
+
+        List<ProductDto> products = redisService.getRecentViewedItems(user.getDeviceId()).stream()
                 .distinct()
                 .map(history -> {
-                    Product product = history.getProduct();
-                    String imageUrl = product.getImage() != null ? product.getImage().getImgUrl() : null; // Image 엔티티가 null이 아닐 경우 URL 추출
+                    LinkedHashMap<?, ?> linkedHashMap = (LinkedHashMap<?, ?>) history;
+                    Object imgUrlValue = linkedHashMap.get("imgUrl"); // Image 엔티티가 null이 아닐 경우 URL 추출
+                    Object itemNoValue = linkedHashMap.get("itemNo");
                     return ProductDto.builder()
-                            .productItemNo(product.getItemNo())
-                            .productUrl(imageUrl)
+                            .productItemNo(itemNoValue.toString())
+                            .productUrl(imgUrlValue.toString())
                             .build();
                 })
                 .collect(Collectors.toList());
+        Set<ProductDto> uniqueProducts = new HashSet<>(products);
+        List<ProductDto> uniqueProductList = new ArrayList<>(uniqueProducts);
 
         return MyPageDto.builder()
                 .language(language)
                 .dislikedMaterials(dislikedMaterials)
-                .products(products) // ProductDto 리스트 전달
+                .products(uniqueProductList) // ProductDto 리스트 전달
                 .build();
     }
 
