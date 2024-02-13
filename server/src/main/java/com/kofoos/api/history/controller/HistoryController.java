@@ -75,7 +75,7 @@ public class HistoryController {
 
     }
 
-//    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 10000)
     @Transactional
     public void updateSql(){
         Map<String, List<HistoryProductDto>> redisHistories = redisService.getAllRedisHistories();
