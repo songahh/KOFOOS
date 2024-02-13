@@ -20,8 +20,8 @@ public class Image {
     @Column(length = 100)
     private String imgUrl;
 
-//    @OneToOne(mappedBy = "image",fetch = FetchType.LAZY)
-//    private WishlistItem wishlistItem;
+    @OneToOne(mappedBy = "image",fetch = FetchType.LAZY)
+    private WishlistItem wishlistItem;
 
     @OneToOne(mappedBy = "image",fetch = FetchType.LAZY)
     private Product product;
@@ -31,9 +31,9 @@ public class Image {
         this.imgUrl = imgUrl;
     }
 
-//    public void setWishlistItem(WishlistItem wishlistItem){
-//        this.wishlistItem = wishlistItem;
-//    }
+    public void setWishlistItem(WishlistItem wishlistItem){
+        this.wishlistItem = wishlistItem;
+    }
 
     public void setProduct(Product product) {
         this.product = product;

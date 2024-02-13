@@ -52,8 +52,8 @@ public class Product {
     private Category category;
 
 
-//    @OneToOne(mappedBy = "product",fetch = FetchType.LAZY)
-//    private WishlistItem wishlistItem;
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    private List<WishlistItem> wishlistItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private List<History> history = new ArrayList<>();
@@ -84,6 +84,7 @@ public class Product {
         this.category = category;
         category.getProducts().add(this);
     }
+
 
     public void setImage(Image image){
         this.image = image;

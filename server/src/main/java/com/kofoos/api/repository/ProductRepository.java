@@ -27,18 +27,13 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     Optional<Product> findProductByItemNo(String itemNo);
 
     @Modifying
-    @Query("update Product p set p.hit = p.hit + 1 where p.id = :id")
-    void UpHit(int id);
-
-
-    @Modifying
     @Query("update Product p set p.like = p.like + 1 where p.id = :id")
-    void UpLike(int id);
+    void upLike(int id);
 
 
     @Modifying
     @Query("update Product p set p.like = p.like - 1 where p.id = :id")
-    void DownLike(int id);
+    void downLike(int id);
 
     @Query("select distinct(p) from Product p " +
             "join fetch p.image " +

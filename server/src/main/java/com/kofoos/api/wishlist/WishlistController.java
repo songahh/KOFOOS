@@ -55,6 +55,19 @@ public class WishlistController {
     }
 
     @ResponseBody
+    @PostMapping("/product/unlike")
+    public ResponseEntity<Map<String, Object>> unlikeProduct(@RequestBody Map<String, Object> req)
+            throws ParseException {
+        Map<String, Object> result = new HashMap<>();
+        int productId = (Integer) req.get("productId");
+        String deviceId = (String) req.get("deviceId");
+        System.out.println("Product ID to unlike: " + productId);
+        wishlistService.unlike(productId, deviceId);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @ResponseBody
     @PostMapping("/product/cancel")
     public ResponseEntity<Map<String, Object>> cencelLikeProduct(@RequestBody Map<String, Object> req)
             throws ParseException {
