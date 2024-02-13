@@ -27,7 +27,7 @@ public class ProductDetailDto {
     private int like;
     private String convenienceStore;
     private CategorySearchDto categorySearchDto;
-    private List<String> dislikedMaterials;
+    private List<Integer> dislikedMaterials;
     private String imgurl;
     private String tagString;
     private int productId;
@@ -51,8 +51,8 @@ public class ProductDetailDto {
 
         List<ProductMaterial> productMaterials = product.getProductMaterials();
 
-        List<String> dislikedMaterials = productMaterials.stream()
-                .map(material -> material.getDislikedMaterial().getName())
+        List<Integer> dislikedMaterials = productMaterials.stream()
+                .map(material -> material.getDislikedMaterial().getId())
                 .collect(Collectors.toList());
 
         return ProductDetailDto.builder()
