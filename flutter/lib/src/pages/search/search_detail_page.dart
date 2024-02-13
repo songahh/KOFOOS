@@ -27,7 +27,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     data = searchApi.getProductDetail(widget.itemNo).then(
-          (productData) {
+      (productData) {
         setState(() {
           count = productData['like'];
           productId = productData['productId'].toString();
@@ -61,6 +61,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Center(
+                    // 제품 사진
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.width,
@@ -75,70 +76,77 @@ class _ProductDetailViewState extends State<ProductDetailView>
                     ),
                   ),
                   Container(
-                    // 카테고리
-                    child: Text(
-                      '   ${data['categorySearchDto']['cat1']}' +
-                          " >  " +
-                          data['categorySearchDto']['cat2'] +
-                          " >  " +
-                          data['categorySearchDto']['cat3'],
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        '   ${data['categorySearchDto']['cat1']}' +
+                            " >  " +
+                            data['categorySearchDto']['cat2'] +
+                            " >  " +
+                            data['categorySearchDto']['cat3'],
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
                   ),
                   SizedBox(
                     height: 10,
                   ),
-                  Text(
-                    // 상품명
-                    '  ${data['name']}',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+// 상품명
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      '  ${data['name']}',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
+// 좋아요
                   Row(
-                    // 좋아요
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 3),
-                        margin: EdgeInsets.only(right: 16),
-                        width: 85,
-                        height: 40,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "   $count",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
+                      Padding(
+                        padding: EdgeInsets.only(right: 8),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 3),
+                          width: 85,
+                          height: 40,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "   $count",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            SizedBox(width: 1),
-                            IconButton(
-                              padding: EdgeInsets.symmetric(vertical: 3),
-                              icon: Icon(
-                                isLiked
-                                    ? Icons.favorite
-                                    : Icons.favorite_outline,
-                                color: isLiked ? Colors.red : Colors.white,
+                              SizedBox(width: 1),
+                              IconButton(
+                                padding: EdgeInsets.symmetric(vertical: 3),
+                                icon: Icon(
+                                  isLiked
+                                      ? Icons.favorite
+                                      : Icons.favorite_outline,
+                                  color: isLiked ? Colors.red : Colors.white,
+                                ),
+                                onPressed: () {
+                                  print(count);
+                                  Like();
+                                },
                               ),
-                              onPressed: () {
-                                print(count);
-                                Like();
-                              },
-                            ),
-                          ],
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Color(0xffCACACA),
+                            ],
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Color(0xffCACACA),
+                          ),
                         ),
                       ),
                     ],
@@ -146,22 +154,12 @@ class _ProductDetailViewState extends State<ProductDetailView>
                   SizedBox(
                     height: 14,
                   ),
-                  Container(
-                    // 상품설명
+                  // 재료 목록(비선호/알러지 식품)
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8),
-                    child:
-                    Text(data['description'] ?? 'No description available'),
+                    child: _Ingredient(data['dislikedMaterials'], ""),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      _buildTags(data['tagString'] ?? 'No tag available',
-                          Colors.white),
-                    ],
-                  ),
+                  // 탭바
                   Container(
                     height: 100,
                     child: TabBar(
@@ -169,23 +167,23 @@ class _ProductDetailViewState extends State<ProductDetailView>
                       tabs: [
                         Tab(
                           child: Text(
-                            'Ingredients',
+                            'Information',
                             style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.bold),
+                                fontSize: 10, fontWeight: FontWeight.bold),
                           ),
                         ),
                         Tab(
                           child: Text(
                             'Recommendation',
                             style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.bold),
+                                fontSize: 10, fontWeight: FontWeight.bold),
                           ),
                         ),
                         Tab(
                           child: Text(
                             'Available stock',
                             style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.bold),
+                                fontSize: 10, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
@@ -198,8 +196,33 @@ class _ProductDetailViewState extends State<ProductDetailView>
                       children: [
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 12.0),
-                          // 좌우 여유 공간 설정
-                          child: _Ingredient(data['dislikedMaterials'], ""),
+                          // 제품 태그 및 설명
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              // 제품태그
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  _buildTags(
+                                      data['tagString'] ?? 'No tag available',
+                                      Colors.white),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              // 상품설명
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                child: Text(data['description'] ??
+                                    'No description available'),
+                              ),
+                            ],
+                          ),
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 12.0),
@@ -294,9 +317,9 @@ Widget _Ingredient(List<dynamic>? dislikedMaterials, String materialDetail) {
   List<Widget> chips = dislikedMaterials == null || dislikedMaterials.isEmpty
       ? [_buildChip("No disliked materials", Colors.white)]
       : dislikedMaterials
-      .map<Widget>(
-          (material) => _buildChip(material.toString(), Colors.white))
-      .toList();
+          .map<Widget>(
+              (material) => _buildChip(material.toString(), Colors.white))
+          .toList();
 
   return Scrollbar(
     thickness: 10,

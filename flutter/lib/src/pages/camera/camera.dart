@@ -14,19 +14,16 @@ import 'camera_view.dart';
 class Camera extends StatefulWidget {
   const Camera({Key? key}) : super(key: key);
 
-
   @override
   State<Camera> createState() => _CameraState();
 }
 
 class _CameraState extends State<Camera> {
-
   List<ResultObjectDetection>? results;
   Duration? objectDetectionInferenceTime;
 
   String? classification;
   Duration? classificationInferenceTime;
-
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +41,13 @@ class _CameraState extends State<Camera> {
       ),
       floatingActionButton: Padding(
         padding: EdgeInsets.only(bottom: 20.0),
-        child: FloatingActionButton(  // 카메라 전환 버튼
+        child: FloatingActionButton(
+          // 카메라 전환 버튼
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => SimpleBarcodeScannerPage()),
+              MaterialPageRoute(
+                  builder: (context) => SimpleBarcodeScannerPage()),
             );
           },
           child: Icon(Icons.barcode_reader),
@@ -60,8 +59,8 @@ class _CameraState extends State<Camera> {
     );
   }
 
-
-  void showSnackBar(BuildContext context, List<ResultObjectDetection>? results) async {
+  void showSnackBar(
+      BuildContext context, List<ResultObjectDetection>? results) async {
     if (results == null || results.isEmpty) {
       return;
     }
@@ -88,27 +87,62 @@ class _CameraState extends State<Camera> {
           height: 250.0,
           child: Center(
             child: GestureDetector(
-              onTap: (){
-                CameraController? cameraController;
-                // cameraController!.stopImageStream();
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                // RootController.to.goToProductDetail(data['itemNo']);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProductDetailView(
-                        itemNo: data['itemNo'],
+              // 제품 상제 정보 표시
+              // onTap: (){
+              //   CameraController? cameraController;
+              //   // cameraController!.stopImageStream();
+              //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              //   // RootController.to.goToProductDetail(data['itemNo']);
+              //   Navigator.pushReplacement(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => ProductDetailView(
+              //           itemNo: data['itemNo'],
+              //         ),
+              //       )).then((value) =>
+              //       cameraController?.startImageStream((image) {
+              //         onLatestImageAvailable;})
+              //   );
+              // },
+              onTap: () async {
+                ScaffoldMessenger.of(context).clearSnackBars();
+                print('안녕!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+                print(data);
+
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Product info"),
+                      content: Column(
+                        children: [
+                          Text("제품 번호: $itemNo", style: TextStyle(fontSize: 18.0)),
+                          Image.network(data['imgurl'], height: 300.0),
+                        ],
                       ),
-                    )).then((value) =>
-                    cameraController?.startImageStream((image) {
-                      onLatestImageAvailable;})
-                );
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("O K"),
+                        ),
+                      ],
+                    );
+                  },
+                ).then((value) {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                });
               },
+
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Is this the right product?", style: TextStyle(fontSize: 20.0),),
-                  Image.network(data['imgurl'],height: 200),
+                  Text(
+                    "Is this the right product?",
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                  Image.network(data['imgurl'], height: 200),
                 ],
               ),
             ),
@@ -134,7 +168,8 @@ class _CameraState extends State<Camera> {
     );
   }
 
-  void resultsCallback(List<ResultObjectDetection> results, Duration inferenceTime) {
+  void resultsCallback(
+      List<ResultObjectDetection> results, Duration inferenceTime) {
     if (!mounted) {
       return;
     }
@@ -157,7 +192,8 @@ class _CameraState extends State<Camera> {
     showSnackBar(context, results);
   }
 
-  void resultsCallbackClassification(String classification, Duration inferenceTime) {
+  void resultsCallbackClassification(
+      String classification, Duration inferenceTime) {
     if (!mounted) {
       return;
     }
@@ -166,6 +202,4 @@ class _CameraState extends State<Camera> {
       classificationInferenceTime = inferenceTime;
     });
   }
-
 }
-

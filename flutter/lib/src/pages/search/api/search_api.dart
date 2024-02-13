@@ -10,7 +10,6 @@ class SearchApi {
   var searchDio = Dio(
     BaseOptions(
       baseUrl: "http://i10a309.p.ssafy.io:8080",
-      // baseUrl: "http://10.0.2.2:8080",
       connectTimeout: 5000,
       receiveTimeout: 5000,
       headers: {
