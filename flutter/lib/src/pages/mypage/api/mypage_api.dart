@@ -54,25 +54,6 @@ class MyPageApi {
     }
   }
 
-  //사용자 언어 업데이트
-  Future<void> updateUserLanguage(String deviceId, String language) async {
-    final response = await dio.post(
-      '$baseUrl/update_language', // 언어 업데이트 API 엔드포인트, 실제 경로는 서버 구현에 따라 다를 수 있음
-      data: json.encode({
-        'deviceId': deviceId,
-        'language': language,
-      }),
-      options: Options(headers: {'Content-Type': 'application/json'}),
-    );
-
-    if (response.statusCode == 200) {
-      print('Language updated successfully');
-    } else {
-      throw Exception('Failed to update language');
-    }
-  }
-
-
   Future<void> deleteUser(String deviceId) async {
     final response = await dio.delete(
       '$baseUrl/delete',

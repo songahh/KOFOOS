@@ -1,6 +1,5 @@
 // my_page_notifier.dart
 import 'package:flutter/material.dart';
-import 'package:kofoos/src/pages/mypage/func/users_update_lang_func.dart';
 import '../../common/device_controller.dart';
 import 'dto/my_page_dto.dart';
 import 'api/mypage_api.dart';
