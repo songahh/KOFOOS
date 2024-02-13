@@ -1,8 +1,12 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
+import '../../../common/device_controller.dart';
 
 class SearchApi {
+
+  final DeviceController deviceController = Get.find<DeviceController>();
   var searchDio = Dio(
     BaseOptions(
       baseUrl: "http://i10a309.p.ssafy.io:8080",
@@ -39,8 +43,9 @@ class SearchApi {
   }
 
   Future<dynamic> getProductDetail(String itemNo) async {
+    String currentDeviceId = deviceController.deviceId.value;
     try {
-      final response = await searchDio.get('/products/detail/no/$itemNo');
+      final response = await searchDio.get('/products/detail/no/$itemNo/$currentDeviceId');
       return response.data;
     } on DioError catch (e) {
       throw Exception('getProductDetail error:$e');
@@ -59,7 +64,7 @@ class SearchApi {
 
   Future<dynamic> getProductByBarcode(String barcode) async {
     try {
-      final response = await searchDio.get('/products/detail/$barcode/reayeon');
+      final response = await searchDio.get('/products/detail/$barcode');
       return response.data;
     } on DioError catch (e) {
       throw Exception('getProductDetail error:$e');
