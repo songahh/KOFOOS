@@ -2,7 +2,6 @@ package com.kofoos.api.User;
 
 import com.kofoos.api.User.dto.MyPageDto;
 import com.kofoos.api.User.dto.UpdateFoodRequestDto;
-import com.kofoos.api.User.dto.UpdateLangRequestDto;
 import com.kofoos.api.User.dto.UserRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -84,20 +83,6 @@ public class UserController {
         }
     }
 
-
-    //회원 언어 업데이트
-    @PostMapping("/update_language")
-    public ResponseEntity<?> updateUserLanguage(@RequestBody UpdateLangRequestDto requestDto) {
-        try {
-            String deviceId = requestDto.getDeviceId();
-            String newLanguage = requestDto.getLanguage();
-            int userId = userService.getUserId(deviceId);
-            userService.updateUserLanguage(userId, newLanguage);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating language: " + e.getMessage());
-        }
-    }
     //회원 탈퇴
     @DeleteMapping("delete")
     public ResponseEntity<?> deleteUser(@RequestBody UserRequestDto requestDto) {

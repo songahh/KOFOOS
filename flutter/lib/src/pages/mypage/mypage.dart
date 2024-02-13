@@ -156,7 +156,7 @@ class _MypageState extends State<Mypage> {
                         primary: Color(0xffECECEC),
                       ),
                       child: Text(
-                        getLanguageDisplayName(info.language), // 유저가 선택한 언어 출력
+                        info.language, // 유저가 선택한 언어 출력
                         style: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w600,
