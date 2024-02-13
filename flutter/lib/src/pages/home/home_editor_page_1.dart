@@ -47,7 +47,7 @@ class HomeEditorPage1 extends StatelessWidget {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
                           child: Image.asset(
-                            'assets/editor/ecr$i.jpg',
+                            'assets/editor/related_products/ecr$i.jpg',
                             width: 100,
                             height: 100,
                             fit: BoxFit.cover,
@@ -78,13 +78,11 @@ class HomeEditorPage1 extends StatelessWidget {
           SingleChildScrollView(
             child: Column(
               children: [
-
                 Container(
-                  child: Image.asset('assets/editor/ec0.png'),
+                  child: Image.asset('assets/editor/content/ec0.png'),
                 ),
                 _homeEditorRelatedGoodsWidget(context),
               ],
-
             ),
           ),
           BackButtonWidget(),

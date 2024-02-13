@@ -1,11 +1,18 @@
+
 import 'package:flutter/material.dart';
+import 'package:kofoos/src/pages/home/api/home_api.dart';
+import 'package:kofoos/src/pages/home/func/home_recommend_func.dart';
 import 'package:kofoos/src/pages/home/home_editor_page_2.dart';
 import 'package:kofoos/src/pages/home/home_editor_page_3.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:kofoos/src/pages/home/home_editor_page_1.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:kofoos/src/pages/search/search_detail_page.dart';
+
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
+  HomeApi homeApi = HomeApi();
 
   Widget _homeEditorWidget(BuildContext context) {
     return CarouselSlider.builder(
@@ -44,14 +51,14 @@ class Home extends StatelessWidget {
                 ),
               );
             }
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: 300,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-                image: AssetImage('assets/editor/e$index.jpg'),
+          },
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 300,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage('assets/editor/carousel/e$index.jpg'),
               ),
             ),
           ),
@@ -61,136 +68,195 @@ class Home extends StatelessWidget {
   }
 
   Widget _homeRecommendWidget1(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 10.0,
-        ),
-        Row(
-          children: [
-            SizedBox(
-              width: 10.0,
-            ),
-            Text(
-              'What\'s Hot in Korea🔥',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+    return FutureBuilder<List<dynamic>>(
+      future: homeApi.getRecommendHot(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Text('No data available');
+        } else {
+          List<dynamic> recommendHotList = snapshot.data!;
+          return Column(
+            children: [
+              SizedBox(
+                height: 10.0,
               ),
-            ),
-            Spacer(),
-            TextButton(
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-              ),
-              onPressed: () {
-                print('해당 테마 상품 전체보기 기능 추가 필요');
-              },
-              child: Text(
-                'All  >',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Container(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                for (int i = 0;
-                i < 10;
-                i++)
-                  GestureDetector(
-                    onTap: () {
-                      print('$i번 상품 상세보기 기능 추가 필요');
+              Row(
+                children: [
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  Text(
+                    'What\'s Hot in Korea 🔥',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Spacer(),
+                  // 전체보기 버튼
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                    ),
+                    onPressed: () {
+                      print('해당 테마 상품 전체보기 기능 추가 필요');
+                      homeRecommendFunc(context, recommendHotList);
                     },
-                    child: Container(
-                      margin: const EdgeInsets.all(8),
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.blueAccent,
+                    child: Text(
+                      'All  >',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
                       ),
                     ),
                   ),
-              ],
-            ),
-          ),
-        ),
-        Divider(
-          height: 40,
-          thickness: 2.0,
-          color: Color(0xffECECEC),
-        ),
-      ],
+                ],
+              ),
+              Container(
+                height: 120,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      for (int i = 0; i < recommendHotList.length; i++)
+                        GestureDetector(
+                          onTap: () {
+                            String itemNo = recommendHotList[i]['itemNo'];
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProductDetailView(
+                                  itemNo: itemNo,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.all(8),
+                            width: 100,
+                            height: 100,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: CachedNetworkImage(
+                                imageUrl: recommendHotList[i]['imgUrl'],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              Divider(
+                height: 30,
+                thickness: 2.0,
+                color: Color(0xffECECEC),
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 
   Widget _homeRecommendWidget2(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            SizedBox(
-              width: 10.0,
-            ),
-            Text(
-              'What\'s Hot in Korea🔥',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+    return FutureBuilder<List<dynamic>>(
+      future: homeApi.getRecommendHistory(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Text('No data available');
+        } else {
+          List<dynamic> recommendHistoryList = snapshot.data!;
+          return Column(
+            children: [
+              SizedBox(
+                height: 10.0,
               ),
-            ),
-            Spacer(),
-            TextButton(
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-              ),
-              onPressed: () {
-                print('해당 테마 상품 전체보기 기능 추가 필요');
-              },
-              child: Text(
-                'All  >',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Container(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                for (int i = 0;
-                    i < 10;
-                    i++)
-                  GestureDetector(
-                    onTap: () {
-                      print('$i번 상품 상세보기 기능 추가 필요');
+              Row(
+                children: [
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  Text(
+                    'Just For You ✨',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Spacer(),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                    ),
+                    onPressed: () {
+                      print('해당 테마 상품 전체보기 기능 추가 필요');
+                      homeRecommendFunc(context, recommendHistoryList);
                     },
-                    child: Container(
-                      margin: const EdgeInsets.all(8),
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.blueAccent,
+                    child: Text(
+                      'All  >',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
                       ),
                     ),
                   ),
-              ],
-            ),
-          ),
-        ),
-      ],
+                ],
+              ),
+              Container(
+                height: 120,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      for (int i = 0; i < recommendHistoryList.length; i++)
+                        GestureDetector(
+                          onTap: () {
+                            String itemNo = recommendHistoryList[i]['itemNo'];
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProductDetailView(
+                                  itemNo: itemNo,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.all(8),
+                            width: 100,
+                            height: 100,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: CachedNetworkImage(
+                                imageUrl: recommendHistoryList[i]['imgUrl'],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              Divider(
+                height: 40,
+                thickness: 0,
+                color: Color(0xffECECEC),
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 
@@ -207,3 +273,7 @@ class Home extends StatelessWidget {
     );
   }
 }
+
+
+
+

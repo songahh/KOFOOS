@@ -19,13 +19,13 @@ class SearchProductPage extends StatefulWidget {
 
 class _SearchProductPageState extends State<SearchProductPage> {
   SearchApi searchApi = SearchApi();
-  late Future<dynamic> data;
-  int visibleItemCount = 15;
+    late Future<dynamic> data;
+    int visibleItemCount = 15;
 
-  @override
-  void initState() {
-    super.initState();
-    data = searchApi.getProducts(widget.cat1, widget.cat2, widget.order);
+        @override
+        void initState() {
+      super.initState();
+      data = searchApi.getProducts(widget.cat1, widget.cat2, widget.order);
   }
 
   @override
@@ -34,53 +34,71 @@ class _SearchProductPageState extends State<SearchProductPage> {
       future: data,
       builder: (context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return Text('Error');
         } else if (snapshot.hasData) {
           var products = snapshot.data as List<dynamic>;
 
-          return Material(
-            child: Stack(
-              children: [
-                NotificationListener<ScrollNotification>(
-                  onNotification: (ScrollNotification scrollInfo) {
-                    if (scrollInfo.metrics.pixels ==
-                        scrollInfo.metrics.maxScrollExtent) {
-                      setState(() {
-                        visibleItemCount =
-                            (visibleItemCount + 15).clamp(0, products.length);
-                      });
-                    }
-                    return false;
-                  },
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Text('Product'),
-                        SizedBox(height: 30),
-                        Wrap(
-                          spacing: 8.0,
-                          runSpacing: 4.0,
-                          children: products
-                              .sublist(
-                              0, visibleItemCount.clamp(0, products.length))
-                              .map((product) => _product(context, product))
-                              .toList(),
-                        ),
-                      ],
+          return Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    color: Colors.white,
+                    child: Text(
+                      ' Products(${products.length})',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                BackButtonWidget(),
-              ],
-            ),
+                  Expanded(
+                    child: NotificationListener<ScrollNotification>(
+                      onNotification: (ScrollNotification scrollInfo) {
+                        if (scrollInfo.metrics.pixels ==
+                            scrollInfo.metrics.maxScrollExtent) {
+                          setState(() {
+                            visibleItemCount =
+                                (visibleItemCount + 15).clamp(0, products.length);
+                          });
+                        }
+                        return false;
+                      },
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                        ),
+                        itemCount: visibleItemCount,
+                        itemBuilder: (context, index) {
+                          if (index < products.length) {
+                            return _product(context, products[index]);
+                          } else {
+                            return SizedBox.shrink();
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              // 추가된 부분
+              Positioned(
+                child: BackButtonWidget(),
+              ),
+            ],
           );
         }
         return Text('Error');
       },
     );
   }
+
+
 }
 
 Widget _product(BuildContext context, dynamic item) {
@@ -97,9 +115,16 @@ Widget _product(BuildContext context, dynamic item) {
       );
     },
     child: Container(
-      width: 120,
-      height: 150,
-      child: Image.network(httpImgUrl),
+      margin: const EdgeInsets.all(8),
+      width: 100,
+      height: 100,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(5.0),
+        child: Image.network(
+          httpImgUrl,
+          fit: BoxFit.cover,
+        ),
+      ),
     ),
   );
 }

@@ -81,6 +81,15 @@ public class UserService {
         }
     }
 
+    //회원 언어 업데이트
+    @Transactional
+    public void updateUserLanguage(int userId, String newLanguage) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.updateLanguage(newLanguage); // User 엔티티에 setLanguage 메서드를 구현해야 합니다.
+    }
+
+
 
     //회원 삭제
     public void deleteUser(int userId) {
