@@ -1,8 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:kofoos/src/pages/mypage/api/mypage_api.dart';
 
+import '../../common/device_controller.dart';
+import '../register/select_food.dart';
 import 'api/search_api.dart';
+import 'package:get/get.dart';
 
 class ProductDetailView extends StatefulWidget {
   const ProductDetailView({super.key, required this.itemNo});
@@ -21,11 +25,16 @@ class _ProductDetailViewState extends State<ProductDetailView>
   int count = 0;
   late String productId = '';
   late TabController _tabController;
+  MyPageApi _myPageApi = MyPageApi(); // MyPageApi 인스턴스 생성
+  List<int> userDislikedFoodsIds = []; // 사용자의 비선호 식재료 ID 리스트
+  bool isLoading = true; // 로딩 상태
+  final DeviceController deviceController = Get.find<DeviceController>();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _loadUserDislikedFoods(); // 사용자의 비선호 식재료 리스트를 로드
     data = searchApi.getProductDetail(widget.itemNo).then(
       (productData) {
         setState(() {
@@ -42,6 +51,129 @@ class _ProductDetailViewState extends State<ProductDetailView>
       isLiked = !isLiked;
       count += isLiked ? 1 : -1;
     });
+  }
+
+  // 사용자의 비선호 식재료 리스트를 로드하는 메서드
+  void _loadUserDislikedFoods() async {
+    try {
+      String deviceId = deviceController.deviceId.value;
+      userDislikedFoodsIds = await _myPageApi.loadUserDislikedFoods(deviceId);
+      setState(() {
+        isLoading = false;
+      });
+    } catch (e) {
+      print("비선호 식재료 로드 실패: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  final Map<String, Color> foodColorMap = {
+    'nuts': const Color(0xff866464),
+    'apple': const Color(0xffEDDC44),
+    'banana': const Color(0xffF3D59C),
+    'beef': const Color(0xffDCBEEF),
+    'bean': const Color(0xff07870D),
+    'mackerel': const Color(0xff61A2C7),
+    'buckwheat': const Color(0xffC5C761),
+    'celery': const Color(0xff9FCC9E),
+    'shrimp&crab': const Color(0xffFFAC7D),
+    'dairy product': const Color(0xff359EFF),
+    'eggs': const Color(0xffFFDB7D),
+    'gluten': const Color(0xffF5E6CA),
+    'kale': const Color(0xff9CB29C),
+    'mushroom': const Color(0xffB75F0D),
+    'mustard': const Color(0xff767676),
+    'peach': const Color(0xffFFD3D3),
+    'peanut': const Color(0xff6B8664),
+    'pork': const Color(0xffFE9999),
+    'chicken': const Color(0xffF6BC77),
+    'squid&clam': const Color(0xffADD2E6),
+    'tomato': const Color(0xffA80A0A),
+    // ... 다른 음식과 색상들 ...
+  };
+
+  Color getFoodColor(String food) {
+    // 매핑된 색상을 반환하거나, 매핑되지 않았다면 기본 색상을 반환
+    return foodColorMap[food] ?? Colors.grey;
+  }
+
+  Widget _Ingredient(List<dynamic>? dislikedMaterials ) {
+    // 비선호 식재료가 없는 경우 "No disliked materials" 칩을 표시
+    if (dislikedMaterials == null || dislikedMaterials.isEmpty) {
+      return _buildChip("No disliked materials", Colors.grey);
+    }
+
+    // 비선호 식재료가 있는 경우 각 식재료에 대한 칩을 생성
+    List<Widget> chips = dislikedMaterials.map<Widget>((materialId) {
+      // select_food.dart의 foodList에서 현재 materialId와 일치하는 식재료 객체를 찾습니다.
+      Food? food = foodList.firstWhereOrNull((food) => food.id == materialId);
+
+      // 해당 식재료가 사용자의 비선호 목록에 있는지 확인합니다.
+      bool isDisliked = userDislikedFoodsIds.contains(materialId);
+
+      // 식재료 객체를 찾았다면 식재료 칩을 생성합니다.
+      if (food != null) {
+        return Container(
+          margin: EdgeInsets.all(4),
+          child: Stack(
+            alignment: Alignment.topRight, // "warning" 문구의 위치를 조정합니다.
+            children: [
+              Container(
+                margin: EdgeInsets.all(1),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  border: isDisliked ? Border.all(color: Colors.transparent, width: 2) : null,
+                ),
+                child: Chip(
+                  backgroundColor: isDisliked ? Colors.red : getFoodColor(food.name),
+                  avatar: CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                    child: Image.asset('assets/icon/${food.image}.png', width: 20, height: 20),
+                  ),
+                  label: Text(
+                    food.name,
+                    style: const TextStyle(color: Colors.white), // 텍스트 색상을 흰색으로 지정
+                  ),
+                ),
+              ),
+              if (isDisliked) Positioned( // isDisliked가 true일 경우에만 "warning" 문구를 표시합니다.
+                top: 0,
+                right: 0,
+                child: Container(
+                  padding: EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                    color: Colors.yellow,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    'WARNING',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      } else {
+        return Container();
+      }
+    }).toList();
+
+    return Scrollbar(
+      thickness: 10,
+      child: Wrap(
+        alignment: WrapAlignment.start,
+        spacing: 0.0, //좌우 간격
+        runSpacing: 1.0, // 가로로 나열하면서 줄바꿈
+        children: [...chips],
+      ),
+    );
   }
 
   @override
@@ -152,12 +284,12 @@ class _ProductDetailViewState extends State<ProductDetailView>
                     ],
                   ),
                   SizedBox(
-                    height: 14,
+                    height: 8,
                   ),
                   // 재료 목록(비선호/알러지 식품)
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: _Ingredient(data['dislikedMaterials'], ""),
+                    child: _Ingredient(data['dislikedMaterials']),
                   ),
                   // 탭바
                   Container(
@@ -313,32 +445,7 @@ Widget _buildChip(String label, Color color) {
   );
 }
 
-Widget _Ingredient(List<dynamic>? dislikedMaterials, String materialDetail) {
-  List<Widget> chips = dislikedMaterials == null || dislikedMaterials.isEmpty
-      ? [_buildChip("No disliked materials", Colors.white)]
-      : dislikedMaterials
-          .map<Widget>(
-              (material) => _buildChip(material.toString(), Colors.white))
-          .toList();
 
-  return Scrollbar(
-    thickness: 10,
-    child: Wrap(
-      alignment: WrapAlignment.start,
-      spacing: 5.0,
-      runSpacing: 5.0, // 가로로 나열하면서 줄바꿈
-      children: [
-        ...chips,
-        Container(
-          child: Text(
-            materialDetail,
-            style: TextStyle(fontSize: 20),
-          ),
-        ),
-      ],
-    ),
-  );
-}
 
 class Recommendation extends StatelessWidget {
   String productId;
