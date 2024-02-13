@@ -216,8 +216,8 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
       await _objectModel!.getCameraImagePrediction(
         cameraImage,
         _camFrameRotation,
-        minimumScore: 0.3,
-        iOUThreshold: 0.3,
+        minimumScore: 0.8,
+        iOUThreshold: 0.6,
       );
 
       // Stop the stopwatch

@@ -64,8 +64,8 @@ class ImageScan  {
       try {
         List<ResultObjectDetection> detectionResults = await _objectModelYoloV8!.getImagePrediction(
             await image.readAsBytes(),
-            minimumScore: 0.1,
-            iOUThreshold: 0.3);
+            minimumScore: 0.8,
+            iOUThreshold: 0.6);
         results.addAll(detectionResults);
       } catch (e) {
         print("Object detection failed for image: ${image.path}, Error: $e");
