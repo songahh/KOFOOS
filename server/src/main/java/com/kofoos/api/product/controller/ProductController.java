@@ -37,12 +37,19 @@ public class ProductController {
 
 
     // 상품 조회 바코드
-    @GetMapping("/detail/{barcode}/{deviceId}")
-    public ResponseEntity<?> findProductDetailBarcode(@PathVariable String barcode,@PathVariable String deviceId){
+    @GetMapping("/detail/{barcode}")
+    public ResponseEntity<?> findProductDetailBarcode(@PathVariable String barcode){
         ProductDetailDto productDetailDto = productService.findProductByBarcode(barcode);
+        return new ResponseEntity<>(productDetailDto, HttpStatus.OK);
+    }
+
+    // 상품 조회 아이템번호
+    @GetMapping("/detail/no/{ItemNo}/{deviceId}")
+    public ResponseEntity<?> findProductDetailItemNo(@PathVariable String ItemNo,@PathVariable String deviceId){
+        ProductDetailDto productDetailDto = productService.findProductByItemNo(ItemNo);
         int userId = userService.getUserId(deviceId);
         RedisEntity redisEntity = RedisEntity.builder()
-                .barcode(barcode)
+                .barcode(productDetailDto.getBarcode())
                 .createdAt(LocalDateTime.now())
                 .name(productDetailDto.getName())
                 .imgUrl(productDetailDto.getImgurl())
@@ -53,13 +60,6 @@ public class ProductController {
                 .itemNo(productDetailDto.getItemNo())
                 .build();
         redisService.addRecentViewedItem(deviceId,redisEntity);
-        return new ResponseEntity<>(productDetailDto, HttpStatus.OK);
-    }
-
-    // 상품 조회 아이템번호
-    @GetMapping("/detail/no/{ItemNo}")
-    public ResponseEntity<?> findProductDetailItemNo(@PathVariable String ItemNo){
-        ProductDetailDto productDetailDto = productService.findProductByItemNo(ItemNo);
         return new ResponseEntity<>(productDetailDto, HttpStatus.OK);
     }
 
