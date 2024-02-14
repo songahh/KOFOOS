@@ -91,7 +91,7 @@ public class RedisService {
 }
 
 
-    LocalDateTime getDateTime(Object timeValue){
+    public LocalDateTime getDateTime(Object timeValue){
         String timeValueString = timeValue.toString();
         String temp = "";
         for (int i = 0; i < timeValueString.length(); i++) {
