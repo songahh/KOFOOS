@@ -474,7 +474,7 @@ Widget _buildChip(String label, Color color) {
 
 
 class Recommendation extends StatelessWidget {
-  String productId;
+  int productId;
 
   Recommendation({Key? key, required this.productId}) : super(key: key);
   SearchApi searchApi = SearchApi();

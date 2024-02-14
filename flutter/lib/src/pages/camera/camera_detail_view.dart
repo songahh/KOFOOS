@@ -23,7 +23,7 @@ class _CameraDetailViewState extends State<CameraDetailView>
   late Future<dynamic> data;
   bool isLiked = false;
   int count = 0;
-  late String productId = '';
+  late int productId = -1;
   late TabController _tabController;
   MyPageApi _myPageApi = MyPageApi(); // MyPageApi 인스턴스 생성
   List<int> userDislikedFoodsIds = []; // 사용자의 비선호 식재료 ID 리스트
@@ -39,7 +39,7 @@ class _CameraDetailViewState extends State<CameraDetailView>
       (productData) {
         setState(() {
           count = productData['like'];
-          productId = productData['productId'].toString();
+          productId = productData['productId'];
         });
         return productData;
       },
@@ -457,7 +457,7 @@ Widget _buildChip(String label, Color color) {
 }
 
 class Recommendation extends StatelessWidget {
-  String productId;
+  int productId;
 
   Recommendation({Key? key, required this.productId}) : super(key: key);
   SearchApi searchApi = SearchApi();
