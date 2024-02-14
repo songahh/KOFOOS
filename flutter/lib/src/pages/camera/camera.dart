@@ -72,7 +72,7 @@ class _CameraState extends State<Camera> {
               "No Match Found",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.red,
+                color: Colors.black,
               ),
             ),
             content: Column(
@@ -83,7 +83,7 @@ class _CameraState extends State<Camera> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: Color(0xffCACACA),
 
                   ),
                 ),
@@ -93,7 +93,7 @@ class _CameraState extends State<Camera> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: Color(0xffCACACA),
                   ),
                 ),
               ],

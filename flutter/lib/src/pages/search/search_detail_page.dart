@@ -136,8 +136,8 @@ class _ProductDetailViewState extends State<ProductDetailView>
           Fluttertoast.showToast(
             msg: '             ❗ WARNING ❗\n   There are disliked materials.',
             toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
             textColor: Colors.black87,
+
           );
           Vibration.vibrate(duration: 500);
         }
@@ -182,7 +182,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
-                      'WARNING',
+                      '⛔WARNING',
                       style: TextStyle(
                         color: Colors.black87,
                         fontSize: 10,
@@ -476,7 +476,7 @@ Widget _buildChip(String label, Color color) {
           child: Text(
             label,
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
         ),
