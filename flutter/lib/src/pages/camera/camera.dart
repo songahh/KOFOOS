@@ -5,6 +5,7 @@ import 'package:kofoos/src/pages/camera/camera_detail_view.dart';
 import 'package:kofoos/src/pages/home/home.dart';
 import 'package:pytorch_lite/pytorch_lite.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+import 'dart:async';
 
 import '../../root/root_controller.dart';
 import '../search/api/search_api.dart';
@@ -20,11 +21,101 @@ class Camera extends StatefulWidget {
 }
 
 class _CameraState extends State<Camera> {
+  var _count = 0;
+  Timer? _detectionTimer;
+  final _detectionTimeout = Duration(seconds: 10);
+  final _maxFailures = 10;
+  bool _isWarningMessageShown = false;
   List<ResultObjectDetection>? results;
   Duration? objectDetectionInferenceTime;
 
   String? classification;
   Duration? classificationInferenceTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _resetDetection();
+  }
+
+  @override
+  void dispose() {
+    _detectionTimer?.cancel();
+    super.dispose();
+  }
+
+  void _resetDetection() {
+    _count = 0;
+    _startDetectionTimer();
+    _isWarningMessageShown = false;
+  }
+
+  void _startDetectionTimer() {
+    _detectionTimer?.cancel();
+    _detectionTimer = Timer(_detectionTimeout, _evaluateDetectionFailure);
+  }
+
+  void _evaluateDetectionFailure() {
+    if ((_count >= _maxFailures || _detectionTimer?.isActive == false) && !_isWarningMessageShown) {
+      _showNoMatchFoundDialog();
+      _isWarningMessageShown = true;
+    }
+  }
+
+  void _showNoMatchFoundDialog() {
+    if (!_isWarningMessageShown) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "No Match Found",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+              ),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  "No matching products found after multiple attempts.",
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  "How about trying the barcode scanner button?",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text("OK", style: TextStyle(color: Colors.blue)),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _resetDetection();
+                },
+              ),
+            ],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            backgroundColor: Colors.white,
+          );
+        },
+      );
+    }
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +173,8 @@ class _CameraState extends State<Camera> {
       data = await searchApi.getProductDetail(itemNo);
     }
 
-    if (showMoreDetail && data != null) {
+    if (showMoreDetail && data != null && !_isWarningMessageShown) {
+      _count = 0;
       final snackBar = SnackBar(
         content: Container(
           height: 250.0,
@@ -142,6 +234,14 @@ class _CameraState extends State<Camera> {
       List<ResultObjectDetection> results, Duration inferenceTime) {
     if (!mounted) {
       return;
+    }
+    if (results.isEmpty || results.every((result) => result.score <= 0.75)) {
+      _count++;
+      if (_count >= _maxFailures) {
+        _evaluateDetectionFailure();
+      }
+    } else {
+      _resetDetection();
     }
     setState(() {
       this.results = results;
