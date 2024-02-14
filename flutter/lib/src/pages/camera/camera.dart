@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kofoos/src/pages/camera/camera_detail_view.dart';
 import 'package:kofoos/src/pages/home/home.dart';
 import 'package:pytorch_lite/pytorch_lite.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
@@ -180,53 +181,22 @@ class _CameraState extends State<Camera> {
           child: Center(
             child: GestureDetector(
               // 제품 상제 정보 표시
-              // onTap: (){
-              //   CameraController? cameraController;
-              //   // cameraController!.stopImageStream();
-              //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              //   // RootController.to.goToProductDetail(data['itemNo']);
-              //   Navigator.pushReplacement(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (context) => ProductDetailView(
-              //           itemNo: data['itemNo'],
-              //         ),
-              //       )).then((value) =>
-              //       cameraController?.startImageStream((image) {
-              //         onLatestImageAvailable;})
-              //   );
-              // },
-              onTap: () async {
-                ScaffoldMessenger.of(context).clearSnackBars();
-                print('안녕!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-                print(data);
-
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("Product info"),
-                      content: Column(
-                        children: [
-                          Text("제품 번호: $itemNo", style: TextStyle(fontSize: 18.0)),
-                          Image.network(data['imgurl'], height: 300.0),
-                        ],
+              onTap: (){
+                CameraController? cameraController;
+                // cameraController!.stopImageStream();
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                // RootController.to.goToProductDetail(data['itemNo']);
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CameraDetailView(
+                        itemNo: data['itemNo'],
                       ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text("O K"),
-                        ),
-                      ],
-                    );
-                  },
-                ).then((value) {
-                  ScaffoldMessenger.of(context).clearSnackBars();
-                });
+                    )).then((value) =>
+                    cameraController?.startImageStream((image) {
+                      onLatestImageAvailable;})
+                );
               },
-
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
