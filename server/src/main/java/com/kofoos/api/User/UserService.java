@@ -119,15 +119,17 @@ public class UserService {
                     LinkedHashMap<?, ?> linkedHashMap = (LinkedHashMap<?, ?>) history;
                     Object imgUrlValue = linkedHashMap.get("imgUrl"); // Image 엔티티가 null이 아닐 경우 URL 추출
                     Object itemNoValue = linkedHashMap.get("itemNo");
+                    Object timeValue = linkedHashMap.get("createdAt");
                     return ProductDto.builder()
                             .productItemNo(itemNoValue.toString())
                             .productUrl(imgUrlValue.toString())
+                            .date(redisService.getDateTime(timeValue))
                             .build();
                 })
                 .collect(Collectors.toList());
         Set<ProductDto> uniqueProducts = new HashSet<>(products);
         List<ProductDto> uniqueProductList = new ArrayList<>(uniqueProducts);
-
+        uniqueProductList.sort(ProductDto::compareTo);
         return MyPageDto.builder()
                 .language(language)
                 .dislikedMaterials(dislikedMaterials)
