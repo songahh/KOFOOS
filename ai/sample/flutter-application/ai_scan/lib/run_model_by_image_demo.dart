@@ -35,20 +35,21 @@ class _RunModelByImageDemoState extends State<RunModelByImageDemo> {
   Future loadModel() async {
     //String pathImageModel = "assets/models/model_classification.pt";
     //String pathCustomModel = "assets/models/custom_model.ptl";
-    String pathObjectDetectionModel = "assets/best.torchscript";
+    String pathObjectDetectionModel = "assets/model_2024-02-13.torchscript";
     // String pathObjectDetectionModelYolov8 = "assets/models/yolov8s.torchscript";
-    String pathObjectDetectionModelYolov8 = "assets/best.torchscript";
+    String pathObjectDetectionModelYolov8 =
+        "assets/model_2024-02-13.torchscript";
     try {
       // _imageModel = await PytorchLite.loadClassificationModel(
       //     pathImageModel, 224, 224, 1000,
       //     labelPath: "assets/labels/label_classification_imageNet.txt");
       //_customModel = await PytorchLite.loadCustomModel(pathCustomModel);
       _objectModel = await PytorchLite.loadObjectDetectionModel(
-          pathObjectDetectionModel, 100, 640, 640,
-          labelPath: "assets/labels.txt");
+          pathObjectDetectionModel, 104, 640, 640,
+          labelPath: "assets/labels_2024-02-13.txt");
       _objectModelYoloV8 = await PytorchLite.loadObjectDetectionModel(
-          pathObjectDetectionModelYolov8, 100, 640, 640,
-          labelPath: "assets/labels.txt",
+          pathObjectDetectionModelYolov8, 104, 640, 640,
+          labelPath: "assets/labels_2024-02-13.txt",
           objectDetectionModelType: ObjectDetectionModelType.yolov8);
     } catch (e) {
       if (e is PlatformException) {
@@ -97,8 +98,8 @@ class _RunModelByImageDemoState extends State<RunModelByImageDemo> {
     Stopwatch stopwatch = Stopwatch()..start();
     objDetect = await _objectModel.getImagePrediction(
         await File(image!.path).readAsBytes(),
-        minimumScore: 0.1,
-        iOUThreshold: 0.3);
+        minimumScore: 0.8,
+        iOUThreshold: 0.6);
     textToShow = inferenceTimeAsString(stopwatch);
     print('object executed in ${stopwatch.elapsed.inMilliseconds} ms');
 
@@ -131,8 +132,8 @@ class _RunModelByImageDemoState extends State<RunModelByImageDemo> {
 
     objDetect = await _objectModelYoloV8.getImagePrediction(
         await File(image!.path).readAsBytes(),
-        minimumScore: 0.1,
-        iOUThreshold: 0.3);
+        minimumScore: 0.8,
+        iOUThreshold: 0.6);
     textToShow = inferenceTimeAsString(stopwatch);
 
     print('object executed in ${stopwatch.elapsed.inMilliseconds} ms');
