@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kofoos/src/pages/mypage/api/mypage_api.dart';
 import 'package:kofoos/src/pages/search/api/search_api.dart';
+import 'package:motion_toast/motion_toast.dart';
 import 'package:vibration/vibration.dart';
 import '../../common/device_controller.dart';
 import '../register/select_food.dart';
@@ -97,6 +98,35 @@ class _CameraDetailViewState extends State<CameraDetailView>
     return foodColorMap[food] ?? Colors.grey;
   }
 
+  void _displayWarningMotionToast() async{
+    if(mounted)
+      MotionToast(
+        title: Text(
+          '❗ WARNING ❗',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: Colors.white,
+          ),
+        ),
+        primaryColor: Colors.red,
+        description: Text(
+          'There are disliked materials.',
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.white,
+          ),
+        ),
+        animationCurve: Curves.elasticOut,
+        borderRadius: 10,
+        animationDuration: const Duration(milliseconds: 1000),
+        icon: Icons.warning,
+        iconSize: 35,
+        width: 300,
+        height: 80,
+      ).show(context);
+  }
+
   Widget _Ingredient(List<dynamic>? dislikedMaterials) {
     // 비선호 식재료가 없는 경우 "No disliked materials" 칩을 표시
     if (dislikedMaterials == null || dislikedMaterials.isEmpty) {
@@ -114,12 +144,7 @@ class _CameraDetailViewState extends State<CameraDetailView>
       // 식재료 객체를 찾았다면 식재료 칩을 생성합니다.
       if (food != null) {
         if (isDisliked) {
-          Fluttertoast.showToast(
-            msg: '             ❗ WARNING ❗\n   There are disliked materials.',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            textColor: Colors.black87,
-          );
+          _displayWarningMotionToast();
           Vibration.vibrate(duration: 500);
         }
 
@@ -202,6 +227,7 @@ class _CameraDetailViewState extends State<CameraDetailView>
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
           var data = snapshot.data;
+          bool isDisliked = data['dislikedMaterials'].any((material) => userDislikedFoodsIds.contains(material));
           return Scaffold(
             appBar: AppBar(
               title: Text('Product Detail'),
@@ -212,17 +238,28 @@ class _CameraDetailViewState extends State<CameraDetailView>
                 children: [
                   Center(
                     // 제품 사진
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Image.network(
-                        data['imgurl'],
-                        fit: BoxFit.cover,
-                      ),
+                    child: Stack(
+                      children: [
+                        // 제품 사진
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Image.network(
+                            data['imgurl'],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        if (isDisliked)
+                          Image.asset(
+                            "assets/info/X.png",
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.width,
+                          )
+                      ],
                     ),
                   ),
                   Container(
