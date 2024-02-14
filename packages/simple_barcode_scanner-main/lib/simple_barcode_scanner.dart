@@ -119,6 +119,9 @@ class _SimpleBarcodeScannerPageState extends State<SimpleBarcodeScannerPage>{
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
+                        Future.delayed(Duration(seconds: 1), () {
+                          Navigator.of(context).pop(true);
+                        });
                         return AlertDialog(
                           backgroundColor: Colors.white, // 배경색 설정
                           shape: RoundedRectangleBorder( // 모서리 둥글게 설정
@@ -141,13 +144,8 @@ class _SimpleBarcodeScannerPageState extends State<SimpleBarcodeScannerPage>{
                       },
                     ).then((val) {
                       isDialogShowing = false;
-                      Future.delayed(Duration(seconds: 1), () {
-                        Navigator.of(context, rootNavigator: true).pop('dialog');
-                      });
                     });
                   }
-
-
                   Future.delayed(Duration(seconds: 1), () {
                     Navigator.pushReplacement(
                       context,
