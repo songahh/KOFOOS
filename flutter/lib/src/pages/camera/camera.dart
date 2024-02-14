@@ -68,16 +68,30 @@ class _CameraState extends State<Camera> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text(
-              "No Match Found",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+            titlePadding: EdgeInsets.zero,
+            title: ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0),
+              ),
+              child: Image.asset(
+                'assets/info/error.gif',
+                fit: BoxFit.cover,
+                height: 200,
               ),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                Text(
+                  "No Match Found",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 8),
                 Text(
                   "No matching products found after multiple attempts.",
                   style: TextStyle(
