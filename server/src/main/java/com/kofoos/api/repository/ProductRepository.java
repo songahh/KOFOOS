@@ -80,7 +80,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query("select p from Product p left join fetch p.productMaterials join fetch p.image join p.category on p.category.id = :id ORDER BY p.like")
     List<Product> findProductsOrderByLike(int id);
-    @Query("select p from Product p left join fetch p.productMaterials join fetch p.image join p.category on p.category.id = :id ORDER BY p.hit")
+    @Query("select p from Product p left join fetch p.productMaterials join fetch p.image join p.category on p.category.id = :id ORDER BY p.hit desc ")
     List<Product> findProductsOrderByHit(int id);
 
     @Modifying
