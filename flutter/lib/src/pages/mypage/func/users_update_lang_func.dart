@@ -18,6 +18,15 @@ void usersUpdateLangFunc(BuildContext context) {
         title: Text('Select Language'),
         children: [
           ListTile(
+            title: Text('한국어'),
+            onTap: () async{
+                  print('한국어 선택');
+              await myPageApi.updateUserLanguage(deviceController.deviceId.value, 'ko_KR');
+              myPageNotifier.fetchMyPageInfo(deviceController.deviceId.value); // 언어 업데이트 후 정보 갱신
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
             title: Text('English'),
             onTap: () async{
               print('영어 선택');
@@ -50,7 +59,7 @@ void usersUpdateLangFunc(BuildContext context) {
   );
 }
 
-//언어 코드와 언어 이름 매핑
+// 언어 코드와 언어 이름 매핑
 String getLanguageDisplayName(String languageCode) {
   switch (languageCode) {
     case 'ko_KR':
@@ -62,6 +71,6 @@ String getLanguageDisplayName(String languageCode) {
     case 'ja_JP':
       return '日本語';
     default:
-      return 'Unknown';
+      return 'English';
   }
 }
