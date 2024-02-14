@@ -68,31 +68,42 @@ class _CameraState extends State<Camera> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text(
-              "No Match Found",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
+            titlePadding: EdgeInsets.zero,
+            title: ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0), // 상단 왼쪽을 둥글게 만듭니다.
+                topRight: Radius.circular(20.0), // 상단 오른쪽을 둥글게 만듭니다.
+              ),
+              child: Image.asset(
+                'assets/info/error.gif', // 이미지 경로를 여기에 넣으세요.
+                fit: BoxFit.cover, // 이미지의 너비를 조정하세요.
+                height: 200, // 이미지의 높이를 다이얼로그의 높이로 설정합니다.
               ),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Text(
+                  "No Match Found",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.red,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
                   "No matching products found after multiple attempts.",
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
                     color: Colors.black,
-
                   ),
                 ),
-                SizedBox(height: 12),
+                SizedBox(height: 6),
                 Text(
                   "How about trying the barcode scanner button?",
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
                     color: Colors.black,
                   ),
                 ),
@@ -100,10 +111,10 @@ class _CameraState extends State<Camera> {
             ),
             actions: <Widget>[
               TextButton(
-                child: Text("OK", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                child: Text("OK", style: TextStyle(fontSize:15, color: Colors.black, fontWeight: FontWeight.bold)),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  _resetDetection();
+                  // _resetDetection(); 여기서 해당 함수가 정의되어야 합니다.
                 },
               ),
             ],
