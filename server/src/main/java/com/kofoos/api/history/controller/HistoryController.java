@@ -45,7 +45,7 @@ public class HistoryController {
     @PostMapping("/redis")
     public ResponseEntity<?> getHistoriesRedis(@RequestBody RequestId requestId){
         System.out.println("deviceId = " + requestId.getDeviceId());
-        Set<Object> histories = redisService.getRecentViewedItems(requestId.getDeviceId());
+        List<Object> histories = redisService.getRecentViewedItems(requestId.getDeviceId());
         return new ResponseEntity<>(histories,HttpStatus.OK);
 
     }
@@ -55,7 +55,7 @@ public class HistoryController {
 
         List<HistoryProductDto> mysql = historyService.HistoryDetail(requestId.getDeviceId());
         List<HistoryProductDto> allList = new ArrayList<>(mysql);
-        Set<Object> redis = redisService.getRecentViewedItems(requestId.getDeviceId());
+        List<Object> redis = redisService.getRecentViewedItems(requestId.getDeviceId());
         if (redis != null && !redis.isEmpty()) {
             List<HistoryProductDto> redisProducts = redis.stream().map(o -> {
                 RedisEntity redisEntity = (RedisEntity) o;
