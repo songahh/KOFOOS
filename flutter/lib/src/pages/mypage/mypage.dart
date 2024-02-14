@@ -265,9 +265,11 @@ class _MypageState extends State<Mypage> {
                 child: Text(
                   'More details',
                   style: TextStyle(
-                    fontSize: fontSize - 4, // 조금 더 작게 설정
+                    fontSize: 12,
                     color: Colors.grey,
                     decoration: TextDecoration.underline,
+                    decorationColor: Colors.grey,
+                    decorationThickness: 2.0,
                   ),
                 ),
               ),
