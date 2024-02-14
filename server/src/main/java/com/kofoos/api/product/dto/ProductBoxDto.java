@@ -6,14 +6,14 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ProductBoxDto {
+public class ProductBoxDto implements Comparable<ProductBoxDto>{
 
     private String barcode;
     private String name;
     private String itemNo;
     private String imgurl;
     private int productId;
-
+    private int hit;
 
     public static ProductBoxDto of(Product product) {
 
@@ -22,9 +22,14 @@ public class ProductBoxDto {
                 .name(product.getName())
                 .itemNo(product.getItemNo())
                 .productId(product.getId())
+                .hit(product.getHit())
                 .imgurl(product.getImage() != null ? product.getImage().getImgUrl()+"?width=200&height=200" : "hoho")
                 .build();
 
     }
 
+    @Override
+    public int compareTo(ProductBoxDto o) {
+        return Integer.compare(o.hit,this.hit);
+    }
 }
