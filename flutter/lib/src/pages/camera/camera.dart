@@ -88,7 +88,7 @@ class _CameraState extends State<Camera> {
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w600,
-                    color: Colors.red,
+                    color: Colors.black,
                   ),
                 ),
                 SizedBox(height: 8),
@@ -96,25 +96,28 @@ class _CameraState extends State<Camera> {
                   "No matching products found after multiple attempts.",
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xffCACACA),
+
                   ),
                 ),
-                SizedBox(height: 6),
+                SizedBox(height: 12),
                 Text(
                   "How about trying the barcode scanner button?",
                   style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xffCACACA),
                   ),
                 ),
               ],
             ),
             actions: <Widget>[
               TextButton(
-                child: Text("OK", style: TextStyle(fontSize:15, color: Colors.black, fontWeight: FontWeight.bold)),
+                child: Text("OK", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  // _resetDetection(); 여기서 해당 함수가 정의되어야 합니다.
+                  _resetDetection();
                 },
               ),
             ],
