@@ -5,6 +5,7 @@ import 'package:kofoos/src/pages/mypage/func/users_update_lang_func.dart';
 import 'package:kofoos/src/pages/mypage/api/mypage_api.dart';
 import 'package:kofoos/src/pages/mypage/dto/my_page_dto.dart';
 import 'package:kofoos/src/pages/mypage/update_materials_page.dart';
+import 'package:kofoos/src/pages/register/func/get_device_id.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../common/device_controller.dart';
@@ -12,6 +13,7 @@ import '../register/select_food.dart';
 import 'func/mypage_history_func.dart';
 import 'mypage_notifier.dart';
 import 'package:get/get.dart';
+
 
 class Mypage extends StatefulWidget {
   const Mypage({Key? key}) : super(key: key);
@@ -21,6 +23,7 @@ class Mypage extends StatefulWidget {
 }
 
 class _MypageState extends State<Mypage> {
+
   final DeviceController deviceController =
       Get.find<DeviceController>(); // DeviceController 인스턴스 얻기
 

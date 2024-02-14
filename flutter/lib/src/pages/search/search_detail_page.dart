@@ -7,6 +7,7 @@ import 'api/search_api.dart';
 import 'package:get/get.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vibration/vibration.dart';
+import 'package:motion_toast/motion_toast.dart';
 
 class ProductDetailView extends StatefulWidget {
   const ProductDetailView({super.key, required this.itemNo});
@@ -30,7 +31,6 @@ class _ProductDetailViewState extends State<ProductDetailView>
   List<int> userDislikedFoodsIds = []; // 사용자의 비선호 식재료 ID 리스트
   bool isLoading = true; // 로딩 상태
   final DeviceController deviceController = Get.find<DeviceController>();
-
   @override
   void initState() {
     super.initState();
@@ -69,6 +69,35 @@ class _ProductDetailViewState extends State<ProductDetailView>
         count += isLiked ? 1 : -1;
       });
     }
+  }
+
+  void _displayWarningMotionToast() async{
+    if(mounted)
+      MotionToast(
+        title: Text(
+          '❗ WARNING ❗',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: Colors.white,
+          ),
+        ),
+        primaryColor: Colors.red,
+        description: Text(
+          'There are disliked materials.',
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.white,
+          ),
+        ),
+        animationCurve: Curves.elasticOut,
+        borderRadius: 10,
+        animationDuration: const Duration(milliseconds: 1000),
+        icon: Icons.warning,
+        iconSize: 35,
+        width: 300,
+        height: 80,
+      ).show(context);
   }
 
   // 사용자의 비선호 식재료 리스트를 로드하는 메서드
@@ -133,13 +162,8 @@ class _ProductDetailViewState extends State<ProductDetailView>
       // 식재료 객체를 찾았다면 식재료 칩을 생성합니다.
       if (food != null) {
         if (isDisliked) {
-          Fluttertoast.showToast(
-            msg: '             ❗ WARNING ❗\n   There are disliked materials.',
-            toastLength: Toast.LENGTH_SHORT,
-            textColor: Colors.black87,
-
-          );
-          Vibration.vibrate(duration: 500);
+            _displayWarningMotionToast();
+            Vibration.vibrate(duration: 500);
         }
 
         return Container(
@@ -221,6 +245,8 @@ class _ProductDetailViewState extends State<ProductDetailView>
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
           var data = snapshot.data;
+          bool isDisliked = data['dislikedMaterials'].any((material) => userDislikedFoodsIds.contains(material));
+          print("@@@@@@@@@@@@@@@@222"+isDisliked.toString());
           return Scaffold(
             body: SingleChildScrollView(
               child: Column(
@@ -228,17 +254,28 @@ class _ProductDetailViewState extends State<ProductDetailView>
                 children: [
                   Center(
                     // 제품 사진
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Image.network(
-                        data['imgurl'],
-                        fit: BoxFit.cover,
-                      ),
+                    child: Stack(
+                      children: [
+                        // 제품 사진
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Image.network(
+                            data['imgurl'],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        if (isDisliked)
+                          Image.asset(
+                            "assets/info/X.png",
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.width,
+                          )
+                      ],
                     ),
                   ),
                   Container(
