@@ -34,22 +34,6 @@ class ImageScan  {
     }
   }
 
-  /*Future loadModel() async {
-    String pathObjectDetectionModelYolov8 = "assets/ai/best.torchscript";
-    try {
-      _objectModelYoloV8 = await PytorchLite.loadObjectDetectionModel(
-          pathObjectDetectionModelYolov8, 100, 640, 640,
-          labelPath: "assets/ai/labels.txt",
-          objectDetectionModelType: ObjectDetectionModelType.yolov8);
-    } catch (e) {
-      if (e is PlatformException) {
-        print("only supported for android, Error is $e");
-      } else {
-        print("Error is $e");
-      }
-    }
-  }*/
-
 // 이미지 파일 리스트를 받아 각 이미지에 대한 객체 탐지를 실행하고 결과를 반환하는 메서드
   Future<List<ResultObjectDetection?>> runObjectDetectionYoloV8(List<File> images) async {
     if (_objectModelYoloV8 == null) {
@@ -66,12 +50,32 @@ class ImageScan  {
             await image.readAsBytes(),
             minimumScore: 0.8,
             iOUThreshold: 0.6);
-        results.addAll(detectionResults);
+        if (detectionResults.isNotEmpty) {
+
+          double max = 0;
+          ResultObjectDetection maxScoreResult = detectionResults[0];
+
+          for(var det in detectionResults){
+            if(max > det.score){
+              max = det.score;
+              maxScoreResult = det;
+            }
+          }
+          results.add(maxScoreResult);
+          print('=====결과값이 있을 때 결과 개수: ${results.length}====');
+        } else {
+          results.add(null); // 비어 있는 결과인 경우 null 추가
+          print('=====결과값이 없을 때 결과 개수: ${results.length}====');
+        }
+        print('=====if문 나와서 결과 개수: ${results.length}====');
+        print(detectionResults);
       } catch (e) {
         print("Object detection failed for image: ${image.path}, Error: $e");
         results.add(null); // 실패한 경우 null 추가
+        print('===== catch문 결과 개수: ${results.length}====');
       }
     }
+
     return results;
   }
   String inferenceTimeAsString(Stopwatch stopwatch) =>
