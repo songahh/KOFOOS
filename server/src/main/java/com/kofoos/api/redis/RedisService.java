@@ -32,9 +32,20 @@ public class RedisService {
         //
     }
 
-    public Set<Object> getRecentViewedItems(String deviceId) {
+    public List<Object> getRecentViewedItems(String deviceId) {
         String key = "recentViewed:" + deviceId;
-        return redisTemplate.opsForZSet().reverseRange(key, 0, 9);
+        Set<Object> getObjects = redisTemplate.opsForZSet().reverseRange(key, 0, 9);
+        assert getObjects != null;
+        List<Object> sortList = new ArrayList<>(getObjects);
+        sortList.sort((o1, o2) -> {
+            LinkedHashMap<?, ?> linkedHashMap1 = (LinkedHashMap<?, ?>) o1;
+            LinkedHashMap<?, ?> linkedHashMap2 = (LinkedHashMap<?, ?>) o2;
+            LocalDateTime date1 = getDateTime(linkedHashMap1.get("createdAt"));
+            LocalDateTime date2 = getDateTime(linkedHashMap2.get("createdAt"));
+            return date2.compareTo(date1);
+        });
+
+        return sortList;
     }
 
 
@@ -55,25 +66,7 @@ public class RedisService {
                         Object productIdValue = linkedHashMap.get("productId");
                         Object userIdValue = linkedHashMap.get("userId");
                         Object timeValue = linkedHashMap.get("createdAt");
-                        String timeValueString = timeValue.toString();
-                        String temp = "";
-                        for (int i = 0; i < timeValueString.length(); i++) {
-                            if (Character.isDigit(timeValueString.charAt(i)) || timeValueString.charAt(i) == ',') {
-                                temp += timeValueString.charAt(i);
-                            }
-                        }
-                        List<Integer> dateTimeValues = Arrays.stream(temp.split(","))
-                                .map(Integer::parseInt)
-                                .collect(Collectors.toList());
-
-                        int year = dateTimeValues.get(0);
-                        int month = dateTimeValues.get(1);
-                        int day = dateTimeValues.get(2);
-                        int hour = dateTimeValues.get(3);
-                        int minute = dateTimeValues.get(4);
-                        int second = dateTimeValues.get(5);
-                        int nano = dateTimeValues.get(6);
-                        LocalDateTime localDateTime = LocalDateTime.of(year, month, day, hour, minute, second, nano);
+                        LocalDateTime localDateTime = getDateTime(timeValue);
 
                         HistoryProductDto productDetailDto = HistoryProductDto.builder()
                                 .barcode(barcodeValue.toString())
@@ -96,5 +89,28 @@ public class RedisService {
         }
     return recentItems;
 }
+
+
+    LocalDateTime getDateTime(Object timeValue){
+        String timeValueString = timeValue.toString();
+        String temp = "";
+        for (int i = 0; i < timeValueString.length(); i++) {
+            if (Character.isDigit(timeValueString.charAt(i)) || timeValueString.charAt(i) == ',') {
+                temp += timeValueString.charAt(i);
+            }
+        }
+        List<Integer> dateTimeValues = Arrays.stream(temp.split(","))
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+
+        int year = dateTimeValues.get(0);
+        int month = dateTimeValues.get(1);
+        int day = dateTimeValues.get(2);
+        int hour = dateTimeValues.get(3);
+        int minute = dateTimeValues.get(4);
+        int second = dateTimeValues.get(5);
+        int nano = dateTimeValues.get(6);
+        return LocalDateTime.of(year, month, day, hour, minute, second, nano);
+    }
 
 }
