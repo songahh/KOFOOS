@@ -458,7 +458,7 @@ class Home extends StatelessWidget {
 
   Widget _homeRecommendWidget3(BuildContext context) {
     return FutureBuilder<List<dynamic>>(
-      future: searchApi.getRecommendProducts('2313'),
+      future: searchApi.getRecommendProducts(2313), // productId를 2313으로 넣어 호출
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());

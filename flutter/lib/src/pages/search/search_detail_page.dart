@@ -5,6 +5,7 @@ import 'package:kofoos/src/pages/mypage/api/mypage_api.dart';
 
 import '../../common/device_controller.dart';
 import '../register/select_food.dart';
+import '../wishlist/api/wishlist_api.dart';
 import 'api/search_api.dart';
 import 'package:get/get.dart';
 
@@ -20,10 +21,11 @@ class ProductDetailView extends StatefulWidget {
 class _ProductDetailViewState extends State<ProductDetailView>
     with SingleTickerProviderStateMixin {
   SearchApi searchApi = SearchApi();
+  WishlistApi wishlistApi = WishlistApi();
   late Future<dynamic> data;
   bool isLiked = false;
   int count = 0;
-  late String productId = '';
+  late int productId = -1;
   late TabController _tabController;
   MyPageApi _myPageApi = MyPageApi(); // MyPageApi 인스턴스 생성
   List<int> userDislikedFoodsIds = []; // 사용자의 비선호 식재료 ID 리스트
@@ -35,22 +37,39 @@ class _ProductDetailViewState extends State<ProductDetailView>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _loadUserDislikedFoods(); // 사용자의 비선호 식재료 리스트를 로드
+    final deviceId = deviceController.deviceId.value; // 현재 deviceId 가져오기
     data = searchApi.getProductDetail(widget.itemNo).then(
-      (productData) {
+          (productData) {
+        var wishList = productData['wishList'] as List<dynamic>?;
         setState(() {
           count = productData['like'];
-          productId = productData['productId'].toString();
+          productId = productData['productId'];
+          isLiked = wishList?.contains(deviceId) ?? false;
         });
         return productData;
       },
     );
   }
 
-  Like() {
+  Future<void> Like() async {
     setState(() {
       isLiked = !isLiked;
       count += isLiked ? 1 : -1;
     });
+
+    try {
+      if (isLiked) {
+        await wishlistApi.likeWishlistItems(productId);
+      } else {
+        await wishlistApi.unlikeWishlistItems(productId);
+      }
+    } catch (e) {
+      print("Wishlist API 호출 실패: $e");
+      setState(() {
+        isLiked = !isLiked;
+        count += isLiked ? 1 : -1;
+      });
+    }
   }
 
   // 사용자의 비선호 식재료 리스트를 로드하는 메서드

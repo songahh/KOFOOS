@@ -102,7 +102,7 @@ public class ProductController {
                 Dtos.add(p);
             }
         }
-
+        Dtos.sort(ProductBoxDto::compareTo);
         return new ResponseEntity<>(Dtos,HttpStatus.OK);
     }
 

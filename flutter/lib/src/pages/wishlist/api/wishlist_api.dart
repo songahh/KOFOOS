@@ -2,10 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-
+import 'package:get/get.dart';
+import '../../../common/device_controller.dart';
 import 'model/FolderDto.dart';
 
 class WishlistApi {
+
+  final DeviceController deviceController = Get.find<DeviceController>();
   var wishlistDio = Dio(
     BaseOptions(
       // baseUrl: "http://10.0.2.2:8080",
@@ -54,5 +57,17 @@ class WishlistApi {
   Future<void> restoreWishlistItems(Set wishlist_item_ids ) async {
     await wishlistDio.post('/wishlist/product/check', data: {"wishlistItemIds": wishlist_item_ids.toList(),"bought":0});
   }
+
+  Future<void> likeWishlistItems(int productId) async {
+    String currentDeviceId = deviceController.deviceId.value;
+    await wishlistDio.post('/wishlist/product/like', data: {"productId": productId,"deviceId": currentDeviceId});
+  }
+
+  Future<void> unlikeWishlistItems(int productId) async {
+    String currentDeviceId = deviceController.deviceId.value;
+    await wishlistDio.post('/wishlist/product/unlike', data: {"productId": productId,"deviceId": currentDeviceId});
+  }
+
+
 }
 
