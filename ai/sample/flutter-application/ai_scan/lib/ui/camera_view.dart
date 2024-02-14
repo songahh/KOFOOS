@@ -54,15 +54,18 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
   Future loadModel() async {
     String pathImageModel = "assets/model_classification.pt";
     //String pathCustomModel = "assets/models/custom_model.ptl";
-    String pathObjectDetectionModel = "assets/best.torchscript";
+    String pathObjectDetectionModel = "assets/model_2024-02-13.torchscript";
+    //String pathObjectDetectionModel = "assets/best.torchscript";
+
     try {
       _imageModel = await PytorchLite.loadClassificationModel(
           pathImageModel, 224, 224, 1000,
           labelPath: "assets/label_classification_imageNet.txt");
       //_customModel = await PytorchLite.loadCustomModel(pathCustomModel);
       _objectModel = await PytorchLite.loadObjectDetectionModel(
-          pathObjectDetectionModel, 100, 640, 640,
-          labelPath: "assets/labels.txt",
+          pathObjectDetectionModel, 104, 640, 640,
+          labelPath: "assets/labels_2024-02-13.txt",
+          //labelPath: "assets/labels.txt",
           objectDetectionModelType: ObjectDetectionModelType.yolov8);
     } catch (e) {
       if (e is PlatformException) {
@@ -222,8 +225,8 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
           await _objectModel!.getCameraImagePrediction(
         cameraImage,
         _camFrameRotation,
-        minimumScore: 0.3,
-        iOUThreshold: 0.3,
+        minimumScore: 0.8,
+        iOUThreshold: 0.6,
       );
 
       // Stop the stopwatch
