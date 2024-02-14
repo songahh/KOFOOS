@@ -83,6 +83,7 @@ flutter:
   assets:
     - assets/icon/
     - assets/logo/
+    - assets/info/
     - assets/editor/carousel/
     - assets/editor/content/
     - assets/editor/related_products/
