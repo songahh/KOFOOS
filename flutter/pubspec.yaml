@@ -54,6 +54,8 @@ dependencies:
     path: ../packages/simple_barcode_scanner-main/
   lazy_load_indexed_stack: ^1.1.0
   shake: ^2.2.0
+  vibration: ^1.8.4
+
 
 dev_dependencies:
   flutter_test:

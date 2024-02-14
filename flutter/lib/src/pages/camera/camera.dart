@@ -48,7 +48,7 @@ class _CameraState extends State<Camera> {
     _count = 0;
     _startDetectionTimer();
     _isWarningMessageShown = false;
-  }
+    }
 
   void _startDetectionTimer() {
     _detectionTimer?.cancel();
@@ -82,22 +82,25 @@ class _CameraState extends State<Camera> {
                   "No matching products found after multiple attempts.",
                   style: TextStyle(
                     fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 12),
                 Text(
                   "How about trying the barcode scanner button?",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue,
+                    color: Colors.black,
                   ),
                 ),
               ],
             ),
             actions: <Widget>[
               TextButton(
-                child: Text("OK", style: TextStyle(color: Colors.blue)),
+                child: Text("OK", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                 onPressed: () {
                   Navigator.of(context).pop();
                   _resetDetection();
