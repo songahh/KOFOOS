@@ -79,7 +79,7 @@ class _SimpleBarcodeScannerPageState extends State<SimpleBarcodeScannerPage>{
   // }
 
   Key scannerKey = UniqueKey();
-
+  bool isDialogShowing = false;
   void restartScanner() {
     setState(() {
       scannerKey = UniqueKey();
@@ -114,13 +114,41 @@ class _SimpleBarcodeScannerPageState extends State<SimpleBarcodeScannerPage>{
                   );
                 } else if (res != "-1" && item['name'] == "-") {
                   print("No matched product: " + res);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('There is no matched product'),
-                    ),
-                  );
+                  if(!isDialogShowing){
+                    isDialogShowing = true;
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          backgroundColor: Colors.white, // 배경색 설정
+                          shape: RoundedRectangleBorder( // 모서리 둥글게 설정
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          title: Text(
+                            "Alert",
+                            style: TextStyle( // 제목 스타일링
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          content: Text(
+                            "There is no matched product",
+                            style: TextStyle( // 내용 스타일링
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        );
+                      },
+                    ).then((val) {
+                      isDialogShowing = false;
+                      Future.delayed(Duration(seconds: 1), () {
+                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                      });
+                    });
+                  }
 
-                  Future.delayed(Duration(seconds: 3), () {
+
+                  Future.delayed(Duration(seconds: 1), () {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => SimpleBarcodeScannerPage()),
@@ -131,21 +159,6 @@ class _SimpleBarcodeScannerPageState extends State<SimpleBarcodeScannerPage>{
                 }
               },
             ),
-            Positioned(
-              right: 30,
-              bottom: 30,
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => SimpleBarcodeScannerPage()),
-                  );
-                },
-                child: Icon(Icons.barcode_reader),
-                backgroundColor: Color(0xffECECEC),
-                foregroundColor: Color(0xff343F56),
-              ),
-            )
           ],
         )
     );
