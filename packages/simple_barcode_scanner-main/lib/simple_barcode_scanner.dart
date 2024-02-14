@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:simple_barcode_scanner/enum.dart';
 import 'package:simple_barcode_scanner/screens/shared.dart';
 import 'package:kofoos/src/pages/search/search_detail_page.dart';
+import 'package:kofoos/src/pages/camera/camera_detail_view.dart';
 import 'package:kofoos/src/pages/search/api/search_api.dart';
 
 export 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
@@ -106,7 +107,7 @@ class _SimpleBarcodeScannerPageState extends State<SimpleBarcodeScannerPage>{
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ProductDetailView(
+                      builder: (context) => CameraDetailView(
                         itemNo: item['itemNo'],
                       ),
                     ),

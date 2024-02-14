@@ -2,30 +2,28 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:kofoos/src/pages/mypage/api/mypage_api.dart';
+import 'package:kofoos/src/pages/search/api/search_api.dart';
 
 import '../../common/device_controller.dart';
 import '../register/select_food.dart';
-import '../wishlist/api/wishlist_api.dart';
-import 'api/search_api.dart';
 import 'package:get/get.dart';
 
-class ProductDetailView extends StatefulWidget {
-  const ProductDetailView({super.key, required this.itemNo});
+class CameraDetailView extends StatefulWidget {
+  const CameraDetailView({super.key, required this.itemNo});
 
   final String itemNo;
 
   @override
-  State<ProductDetailView> createState() => _ProductDetailViewState();
+  State<CameraDetailView> createState() => _CameraDetailViewState();
 }
 
-class _ProductDetailViewState extends State<ProductDetailView>
+class _CameraDetailViewState extends State<CameraDetailView>
     with SingleTickerProviderStateMixin {
   SearchApi searchApi = SearchApi();
-  WishlistApi wishlistApi = WishlistApi();
   late Future<dynamic> data;
   bool isLiked = false;
   int count = 0;
-  late int productId = -1;
+  late String productId = '';
   late TabController _tabController;
   MyPageApi _myPageApi = MyPageApi(); // MyPageApi 인스턴스 생성
   List<int> userDislikedFoodsIds = []; // 사용자의 비선호 식재료 ID 리스트
@@ -37,39 +35,22 @@ class _ProductDetailViewState extends State<ProductDetailView>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _loadUserDislikedFoods(); // 사용자의 비선호 식재료 리스트를 로드
-    final deviceId = deviceController.deviceId.value; // 현재 deviceId 가져오기
     data = searchApi.getProductDetail(widget.itemNo).then(
-          (productData) {
-        var wishList = productData['wishList'] as List<dynamic>?;
+      (productData) {
         setState(() {
           count = productData['like'];
-          productId = productData['productId'];
-          isLiked = wishList?.contains(deviceId) ?? false;
+          productId = productData['productId'].toString();
         });
         return productData;
       },
     );
   }
 
-  Future<void> Like() async {
+  Like() {
     setState(() {
       isLiked = !isLiked;
       count += isLiked ? 1 : -1;
     });
-
-    try {
-      if (isLiked) {
-        await wishlistApi.likeWishlistItems(productId);
-      } else {
-        await wishlistApi.unlikeWishlistItems(productId);
-      }
-    } catch (e) {
-      print("Wishlist API 호출 실패: $e");
-      setState(() {
-        isLiked = !isLiked;
-        count += isLiked ? 1 : -1;
-      });
-    }
   }
 
   // 사용자의 비선호 식재료 리스트를 로드하는 메서드
@@ -118,7 +99,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
     return foodColorMap[food] ?? Colors.grey;
   }
 
-  Widget _Ingredient(List<dynamic>? dislikedMaterials ) {
+  Widget _Ingredient(List<dynamic>? dislikedMaterials) {
     // 비선호 식재료가 없는 경우 "No disliked materials" 칩을 표시
     if (dislikedMaterials == null || dislikedMaterials.isEmpty) {
       return _buildChip("No disliked materials", Colors.grey);
@@ -143,39 +124,46 @@ class _ProductDetailViewState extends State<ProductDetailView>
                 margin: EdgeInsets.all(1),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  border: isDisliked ? Border.all(color: Colors.transparent, width: 2) : null,
+                  border: isDisliked
+                      ? Border.all(color: Colors.transparent, width: 2)
+                      : null,
                 ),
                 child: Chip(
-                  backgroundColor: isDisliked ? Colors.red : getFoodColor(food.name),
+                  backgroundColor:
+                      isDisliked ? Colors.red : getFoodColor(food.name),
                   avatar: CircleAvatar(
                     backgroundColor: Colors.transparent,
-                    child: Image.asset('assets/icon/${food.image}.png', width: 20, height: 20),
+                    child: Image.asset('assets/icon/${food.image}.png',
+                        width: 20, height: 20),
                   ),
                   label: Text(
                     food.name,
-                    style: const TextStyle(color: Colors.white), // 텍스트 색상을 흰색으로 지정
+                    style:
+                        const TextStyle(color: Colors.white), // 텍스트 색상을 흰색으로 지정
                   ),
                 ),
               ),
-              if (isDisliked) Positioned( // isDisliked가 true일 경우에만 "warning" 문구를 표시합니다.
-                top: 0,
-                right: 0,
-                child: Container(
-                  padding: EdgeInsets.all(1),
-                  decoration: BoxDecoration(
-                    color: Colors.yellow,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    'WARNING',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
+              if (isDisliked)
+                Positioned(
+                  // isDisliked가 true일 경우에만 "warning" 문구를 표시합니다.
+                  top: 0,
+                  right: 0,
+                  child: Container(
+                    padding: EdgeInsets.all(1),
+                    decoration: BoxDecoration(
+                      color: Colors.yellow,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      'WARNING',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         );
@@ -207,6 +195,9 @@ class _ProductDetailViewState extends State<ProductDetailView>
         } else if (snapshot.hasData) {
           var data = snapshot.data;
           return Scaffold(
+            appBar: AppBar(
+              title: Text('Product Detail'),
+            ),
             body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,7 +236,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
                   SizedBox(
                     height: 10,
                   ),
-// 상품명
+                  // 상품명
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
@@ -279,7 +270,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
                                 ),
                               ),
                               IconButton(
-                                iconSize: 20,
+                                iconSize: 14,
                                 padding: EdgeInsets.symmetric(vertical: 3),
                                 icon: Icon(
                                   isLiked
@@ -351,21 +342,24 @@ class _ProductDetailViewState extends State<ProductDetailView>
                           child: Column(
                             children: [
                               SizedBox(
-                                height: 16,
+                                height: 10,
                               ),
                               // 제품태그
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   Wrap(
                                     spacing: 8.0, // 각 태그 간의 간격
                                     runSpacing: 4.0, // 줄바꿈 간격
-                                    children: _buildTagsList(data['tagString'] ?? 'No tag available'),
+                                    children: _buildTagsList(
+                                        data['tagString'] ??
+                                            'No tag available'),
                                   ),
                                 ],
                               ),
                               SizedBox(
-                                height: 10,
+                                height: 16,
                               ),
                               // 상품설명
                               Container(
@@ -392,14 +386,6 @@ class _ProductDetailViewState extends State<ProductDetailView>
                 ],
               ),
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Icon(Icons.arrow_back),
-              backgroundColor: Color(0xffECECEC),
-              foregroundColor: Color(0xff343F56),
-            ),
           );
         }
         return Text('Error');
@@ -415,17 +401,16 @@ List<Widget> _buildTagsList(String tagString) {
 
 Widget _buildTags(String label, Color color) {
   return Chip(
-    labelPadding: EdgeInsets.all(1.0),
+    labelPadding: EdgeInsets.all(2.0),
     label: Text(
       label,
       style: TextStyle(
         color: Colors.white,
-        fontSize: 14,
       ),
     ),
     backgroundColor: Color(0xff343F56),
     elevation: 0.0,
-    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(20),
     ),
@@ -471,8 +456,6 @@ Widget _buildChip(String label, Color color) {
   );
 }
 
-
-
 class Recommendation extends StatelessWidget {
   String productId;
 
@@ -504,7 +487,7 @@ class Recommendation extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ProductDetailView(
+                      builder: (context) => CameraDetailView(
                         itemNo: product['itemNo'],
                       ),
                     ),
