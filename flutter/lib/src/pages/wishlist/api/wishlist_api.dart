@@ -7,14 +7,12 @@ import '../../../common/device_controller.dart';
 import 'model/FolderDto.dart';
 
 class WishlistApi {
-
   final DeviceController deviceController = Get.find<DeviceController>();
   var wishlistDio = Dio(
     BaseOptions(
-      // baseUrl: "http://10.0.2.2:8080",
       baseUrl: "http://i10a309.p.ssafy.io:8080",
-      connectTimeout: 5000,
-      receiveTimeout: 5000,
+      connectTimeout: 50000,
+      receiveTimeout: 50000,
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.acceptHeader: 'application/json'
