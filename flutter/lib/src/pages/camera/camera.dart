@@ -71,13 +71,13 @@ class _CameraState extends State<Camera> {
             titlePadding: EdgeInsets.zero,
             title: ClipRRect(
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.0), // 상단 왼쪽을 둥글게 만듭니다.
-                topRight: Radius.circular(20.0), // 상단 오른쪽을 둥글게 만듭니다.
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0),
               ),
               child: Image.asset(
-                'assets/info/error.gif', // 이미지 경로를 여기에 넣으세요.
-                fit: BoxFit.cover, // 이미지의 너비를 조정하세요.
-                height: 200, // 이미지의 높이를 다이얼로그의 높이로 설정합니다.
+                'assets/info/error.gif',
+                fit: BoxFit.cover,
+                height: 200,
               ),
             ),
             content: Column(
