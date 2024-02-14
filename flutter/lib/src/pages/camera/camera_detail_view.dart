@@ -163,7 +163,7 @@ class _CameraDetailViewState extends State<CameraDetailView>
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
-                      'WARNING',
+                      '⛔WARNING',
                       style: TextStyle(
                         color: Colors.black87,
                         fontSize: 10,
