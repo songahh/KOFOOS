@@ -101,20 +101,23 @@ class _CameraDetailViewState extends State<CameraDetailView>
   void _displayWarningMotionToast() async{
     if(mounted)
       MotionToast(
+        backgroundType: BackgroundType.solid,
         title: Text(
           '❗ WARNING ❗',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18,
-            color: Colors.white,
+            color: Colors.black87,
           ),
         ),
-        primaryColor: Colors.red,
+        primaryColor: Colors.amber,
+        secondaryColor: Colors.red,
         description: Text(
           'There are disliked materials.',
           style: TextStyle(
+            fontWeight: FontWeight.bold,
             fontSize: 14,
-            color: Colors.white,
+            color: Colors.black87,
           ),
         ),
         animationCurve: Curves.elasticOut,
