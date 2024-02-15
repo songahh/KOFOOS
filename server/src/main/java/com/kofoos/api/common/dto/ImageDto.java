@@ -14,16 +14,17 @@ public class ImageDto {
 
     private int id;
     private String imgUrl;
-    private WishlistItemDto wishlistItemDto;
-    private ProductDto productDto;
+//    private WishlistItemDto wishlistItemDto;
+
+
 
     public static ImageDto of(Image image){
         return ImageDto.builder()
                 .imgUrl(image.getImgUrl())
-                .wishlistItemDto(WishlistItemDto.of(image.getWishlistItem()))
-                .productDto(ProductDto.of(image.getProduct()))
                 .build();
     }
 
 
+
 }
+

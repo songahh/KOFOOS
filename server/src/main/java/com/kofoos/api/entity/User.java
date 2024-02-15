@@ -27,7 +27,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<History> histories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<UserDislikesMaterial> userDislikesMaterials = new ArrayList<>();
 
     @Builder
@@ -35,4 +35,10 @@ public class User {
         this.deviceId = deviceId;
         this.language = language;
     }
+
+    public void updateLanguage(String newLanguage) {
+        this.language = newLanguage;
+    }
+
+
 }

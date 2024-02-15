@@ -36,4 +36,10 @@ public class UserDislikesMaterial {
         this.dislikedMaterial = dislikedMaterial;
         dislikedMaterial.getUserDislikesMaterials().add(this);
     }
+
+    public int getMaterialId() {
+        return this.dislikedMaterial.getId();
+    }
+
+
 }

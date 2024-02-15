@@ -32,7 +32,6 @@ public class CategoryDto {
                 .cat2(category.getCat2())
                 .cat3(category.getCat3())
                 .cat4(category.getCat4())
-                .productDtos(productDtos)
                 .build();
     }
 

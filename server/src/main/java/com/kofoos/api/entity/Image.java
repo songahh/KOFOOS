@@ -1,6 +1,7 @@
 package com.kofoos.api.entity;
 
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,14 +21,17 @@ public class Image {
     @Column(length = 100)
     private String imgUrl;
 
-    @OneToOne(mappedBy = "image")
+    @OneToOne(mappedBy = "image",fetch = FetchType.LAZY)
     private WishlistItem wishlistItem;
 
-    @OneToOne(mappedBy = "image")
+    @OneToOne(mappedBy = "image",fetch = FetchType.LAZY)
+    @Nullable
     private Product product;
 
     @Builder
-    public Image(String imgUrl){
+    public Image(int id, String imgUrl, WishlistItem wishlistItem){
+        this.id = id;
+        this.wishlistItem = wishlistItem;
         this.imgUrl = imgUrl;
     }
 
