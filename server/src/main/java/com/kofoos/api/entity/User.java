@@ -21,7 +21,7 @@ public class User {
     @Column(name = "language")
     private String language;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<WishlistFolder> wishlistFolders = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
