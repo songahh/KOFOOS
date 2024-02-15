@@ -8,6 +8,8 @@ import '../../common/device_controller.dart';
 import '../register/select_food.dart';
 import 'package:get/get.dart';
 
+import '../wishlist/api/wishlist_api.dart';
+
 class CameraDetailView extends StatefulWidget {
   const CameraDetailView({super.key, required this.itemNo});
 
@@ -20,6 +22,7 @@ class CameraDetailView extends StatefulWidget {
 class _CameraDetailViewState extends State<CameraDetailView>
     with SingleTickerProviderStateMixin {
   SearchApi searchApi = SearchApi();
+  WishlistApi wishlistApi = WishlistApi();
   late Future<dynamic> data;
   bool isLiked = false;
   int count = 0;
@@ -35,22 +38,39 @@ class _CameraDetailViewState extends State<CameraDetailView>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _loadUserDislikedFoods(); // 사용자의 비선호 식재료 리스트를 로드
+    final deviceId = deviceController.deviceId.value; // 현재 deviceId 가져오기
     data = searchApi.getProductDetail(widget.itemNo).then(
       (productData) {
+        var wishList = productData['wishList'] as List<dynamic>?;
         setState(() {
           count = productData['like'];
           productId = productData['productId'];
+          isLiked = wishList?.contains(deviceId) ?? false;
         });
         return productData;
       },
     );
   }
 
-  Like() {
+  Future<void> Like() async {
     setState(() {
       isLiked = !isLiked;
       count += isLiked ? 1 : -1;
     });
+
+    try {
+      if (isLiked) {
+        await wishlistApi.likeWishlistItems(productId);
+      } else {
+        await wishlistApi.unlikeWishlistItems(productId);
+      }
+    } catch (e) {
+      print("Wishlist API 호출 실패: $e");
+      setState(() {
+        isLiked = !isLiked;
+        count += isLiked ? 1 : -1;
+      });
+    }
   }
 
   // 사용자의 비선호 식재료 리스트를 로드하는 메서드
@@ -98,39 +118,46 @@ class _CameraDetailViewState extends State<CameraDetailView>
     return foodColorMap[food] ?? Colors.grey;
   }
 
-  void _displayWarningMotionToast() async{
-    if(mounted)
-      MotionToast(
-        backgroundType: BackgroundType.solid,
-        title: Text(
-          '❗ WARNING ❗',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-            color: Colors.black87,
-          ),
+  void _displayWarningMotionToast(){
+    MotionToast(
+      backgroundType: BackgroundType.solid,
+      title: Text(
+        '❗ WARNING ❗',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+          color: Colors.black87,
         ),
-        primaryColor: Colors.amber,
-        secondaryColor: Colors.red,
-        description: Text(
-          'There are disliked materials.',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-            color: Colors.black87,
-          ),
+      ),
+      primaryColor: Colors.amber,
+      secondaryColor: Colors.red,
+      description: Text(
+        'There are disliked materials.',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+          color: Colors.black87,
         ),
-        animationCurve: Curves.elasticOut,
-        borderRadius: 10,
-        animationDuration: const Duration(milliseconds: 1000),
-        icon: Icons.warning,
-        iconSize: 35,
-        width: 300,
-        height: 80,
-      ).show(context);
+      ),
+      animationCurve: Curves.elasticOut,
+      borderRadius: 10,
+      animationDuration: const Duration(milliseconds: 1000),
+      icon: Icons.warning,
+      iconSize: 35,
+      width: 300,
+      height: 80,
+    ).show(context);
   }
 
   Widget _Ingredient(List<dynamic>? dislikedMaterials) {
+
+    bool hasDislikedMaterials = dislikedMaterials != null && dislikedMaterials.isNotEmpty && dislikedMaterials.any((materialId) => userDislikedFoodsIds.contains(materialId));
+
+    if (hasDislikedMaterials) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _displayWarningMotionToast();
+      });
+    }
     // 비선호 식재료가 없는 경우 "No disliked materials" 칩을 표시
     if (dislikedMaterials == null || dislikedMaterials.isEmpty) {
       return _buildChip("No disliked materials", Colors.grey);
@@ -147,7 +174,6 @@ class _CameraDetailViewState extends State<CameraDetailView>
       // 식재료 객체를 찾았다면 식재료 칩을 생성합니다.
       if (food != null) {
         if (isDisliked) {
-          _displayWarningMotionToast();
           Vibration.vibrate(duration: 500);
         }
 
@@ -242,6 +268,7 @@ class _CameraDetailViewState extends State<CameraDetailView>
                   Center(
                     // 제품 사진
                     child: Stack(
+                      alignment: AlignmentDirectional.topStart,
                       children: [
                         // 제품 사진
                         Container(
