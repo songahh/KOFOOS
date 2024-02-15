@@ -14,7 +14,7 @@ void showConsentDialog(BuildContext context) async {
     builder: (context) => AlertDialog(
       title: const Text('Privacy Consent'),
       content: const Text(
-          'Do you allow us to collect your device ID for analytics?'),
+          'Do you allow us to collect your device ID for our service?'),
       actions: [
         TextButton(
           child: const Text('No'),

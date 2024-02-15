@@ -59,6 +59,8 @@ public class ImageServiceImpl implements ImageService {
         } catch(IOException e) {
             throw new ImageException("S3 이미지 업로드 에러");
         }
+
+
         // DB에 업로드
         // 1. url 제품 테이블에 저장
         String imgUrl = amazonS3.getUrl(bucketName , newName).toString();
@@ -67,5 +69,38 @@ public class ImageServiceImpl implements ImageService {
 
         searchedProduct.setImage(image);
         ir.save(image);
+    }
+
+
+    @Override
+    public int saveImage(MultipartFile multipartFile,String itemNo) throws IOException {
+        String originalName = multipartFile.getOriginalFilename();
+
+
+
+        String ext = originalName.substring(originalName.lastIndexOf("."));
+        String newName = UUID.randomUUID().toString().concat(String.format("_%s", originalName));
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(String.format("image/%s",ext));
+        try{
+            PutObjectResult putObjectResult = amazonS3.putObject(new PutObjectRequest(
+                    bucketName, newName, multipartFile.getInputStream(), metadata
+            ).withCannedAcl(CannedAccessControlList.PublicRead));
+        } catch(IOException e) {
+            throw new ImageException("S3 이미지 업로드 에러");
+        }
+
+        // DB에 업로드
+        // 1. url 제품 테이블에 저장
+        String imgUrl = amazonS3.getUrl(bucketName , newName).toString();
+        Image image = Image.builder().imgUrl(imgUrl).build();
+
+
+        Image im = ir.save(image);
+        System.out.println("이미지 id: "+im.getId());
+
+
+        return im.getId();
     }
 }

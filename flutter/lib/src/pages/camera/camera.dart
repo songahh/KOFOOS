@@ -48,7 +48,7 @@ class _CameraState extends State<Camera> {
     _count = 0;
     _startDetectionTimer();
     _isWarningMessageShown = false;
-  }
+    }
 
   void _startDetectionTimer() {
     _detectionTimer?.cancel();
@@ -68,36 +68,53 @@ class _CameraState extends State<Camera> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text(
-              "No Match Found",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
+            titlePadding: EdgeInsets.zero,
+            title: ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0),
+              ),
+              child: Image.asset(
+                'assets/info/error.gif',
+                fit: BoxFit.cover,
+                height: 200,
               ),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Text(
+                  "No Match Found",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
                   "No matching products found after multiple attempts.",
                   style: TextStyle(
                     fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xffCACACA),
+
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 12),
                 Text(
                   "How about trying the barcode scanner button?",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue,
+                    color: Color(0xffCACACA),
                   ),
                 ),
               ],
             ),
             actions: <Widget>[
               TextButton(
-                child: Text("OK", style: TextStyle(color: Colors.blue)),
+                child: Text("OK", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                 onPressed: () {
                   Navigator.of(context).pop();
                   _resetDetection();
@@ -134,7 +151,6 @@ class _CameraState extends State<Camera> {
       floatingActionButton: Padding(
         padding: EdgeInsets.only(bottom: 20.0),
         child: FloatingActionButton(
-          // 카메라 전환 버튼
           onPressed: () {
             Navigator.pushReplacement(
               context,
@@ -151,11 +167,13 @@ class _CameraState extends State<Camera> {
     );
   }
 
-  void showSnackBar(
-      BuildContext context, List<ResultObjectDetection>? results) async {
+  void showSnackBar(BuildContext context, List<ResultObjectDetection>? results) async {
     if (results == null || results.isEmpty) {
       return;
     }
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
     String? itemNo;
     bool showMoreDetail = false;
     SearchApi searchApi = SearchApi();
@@ -175,35 +193,27 @@ class _CameraState extends State<Camera> {
 
     if (showMoreDetail && data != null && !_isWarningMessageShown) {
       _count = 0;
+
       final snackBar = SnackBar(
         content: Container(
           height: 250.0,
           child: Center(
             child: GestureDetector(
-              // 제품 상제 정보 표시
-              onTap: (){
-                CameraController? cameraController;
-                // cameraController!.stopImageStream();
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                // RootController.to.goToProductDetail(data['itemNo']);
-                Navigator.pushReplacement(
+              onTap: () async {
+                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                await Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => CameraDetailView(
                         itemNo: data['itemNo'],
                       ),
-                    )).then((value) =>
-                    cameraController?.startImageStream((image) {
-                      onLatestImageAvailable;})
-                );
+                    ));
+
               },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "Is this the right product?",
-                    style: TextStyle(fontSize: 20.0),
-                  ),
+                  Text("Is this the right product?", style: TextStyle(fontSize: 20.0)),
                   Image.network(data['imgurl'], height: 200),
                 ],
               ),
@@ -212,9 +222,7 @@ class _CameraState extends State<Camera> {
         ),
         duration: Duration(seconds: 3),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24.0),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.0)),
       );
 
       ScaffoldMessenger.of(context).showSnackBar(snackBar);

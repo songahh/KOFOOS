@@ -54,6 +54,9 @@ dependencies:
     path: ../packages/simple_barcode_scanner-main/
   lazy_load_indexed_stack: ^1.1.0
   shake: ^2.2.0
+  vibration: ^1.8.4
+  motion_toast: ^2.8.0
+
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +84,7 @@ flutter:
   assets:
     - assets/icon/
     - assets/logo/
+    - assets/info/
     - assets/editor/carousel/
     - assets/editor/content/
     - assets/editor/related_products/

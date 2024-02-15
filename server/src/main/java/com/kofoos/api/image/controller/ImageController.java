@@ -21,6 +21,7 @@ public class ImageController {
         return "업로드 성공";
     }
 
+
     @ExceptionHandler(value = ImageException.class)
     public String imageExceptionHandler(ImageException ix){
         return ix.getMessage();
