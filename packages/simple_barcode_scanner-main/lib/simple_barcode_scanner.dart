@@ -119,36 +119,54 @@ class _SimpleBarcodeScannerPageState extends State<SimpleBarcodeScannerPage>{
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
+                        Future.delayed(Duration(seconds: 3), () {
+                          Navigator.of(context).pop(true);
+                        });
                         return AlertDialog(
-                          backgroundColor: Colors.white, // 배경색 설정
-                          shape: RoundedRectangleBorder( // 모서리 둥글게 설정
+                          titlePadding: EdgeInsets.zero,
+                          title: ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20.0), // 상단 왼쪽을 둥글게 만듭니다.
+                              topRight: Radius.circular(20.0), // 상단 오른쪽을 둥글게 만듭니다.
+                            ),
+                            child: Image.asset(
+                              'assets/info/error.gif', // 이미지 경로를 여기에 넣으세요.
+                              fit: BoxFit.cover, // 이미지의 너비를 조정하세요.
+                              height: 200, // 이미지의 높이를 다이얼로그의 높이로 설정합니다.
+                            ),
+                          ),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text(
+                                "No Match Found",
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.red,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "😢No product information available.😢",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                          shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20.0),
                           ),
-                          title: Text(
-                            "Alert",
-                            style: TextStyle( // 제목 스타일링
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          content: Text(
-                            "There is no matched product",
-                            style: TextStyle( // 내용 스타일링
-                              color: Colors.grey[600],
-                            ),
-                          ),
+                          backgroundColor: Colors.white,
                         );
                       },
                     ).then((val) {
                       isDialogShowing = false;
-                      Future.delayed(Duration(seconds: 1), () {
-                        Navigator.of(context, rootNavigator: true).pop('dialog');
-                      });
                     });
                   }
-
-
-                  Future.delayed(Duration(seconds: 1), () {
+                  Future.delayed(Duration(seconds: 3), () {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => SimpleBarcodeScannerPage()),

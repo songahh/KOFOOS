@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kofoos/src/common/back_button_widget.dart';
 import 'package:kofoos/src/pages/search/search_detail_page.dart';
@@ -120,8 +121,9 @@ Widget _product(BuildContext context, dynamic item) {
       height: 100,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(5.0),
-        child: Image.network(
-          httpImgUrl,
+        child: CachedNetworkImage(
+          filterQuality: FilterQuality.low,
+          imageUrl: httpImgUrl,
           fit: BoxFit.cover,
         ),
       ),

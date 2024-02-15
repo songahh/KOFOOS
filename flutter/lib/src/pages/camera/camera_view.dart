@@ -61,7 +61,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
           pathImageModel, 224, 224, 1000,
           labelPath: "assets/ai/label_classification_imageNet.txt");
       _objectModel = await PytorchLite.loadObjectDetectionModel(
-          pathObjectDetectionModel, 100, 640, 640,
+          pathObjectDetectionModel, 104, 640, 640,
           labelPath: "assets/ai/labels.txt",
           objectDetectionModelType: ObjectDetectionModelType.yolov8);
     } catch (e) {

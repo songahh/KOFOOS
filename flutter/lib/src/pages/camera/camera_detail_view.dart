@@ -1,9 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kofoos/src/pages/mypage/api/mypage_api.dart';
 import 'package:kofoos/src/pages/search/api/search_api.dart';
-
+import 'package:motion_toast/motion_toast.dart';
+import 'package:vibration/vibration.dart';
 import '../../common/device_controller.dart';
 import '../register/select_food.dart';
 import 'package:get/get.dart';
@@ -91,12 +91,43 @@ class _CameraDetailViewState extends State<CameraDetailView>
     'chicken': const Color(0xffF6BC77),
     'squid&clam': const Color(0xffADD2E6),
     'tomato': const Color(0xffA80A0A),
-    // ... 다른 음식과 색상들 ...
   };
 
   Color getFoodColor(String food) {
     // 매핑된 색상을 반환하거나, 매핑되지 않았다면 기본 색상을 반환
     return foodColorMap[food] ?? Colors.grey;
+  }
+
+  void _displayWarningMotionToast() async{
+    if(mounted)
+      MotionToast(
+        backgroundType: BackgroundType.solid,
+        title: Text(
+          '❗ WARNING ❗',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: Colors.black87,
+          ),
+        ),
+        primaryColor: Colors.amber,
+        secondaryColor: Colors.red,
+        description: Text(
+          'There are disliked materials.',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            color: Colors.black87,
+          ),
+        ),
+        animationCurve: Curves.elasticOut,
+        borderRadius: 10,
+        animationDuration: const Duration(milliseconds: 1000),
+        icon: Icons.warning,
+        iconSize: 35,
+        width: 300,
+        height: 80,
+      ).show(context);
   }
 
   Widget _Ingredient(List<dynamic>? dislikedMaterials) {
@@ -115,10 +146,15 @@ class _CameraDetailViewState extends State<CameraDetailView>
 
       // 식재료 객체를 찾았다면 식재료 칩을 생성합니다.
       if (food != null) {
+        if (isDisliked) {
+          _displayWarningMotionToast();
+          Vibration.vibrate(duration: 500);
+        }
+
         return Container(
-          margin: EdgeInsets.all(4),
+          margin: EdgeInsets.fromLTRB(1.5, 0, 1.5, 0),
           child: Stack(
-            alignment: Alignment.topRight, // "warning" 문구의 위치를 조정합니다.
+            alignment: Alignment.topLeft, // "warning" 문구의 위치를 조정합니다.
             children: [
               Container(
                 margin: EdgeInsets.all(1),
@@ -130,7 +166,7 @@ class _CameraDetailViewState extends State<CameraDetailView>
                 ),
                 child: Chip(
                   backgroundColor:
-                      isDisliked ? Colors.red : getFoodColor(food.name),
+                  isDisliked ? Colors.black : getFoodColor(food.name),
                   avatar: CircleAvatar(
                     backgroundColor: Colors.transparent,
                     child: Image.asset('assets/icon/${food.image}.png',
@@ -139,7 +175,7 @@ class _CameraDetailViewState extends State<CameraDetailView>
                   label: Text(
                     food.name,
                     style:
-                        const TextStyle(color: Colors.white), // 텍스트 색상을 흰색으로 지정
+                    const TextStyle(color: Colors.white), // 텍스트 색상을 흰색으로 지정
                   ),
                 ),
               ),
@@ -149,15 +185,15 @@ class _CameraDetailViewState extends State<CameraDetailView>
                   top: 0,
                   right: 0,
                   child: Container(
-                    padding: EdgeInsets.all(1),
+                    padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: Colors.yellow,
+                      color: Colors.amber,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
-                      'WARNING',
+                      '⛔WARNING',
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.black87,
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
                       ),
@@ -194,6 +230,7 @@ class _CameraDetailViewState extends State<CameraDetailView>
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
           var data = snapshot.data;
+          bool isDisliked = data['dislikedMaterials'].any((material) => userDislikedFoodsIds.contains(material));
           return Scaffold(
             appBar: AppBar(
               title: Text('Product Detail'),
@@ -204,17 +241,32 @@ class _CameraDetailViewState extends State<CameraDetailView>
                 children: [
                   Center(
                     // 제품 사진
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Image.network(
-                        data['imgurl'],
-                        fit: BoxFit.cover,
-                      ),
+                    child: Stack(
+                      children: [
+                        // 제품 사진
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Image.network(
+                            data['imgurl'],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        if (isDisliked)
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                            child: Image.asset(
+                              alignment: Alignment.topLeft,
+                              "assets/info/warning.png",
+                              width: MediaQuery.of(context).size.width*0.5,
+                              height: MediaQuery.of(context).size.width*0.5,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                   Container(
@@ -301,9 +353,12 @@ class _CameraDetailViewState extends State<CameraDetailView>
                     padding: EdgeInsets.symmetric(horizontal: 8),
                     child: _Ingredient(data['dislikedMaterials']),
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
                   // 탭바
                   Container(
-                    height: 100,
+                    height: 50,
                     child: TabBar(
                       controller: _tabController,
                       tabs: [
@@ -311,21 +366,21 @@ class _CameraDetailViewState extends State<CameraDetailView>
                           child: Text(
                             'Information',
                             style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold),
+                                fontSize: 12, fontWeight: FontWeight.bold),
                           ),
                         ),
                         Tab(
                           child: Text(
-                            'Recommendation',
+                            'Recommend',
                             style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold),
+                                fontSize: 12, fontWeight: FontWeight.bold),
                           ),
                         ),
                         Tab(
                           child: Text(
                             'Available stock',
                             style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold),
+                                fontSize: 12, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
@@ -530,7 +585,12 @@ class Stock extends StatelessWidget {
     return Container(
       width: 200,
       height: 200,
-      child: Text('준비중입니다'),
+      child: Center(
+          child: Text(
+            'Comming Soon !',
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 30, color: Colors.black45),
+          )),
     );
   }
 }

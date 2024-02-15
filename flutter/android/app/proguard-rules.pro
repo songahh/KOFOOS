@@ -7,4 +7,6 @@
 -keep class org.pytorch.** { *; }
 -keep class io.flutter.plugins.**  { *; }
 -keep class com.facebook.** {*;}
+-keep class java.util.Timer { *; }
+-keep class java.util.TimerTask { *; }
 -dontwarn io.flutter.embedding.**

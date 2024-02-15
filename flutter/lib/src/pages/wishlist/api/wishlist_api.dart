@@ -21,7 +21,6 @@ class WishlistApi {
     ),
   );
 
-
   Future<List<FolderDto>> getWishlistFolder() async {
     DeviceController deviceController = Get.find<DeviceController>();
     String currentDeviceId = deviceController.deviceId.value;

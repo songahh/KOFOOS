@@ -3,7 +3,7 @@ import 'dart:convert';
 class WishlistDto {
   final int wishlistItemId;
   final int bought;
-  final String? itemNo;
+  final String itemNo;
   final String imageUrl;
 
   WishlistDto({required this.wishlistItemId ,required this.bought, required this.itemNo, required this.imageUrl});

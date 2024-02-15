@@ -1,13 +1,13 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:kofoos/src/pages/mypage/api/mypage_api.dart';
-
 import '../../common/device_controller.dart';
 import '../register/select_food.dart';
 import '../wishlist/api/wishlist_api.dart';
 import 'api/search_api.dart';
 import 'package:get/get.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:vibration/vibration.dart';
+import 'package:motion_toast/motion_toast.dart';
 
 class ProductDetailView extends StatefulWidget {
   const ProductDetailView({super.key, required this.itemNo});
@@ -31,7 +31,6 @@ class _ProductDetailViewState extends State<ProductDetailView>
   List<int> userDislikedFoodsIds = []; // 사용자의 비선호 식재료 ID 리스트
   bool isLoading = true; // 로딩 상태
   final DeviceController deviceController = Get.find<DeviceController>();
-
   @override
   void initState() {
     super.initState();
@@ -39,7 +38,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
     _loadUserDislikedFoods(); // 사용자의 비선호 식재료 리스트를 로드
     final deviceId = deviceController.deviceId.value; // 현재 deviceId 가져오기
     data = searchApi.getProductDetail(widget.itemNo).then(
-          (productData) {
+      (productData) {
         var wishList = productData['wishList'] as List<dynamic>?;
         setState(() {
           count = productData['like'];
@@ -70,6 +69,38 @@ class _ProductDetailViewState extends State<ProductDetailView>
         count += isLiked ? 1 : -1;
       });
     }
+  }
+
+  void _displayWarningMotionToast() async{
+    if(mounted)
+      MotionToast(
+        backgroundType: BackgroundType.solid,
+        title: Text(
+          '❗ WARNING ❗',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: Colors.black87,
+          ),
+        ),
+        primaryColor: Colors.amber,
+        secondaryColor: Colors.red,
+        description: Text(
+          'There are disliked materials.',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            color: Colors.black87,
+          ),
+        ),
+        animationCurve: Curves.elasticOut,
+        borderRadius: 10,
+        animationDuration: const Duration(milliseconds: 1000),
+        icon: Icons.warning,
+        iconSize: 35,
+        width: 300,
+        height: 80,
+      ).show(context);
   }
 
   // 사용자의 비선호 식재료 리스트를 로드하는 메서드
@@ -110,7 +141,6 @@ class _ProductDetailViewState extends State<ProductDetailView>
     'chicken': const Color(0xffF6BC77),
     'squid&clam': const Color(0xffADD2E6),
     'tomato': const Color(0xffA80A0A),
-    // ... 다른 음식과 색상들 ...
   };
 
   Color getFoodColor(String food) {
@@ -118,7 +148,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
     return foodColorMap[food] ?? Colors.grey;
   }
 
-  Widget _Ingredient(List<dynamic>? dislikedMaterials ) {
+  Widget _Ingredient(List<dynamic>? dislikedMaterials) {
     // 비선호 식재료가 없는 경우 "No disliked materials" 칩을 표시
     if (dislikedMaterials == null || dislikedMaterials.isEmpty) {
       return _buildChip("No disliked materials", Colors.grey);
@@ -134,48 +164,60 @@ class _ProductDetailViewState extends State<ProductDetailView>
 
       // 식재료 객체를 찾았다면 식재료 칩을 생성합니다.
       if (food != null) {
+        if (isDisliked) {
+            _displayWarningMotionToast();
+            Vibration.vibrate(duration: 500);
+        }
+
         return Container(
-          margin: EdgeInsets.all(4),
+          margin: EdgeInsets.fromLTRB(1.5, 0, 1.5, 0),
           child: Stack(
-            alignment: Alignment.topRight, // "warning" 문구의 위치를 조정합니다.
+            alignment: Alignment.topLeft, // "warning" 문구의 위치를 조정합니다.
             children: [
               Container(
                 margin: EdgeInsets.all(1),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  border: isDisliked ? Border.all(color: Colors.transparent, width: 2) : null,
+                  border: isDisliked
+                      ? Border.all(color: Colors.transparent, width: 2)
+                      : null,
                 ),
                 child: Chip(
-                  backgroundColor: isDisliked ? Colors.red : getFoodColor(food.name),
+                  backgroundColor:
+                      isDisliked ? Colors.black : getFoodColor(food.name),
                   avatar: CircleAvatar(
                     backgroundColor: Colors.transparent,
-                    child: Image.asset('assets/icon/${food.image}.png', width: 20, height: 20),
+                    child: Image.asset('assets/icon/${food.image}.png',
+                        width: 20, height: 20),
                   ),
                   label: Text(
                     food.name,
-                    style: const TextStyle(color: Colors.white), // 텍스트 색상을 흰색으로 지정
+                    style:
+                        const TextStyle(color: Colors.white), // 텍스트 색상을 흰색으로 지정
                   ),
                 ),
               ),
-              if (isDisliked) Positioned( // isDisliked가 true일 경우에만 "warning" 문구를 표시합니다.
-                top: 0,
-                right: 0,
-                child: Container(
-                  padding: EdgeInsets.all(1),
-                  decoration: BoxDecoration(
-                    color: Colors.yellow,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    'WARNING',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
+              if (isDisliked)
+                Positioned(
+                  // isDisliked가 true일 경우에만 "warning" 문구를 표시합니다.
+                  top: 0,
+                  right: 0,
+                  child: Container(
+                    padding: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.amber,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      '⛔WARNING',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         );
@@ -188,8 +230,8 @@ class _ProductDetailViewState extends State<ProductDetailView>
       thickness: 10,
       child: Wrap(
         alignment: WrapAlignment.start,
-        spacing: 0.0, //좌우 간격
-        runSpacing: 1.0, // 가로로 나열하면서 줄바꿈
+        spacing: 0.0, // 가로 줄 간격
+        runSpacing: 0.0, // 세로 줄 간격
         children: [...chips],
       ),
     );
@@ -206,6 +248,8 @@ class _ProductDetailViewState extends State<ProductDetailView>
           return Text('Error: ${snapshot.error}');
         } else if (snapshot.hasData) {
           var data = snapshot.data;
+          bool isDisliked = data['dislikedMaterials'].any((material) => userDislikedFoodsIds.contains(material));
+          print("@@@@@@@@@@@@@@@@222"+isDisliked.toString());
           return Scaffold(
             body: SingleChildScrollView(
               child: Column(
@@ -213,17 +257,33 @@ class _ProductDetailViewState extends State<ProductDetailView>
                 children: [
                   Center(
                     // 제품 사진
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Image.network(
-                        data['imgurl'],
-                        fit: BoxFit.cover,
-                      ),
+                    child: Stack(
+                      alignment: AlignmentDirectional.topStart,
+                      children: [
+                        // 제품 사진
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Image.network(
+                            data['imgurl'],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        if (isDisliked)
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                            child: Image.asset(
+                              alignment: Alignment.topLeft,
+                              "assets/info/warning.png",
+                              width: MediaQuery.of(context).size.width*0.5,
+                              height: MediaQuery.of(context).size.width*0.5,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                   Container(
@@ -311,8 +371,11 @@ class _ProductDetailViewState extends State<ProductDetailView>
                     child: _Ingredient(data['dislikedMaterials']),
                   ),
                   // 탭바
+                  SizedBox(
+                    height: 10,
+                  ),
                   Container(
-                    height: 100,
+                    height: 50,
                     child: TabBar(
                       controller: _tabController,
                       tabs: [
@@ -320,21 +383,21 @@ class _ProductDetailViewState extends State<ProductDetailView>
                           child: Text(
                             'Information',
                             style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold),
+                                fontSize: 12, fontWeight: FontWeight.bold),
                           ),
                         ),
                         Tab(
                           child: Text(
-                            'Recommendation',
+                            'Recommend',
                             style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold),
+                                fontSize: 12, fontWeight: FontWeight.bold),
                           ),
                         ),
                         Tab(
                           child: Text(
                             'Available stock',
                             style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold),
+                                fontSize: 12, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
@@ -355,12 +418,15 @@ class _ProductDetailViewState extends State<ProductDetailView>
                               ),
                               // 제품태그
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   Wrap(
                                     spacing: 8.0, // 각 태그 간의 간격
                                     runSpacing: 4.0, // 줄바꿈 간격
-                                    children: _buildTagsList(data['tagString'] ?? 'No tag available'),
+                                    children: _buildTagsList(
+                                        data['tagString'] ??
+                                            'No tag available'),
                                   ),
                                 ],
                               ),
@@ -455,13 +521,13 @@ Widget _buildChip(String label, Color color) {
           child: Text(
             label,
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
         ),
       ],
     ),
-    backgroundColor: Colors.amber,
+    backgroundColor: Colors.grey,
     elevation: 0.0,
     shadowColor: Colors.transparent,
     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -470,8 +536,6 @@ Widget _buildChip(String label, Color color) {
     ),
   );
 }
-
-
 
 class Recommendation extends StatelessWidget {
   int productId;
@@ -547,7 +611,12 @@ class Stock extends StatelessWidget {
     return Container(
       width: 200,
       height: 200,
-      child: Text('준비중입니다'),
+      child: Center(
+          child: Text(
+        'Comming Soon !',
+        style: TextStyle(
+            fontWeight: FontWeight.bold, fontSize: 30, color: Colors.black45),
+      )),
     );
   }
 }
