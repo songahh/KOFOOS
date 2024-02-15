@@ -48,6 +48,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
         return productData;
       },
     );
+
   }
 
   Future<void> Like() async {
@@ -71,8 +72,8 @@ class _ProductDetailViewState extends State<ProductDetailView>
     }
   }
 
-  void _displayWarningMotionToast() async{
-    if(mounted)
+
+  void _displayWarningMotionToast(){
       MotionToast(
         backgroundType: BackgroundType.solid,
         title: Text(
@@ -149,6 +150,13 @@ class _ProductDetailViewState extends State<ProductDetailView>
   }
 
   Widget _Ingredient(List<dynamic>? dislikedMaterials) {
+    bool hasDislikedMaterials = dislikedMaterials != null && dislikedMaterials.isNotEmpty && dislikedMaterials.any((materialId) => userDislikedFoodsIds.contains(materialId));
+
+    if (hasDislikedMaterials) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _displayWarningMotionToast();
+      });
+    }
     // 비선호 식재료가 없는 경우 "No disliked materials" 칩을 표시
     if (dislikedMaterials == null || dislikedMaterials.isEmpty) {
       return _buildChip("No disliked materials", Colors.grey);
@@ -165,7 +173,6 @@ class _ProductDetailViewState extends State<ProductDetailView>
       // 식재료 객체를 찾았다면 식재료 칩을 생성합니다.
       if (food != null) {
         if (isDisliked) {
-            _displayWarningMotionToast();
             Vibration.vibrate(duration: 500);
         }
 
