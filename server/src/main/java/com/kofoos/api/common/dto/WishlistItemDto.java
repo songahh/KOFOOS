@@ -20,7 +20,7 @@ public class WishlistItemDto {
     public static WishlistItemDto of(WishlistItem wishlistItem){
         return WishlistItemDto.builder()
                 .bought(wishlistItem.getBought())
-                .imageDto(ImageDto.of(wishlistItem.getImage()))
+//                .imageDto(ImageDto.of(wishlistItem.getImage()))
                 .wishlistFolderDto(WishlistFolderDto.of((wishlistItem.getWishlistFolder())))
                 .build();
     }

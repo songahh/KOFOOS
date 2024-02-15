@@ -3,6 +3,8 @@ package com.kofoos.api.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -21,7 +23,7 @@ public class WishlistItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
     private Image image;
 
@@ -45,7 +47,7 @@ public class WishlistItem {
     }
 
     private void setImage(Image image){
-        this.image = image;
+        this.image = (image);
 //        image.setWishlistItem(this);
     }
 

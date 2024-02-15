@@ -8,6 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,8 +24,8 @@ public class Image {
     @Column(length = 100)
     private String imgUrl;
 
-    @OneToOne(mappedBy = "image",fetch = FetchType.LAZY)
-    private WishlistItem wishlistItem;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<WishlistItem> wishlistItem = new ArrayList<>();
 
     @OneToOne(mappedBy = "image",fetch = FetchType.LAZY)
     @Nullable
@@ -31,12 +34,11 @@ public class Image {
     @Builder
     public Image(int id, String imgUrl, WishlistItem wishlistItem){
         this.id = id;
-        this.wishlistItem = wishlistItem;
         this.imgUrl = imgUrl;
     }
 
     public void setWishlistItem(WishlistItem wishlistItem){
-        this.wishlistItem = wishlistItem;
+        this.wishlistItem.add(wishlistItem);
     }
 
     public void setProduct(Product product) {
