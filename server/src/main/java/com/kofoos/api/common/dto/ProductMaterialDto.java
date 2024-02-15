@@ -19,9 +19,11 @@ public class ProductMaterialDto {
 
     public static ProductMaterialDto of(ProductMaterial productMaterial) {
         return ProductMaterialDto.builder()
-                .dislikedMaterialDto(DislikedMaterialDto.of(productMaterial.getDislikedMaterial()))
-                .productDto(ProductDto.of(productMaterial.getProduct()))
+
+                .dislikedMaterialDto(DislikedMaterialDto.builder().name(productMaterial.getDislikedMaterial().getName()).build())
+                .productDto(ProductDto.builder().name(productMaterial.getProduct().getName()).build())
                 .build();
     }
 
 }
+

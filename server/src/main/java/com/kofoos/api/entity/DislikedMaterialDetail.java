@@ -10,14 +10,14 @@ public class DislikedMaterialDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "disliked_material_details_id")
+    @Column(name = "disliked_material_detail_id")
     private int id;
 
     @Column(length = 15, name = "detail_name")
     private String detailName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "material_id")
+    @JoinColumn(name = "disliked_material_id")
     private DislikedMaterial dislikedMaterial;
 
     @Builder
@@ -28,6 +28,6 @@ public class DislikedMaterialDetail {
 
     private void setDislikedMaterial(DislikedMaterial dislikedMaterial){
         this.dislikedMaterial = dislikedMaterial;
-        dislikedMaterial.getDislikedMaterialDetailsList().add(this);
+        dislikedMaterial.getDislikedMaterialDetailList().add(this);
     }
 }

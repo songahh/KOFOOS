@@ -26,7 +26,7 @@ public class DislikedMaterial {
     private List<UserDislikesMaterial> UserDislikesMaterials = new ArrayList<>();
 
     @OneToMany(mappedBy = "dislikedMaterial")
-    private List<DislikedMaterialDetails> dislikedMaterialDetailsList = new ArrayList<>();
+    private List<DislikedMaterialDetail> dislikedMaterialDetailList = new ArrayList<>();
 
     @Builder
     public DislikedMaterial(String name) {
