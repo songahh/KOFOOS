@@ -19,12 +19,6 @@ public interface WishlistRepository extends JpaRepository<WishlistItem, Integer>
     @Query("select wi from WishlistItem wi where wi.product.id = :productId and wi.wishlistFolder.id = :folderId")
     Optional<WishlistItem> findWishlistItemByWishlistFolderIdAndProductId(int productId,int folderId);
 
-    @Query("SELECT NEW com.kofoos.api.wishlist.dto.ProductDto(p.id, i.imgUrl) " +
-            "FROM WishlistItem wi " +
-            "JOIN wi.product p " +
-            "JOIN p.image i " +
-            "WHERE wi.wishlistFolder.id = :folderId")
-    List<ProductDto> findProductsByFolderId(@Param("folderId") int folderId);
 
     @Query("SELECT new com.kofoos.api.wishlist.dto.WishlistDto(wi.id, wi.bought, wi.product.itemNo, img.imgUrl) " +
             "FROM WishlistItem wi " +
@@ -32,6 +26,14 @@ public interface WishlistRepository extends JpaRepository<WishlistItem, Integer>
             "JOIN p.image img " +
             "WHERE wi.wishlistFolder.id = :folderId")
     List<WishlistDto> findItemsWithImagesByUserId(@Param("folderId") int folderId);
+
+    @Query("SELECT new com.kofoos.api.wishlist.dto.WishlistDto(wi.id, wi.bought, p.itemNo, img.imgUrl) " +
+            "FROM WishlistItem wi " +
+            "LEFT JOIN wi.product p " +
+            "LEFT JOIN wi.image img " +
+            "WHERE wi.wishlistFolder.id = :folderId")
+    List<WishlistDto> findProductsByFolderId(@Param("folderId") int folderId);
+
 
 
     @Modifying

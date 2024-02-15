@@ -44,6 +44,13 @@ public class ProductService {
         product.addHit();
         return ProductDetailDto.of(product);
     }
+    @Transactional
+    public Optional<Product> findProductByItemNoOrNone(String itemNo){
+        Optional<Product> optional = productRepository.findProductByItemNo(itemNo);
+
+        return optional;
+    }
+
 
 
     public List<ProductBoxDto> findProductsOrder(int id, String order){
