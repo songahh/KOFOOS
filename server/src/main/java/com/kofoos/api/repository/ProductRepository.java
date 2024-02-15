@@ -88,5 +88,8 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     void updateGptTag(String itemNo, String tagString, String description);
 
 
+    @Query("select count(p) from Product p ")
+    int intCount();
+
 
 }

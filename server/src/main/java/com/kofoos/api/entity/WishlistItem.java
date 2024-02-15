@@ -40,7 +40,8 @@ public class WishlistItem {
 
     private void setProduct(Product product) {
         this.product = product;
-        product.getWishlistItems().add(this);
+        if(product!=null)
+            product.getWishlistItems().add(this);
     }
 
     private void setImage(Image image){

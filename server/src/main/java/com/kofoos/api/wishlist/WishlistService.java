@@ -1,5 +1,6 @@
 package com.kofoos.api.wishlist;
 
+import com.kofoos.api.entity.Product;
 import com.kofoos.api.wishlist.dto.FolderDto;
 import com.kofoos.api.wishlist.dto.ProductDto;
 import com.kofoos.api.common.dto.WishlistFolderDto;
@@ -24,7 +25,11 @@ public interface WishlistService {
 
     List<FolderDto> findFolderList(String deviceId);
 
-    List<ProductDto> findFolder(int folderId);
+    List<WishlistDto> findFolder(int folderId);
 
     void check(List<Integer> itemIds, int bought);
+
+    int findDefaultFolderId(String deviceId);
+
+    void insertImage(String deviceId, int id ,int imageId);
 }
