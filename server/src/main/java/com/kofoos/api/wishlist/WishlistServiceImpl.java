@@ -33,7 +33,7 @@ public class WishlistServiceImpl implements WishlistService {
         System.out.println("==============" + currentUser.getId());
 
         WishlistFolder folder = folderRepository.findFolderByUserIdAndName(currentUser.getId(), DEFAULT);
-        System.out.println("폴더 id: " + folder.getId());
+        // System.out.println("폴더 id: " + folder.getId());
 
         if (folder == null) {
             WishlistFolder newfolder = WishlistFolder.builder()
