@@ -74,20 +74,23 @@ class _ProductDetailViewState extends State<ProductDetailView>
   void _displayWarningMotionToast() async{
     if(mounted)
       MotionToast(
+        backgroundType: BackgroundType.solid,
         title: Text(
           '❗ WARNING ❗',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18,
-            color: Colors.white,
+            color: Colors.black87,
           ),
         ),
-        primaryColor: Colors.red,
+        primaryColor: Colors.amber,
+        secondaryColor: Colors.red,
         description: Text(
           'There are disliked materials.',
           style: TextStyle(
+            fontWeight: FontWeight.bold,
             fontSize: 14,
-            color: Colors.white,
+            color: Colors.black87,
           ),
         ),
         animationCurve: Curves.elasticOut,
@@ -255,6 +258,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
                   Center(
                     // 제품 사진
                     child: Stack(
+                      alignment: AlignmentDirectional.topStart,
                       children: [
                         // 제품 사진
                         Container(
@@ -270,11 +274,15 @@ class _ProductDetailViewState extends State<ProductDetailView>
                           ),
                         ),
                         if (isDisliked)
-                          Image.asset(
-                            "assets/info/X.png",
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.width,
-                          )
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                            child: Image.asset(
+                              alignment: Alignment.topLeft,
+                              "assets/info/warning.png",
+                              width: MediaQuery.of(context).size.width*0.5,
+                              height: MediaQuery.of(context).size.width*0.5,
+                            ),
+                          ),
                       ],
                     ),
                   ),
