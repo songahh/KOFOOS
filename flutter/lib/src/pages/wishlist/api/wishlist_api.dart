@@ -1,18 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
+import 'package:kofoos/src/pages/wishlist/WishlistDetectionDto.dart';
 import '../../../common/device_controller.dart';
 import 'model/FolderDto.dart';
 
 class WishlistApi {
-  final DeviceController deviceController = Get.find<DeviceController>();
-  var wishlistDio = Dio(
-    BaseOptions(
+
+  var wishlistDio = dio.Dio(
+    dio.BaseOptions(
+       //baseUrl: "http://10.0.2.2:8080",
       baseUrl: "http://i10a309.p.ssafy.io:8080",
-      connectTimeout: 50000,
-      receiveTimeout: 50000,
+      connectTimeout: 5000,
+      receiveTimeout: 5000,
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         HttpHeaders.acceptHeader: 'application/json'
@@ -21,8 +22,10 @@ class WishlistApi {
   );
 
   Future<List<FolderDto>> getWishlistFolder() async {
+    DeviceController deviceController = Get.find<DeviceController>();
+    String currentDeviceId = deviceController.deviceId.value;
     try {
-      var response = await wishlistDio.post('/wishlist/folder/list', data: {"deviceId": "rayeon"});
+      var response = await wishlistDio.post('/wishlist/folder/list', data: {"deviceId": currentDeviceId});
 
       if (response.statusCode == 200) {
         // 첫 번째 단계: 전체 응답을 JSON 객체로 파싱
@@ -57,15 +60,79 @@ class WishlistApi {
   }
 
   Future<void> likeWishlistItems(int productId) async {
+    DeviceController deviceController = Get.find<DeviceController>();
     String currentDeviceId = deviceController.deviceId.value;
     await wishlistDio.post('/wishlist/product/like', data: {"productId": productId,"deviceId": currentDeviceId});
   }
 
   Future<void> unlikeWishlistItems(int productId) async {
+    DeviceController deviceController = Get.find<DeviceController>();
     String currentDeviceId = deviceController.deviceId.value;
     await wishlistDio.post('/wishlist/product/unlike', data: {"productId": productId,"deviceId": currentDeviceId});
   }
 
+  Future<void> insertItem(WishlistDetectionDto? wishlistDetection) async {
+    DeviceController deviceController = Get.find<DeviceController>();
+    String currentDeviceId = deviceController.deviceId.value;
+    print('여기는 api');
+    print(wishlistDetection?.itemNo);
+    print(wishlistDetection?.imageUrl);
 
+    // 이미지 파일을 MultipartFile 객체로 변환하여 추가
+    var formData = dio.FormData.fromMap({
+      "file": await dio.MultipartFile.fromFile(wishlistDetection!.imageUrl, filename: "upload.jpg"),
+      // 추가 데이터도 함께 전송
+      "deviceId": currentDeviceId,
+      "itemNo": wishlistDetection.itemNo,
+    });
+
+    try {
+      // 클래스 상단에서 정의한 wishlistDio 인스턴스를 재사용하여 요청 전송
+      var response = await wishlistDio.post('/wishlist/detection/insert', data: formData);
+
+      if (response.statusCode == 200) {
+        // 성공적으로 전송됐을 때의 처리
+        print("Successfully uploaded");
+      } else {
+        // 오류 발생 시 처리
+        print("Failed to upload");
+      }
+    } catch (e) {
+      // 예외 처리
+      print("Error during file upload: $e");
+    }
+  }
+
+  Future<void> deleteItem(WishlistDetectionDto? wishlistDetection) async {
+    DeviceController deviceController = Get.find<DeviceController>();
+    String currentDeviceId = deviceController.deviceId.value;
+    print('여기는 api');
+    print(wishlistDetection?.itemNo);
+    print(wishlistDetection?.imageUrl);
+
+    // 이미지 파일을 MultipartFile 객체로 변환하여 추가
+    var formData = dio.FormData.fromMap({
+      "file": await dio.MultipartFile.fromFile(wishlistDetection!.imageUrl, filename: "upload.jpg"),
+      // 추가 데이터도 함께 전송
+      "deviceId": currentDeviceId,
+      "itemNo": wishlistDetection.itemNo,
+    });
+
+    try {
+      // 클래스 상단에서 정의한 wishlistDio 인스턴스를 재사용하여 요청 전송
+      var response = await wishlistDio.post('/wishlist/detection/insert', data: formData);
+
+      if (response.statusCode == 200) {
+        // 성공적으로 전송됐을 때의 처리
+        print("Successfully uploaded");
+      } else {
+        // 오류 발생 시 처리
+        print("Failed to upload");
+      }
+    } catch (e) {
+      // 예외 처리
+      print("Error during file upload: $e");
+    }
+  }
 }
 
