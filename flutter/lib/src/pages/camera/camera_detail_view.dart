@@ -254,11 +254,15 @@ class _CameraDetailViewState extends State<CameraDetailView>
                           ),
                         ),
                         if (isDisliked)
-                          Image.asset(
-                            "assets/info/X.png",
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.width,
-                          )
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                            child: Image.asset(
+                              alignment: Alignment.topLeft,
+                              "assets/info/warning.png",
+                              width: MediaQuery.of(context).size.width*0.5,
+                              height: MediaQuery.of(context).size.width*0.5,
+                            ),
+                          ),
                       ],
                     ),
                   ),
