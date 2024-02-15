@@ -23,7 +23,7 @@ public class WishlistFolder {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "wishlistFolder")
+    @OneToMany(mappedBy = "wishlistFolder",cascade = CascadeType.REMOVE)
     private List<WishlistItem> wishlistitems = new ArrayList<>();
 
 
