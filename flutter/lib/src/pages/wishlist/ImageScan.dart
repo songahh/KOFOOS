@@ -33,13 +33,41 @@ class ImageScan  {
       print("모델 로드 실패: $e");
     }
   }
-  Future<List<ResultObjectDetection?>> runObjectDetectionYoloV8(List<File> images) async {
+
+// 이미지 파일 리스트를 받아 각 이미지에 대한 객체 탐지를 실행하고 결과를 반환하는 메서드
+  Future<List<ResultDto>> runObjectDetectionYoloV8(XFile image) async {
+    //pick a random image
+    List<ResultDto> results = [];
+
+    Stopwatch stopwatch = Stopwatch()..start();
+
+    objDetect = await _objectModelYoloV8!.getImagePrediction(
+        await File(image!.path).readAsBytes(),
+        minimumScore: 0.8,
+        iOUThreshold: 0.6);
+    textToShow = inferenceTimeAsString(stopwatch);
+
+    print('object executed in ${stopwatch.elapsed.inMilliseconds} ms');
+    for (var element in objDetect) {
+      print({
+        "score": element?.score,
+        "className": element?.className,
+      });
+
+      ResultDto resultDto = ResultDto( name: element?.className as String, score: element?.score as double);
+      results.add(resultDto);
+    }
+
+    return results;
+
+  }
+ /* Future<List<String?>> runObjectDetectionYoloV8(List<File> images) async {
     if (_objectModelYoloV8 == null) {
       print("모델 초기화 실패");
       return [];
     }
 
-    List<ResultObjectDetection?> results = [];
+    List<String?> results = [];
     for (File image in images) {
       print(image);
       print('진단 시작!');
@@ -53,7 +81,7 @@ class ImageScan  {
           ResultObjectDetection maxDetectionResult=detectionResults[0];
 
           for(ResultObjectDetection det in detectionResults){
-            if(max < det.score){
+            if(max <= det.score){
 
               max = det.score;
               maxDetectionResult=det;
@@ -61,11 +89,11 @@ class ImageScan  {
           }
           print("정확도 최대값: ");
           print(max);
-          results.add(maxDetectionResult);
+          print(maxDetectionResult.className);
+          results.add(maxDetectionResult.className as String);
           print('=====결과값이 있을 때 결과 개수: ${results.length}====');
         } else {
-          // 비어 있는 결과인 경우 null 대신 빈 리스트를 추가하거나 결과를 추가하지 않음
-          // results.add([]); // 빈 리스트를 추가하는 방법
+          results.add(null); // 비어 있는 결과인 경우 null 추가
           print('=====결과값이 없을 때 결과 개수: ${results.length}====');
         }
         print('=====if문 나와서 결과 개수: ${results.length}====');
@@ -80,7 +108,7 @@ class ImageScan  {
 
     return results;
   }
-
+*/
   String inferenceTimeAsString(Stopwatch stopwatch) =>
       "Inference Took ${stopwatch.elapsed.inMilliseconds} ms";
 
@@ -104,5 +132,13 @@ class ImageScan  {
     print(predictionList);
 
   }
+
+}
+
+class ResultDto {
+  late String name;
+  late double score;
+
+  ResultDto({required this.name, required this.score});
 
 }
