@@ -2,6 +2,11 @@ package com.kofoos.api.wishlist;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kofoos.api.entity.Product;
+import com.kofoos.api.image.controller.ImageController;
+import com.kofoos.api.image.service.ImageService;
+import com.kofoos.api.product.dto.ProductDetailDto;
+import com.kofoos.api.product.service.ProductService;
 import com.kofoos.api.wishlist.dto.FolderDto;
 import com.kofoos.api.wishlist.dto.ProductDto;
 import com.kofoos.api.common.dto.WishlistFolderDto;
@@ -11,10 +16,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/wishlist")
@@ -22,20 +30,19 @@ public class WishlistController {
 
 
     private WishlistService wishlistService;
+    private ImageService imageService;
 
-    public WishlistController(WishlistService wishlistService) {
+    private ProductService productService;
+
+
+
+    public WishlistController(WishlistService wishlistService, ImageService imageService, ProductService productService) {
 
         this.wishlistService = wishlistService;
+        this.imageService = imageService;
+        this.productService = productService;
     }
 
-
-    /*
-      상품 좋아요(위시리스트 추가)
-
-        /wishlist/product/like
-        productId : int
-        deviceId: String
-     */
     @ResponseBody
     @PostMapping("/product/like")
     public ResponseEntity<Map<String, Object>> likeProduct(@RequestBody Map<String, Object> req)
@@ -152,8 +159,7 @@ public class WishlistController {
 
        List<FolderDto> folderList =  wishlistService.findFolderList(deviceId);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String folderListJson = objectMapper.writeValueAsString(folderList);
+        System.out.println("[결과]"+folderList.toString());
 
         result.put("folderList", folderList);
         //ok상태코드 리턴
@@ -177,19 +183,39 @@ public class WishlistController {
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 
-/**
- * Post /product/like 상품 좋아요(위시리스트 추가)
- * Post /product/cancel 상품 좋아요 취소
- * Post /folder/create 위시리스트 폴더 생성
- * Post /folder/delete 위시리스트 폴더 삭제
- * Post /folder/list 위시리스트 폴더 조회(목록)
- * Get /folder/{wishlist_folder_id}위시리스트 상품 조회(상품)
- * * Post /wishlist/product/check 상품 구매 여부 체크
- * ===============================================
- * Post /folder/{wishlist_folder_id}위시리스트 제품 폴더 간 이동
- * Post /wishlist/upload
- *
- */
+    @PostMapping("/detection/insert")
+    public ResponseEntity<Map<String, Object>> saveImageUploadItem(@RequestPart("file") MultipartFile file, @RequestParam("deviceId") String deviceId, @RequestParam("itemNo") String itemNo) throws ParseException, IOException {
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        System.out.println("/detection/insert!!!");
+        int imageId = imageService.saveImage(file,itemNo);
+
+        System.out.println("이미지 id: "+ imageId);
+
+        System.out.println("디바이스 id: "+deviceId);
+
+
+        int productId = 999999999;
+        System.out.println("아이템 No: "+itemNo);
+
+        Product productByItemNo = null;
+        if(itemNo != null){
+            Optional<Product> productByItemNoOrNone = productService.findProductByItemNoOrNone(itemNo);
+            if (productByItemNoOrNone.isPresent()){
+                productByItemNo = productByItemNoOrNone.get();
+                System.out.println("product 엔티티: " +productByItemNo.toString());
+                productId = productByItemNo.getId();
+            }
+
+        }
+
+        System.out.println("상품 id: "+productId);
+        // wishlist_folder_id, product_id, image_id, bought=0
+        wishlistService.insertImage(deviceId,productId,imageId);
+
+        //ok상태코드 리턴
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
 
 
 }
