@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kofoos/src/pages/wishlist/run_model_by_image_demo.dart';
-
 import '../../root/root_controller.dart';
 import '../search/api/search_api.dart';
 import '../search/search_detail_page.dart';
