@@ -61,7 +61,7 @@ class ImageScan  {
     return results;
 
   }
- /* Future<List<String?>> runObjectDetectionYoloV8(List<File> images) async {
+  /* Future<List<String?>> runObjectDetectionYoloV8(List<File> images) async {
     if (_objectModelYoloV8 == null) {
       print("모델 초기화 실패");
       return [];
@@ -74,10 +74,10 @@ class ImageScan  {
       try {
         List<ResultObjectDetection> detectionResults = await _objectModelYoloV8!.getImagePrediction(
             await image.readAsBytes(),
-            minimumScore: 0.8,
-            iOUThreshold: 0.6);
+            minimumScore: 0.3,
+            iOUThreshold: 0.3);
         if (detectionResults.isNotEmpty) {
-          double max = 0;
+          double max = 0.75;
           ResultObjectDetection maxDetectionResult=detectionResults[0];
 
           for(ResultObjectDetection det in detectionResults){
@@ -93,7 +93,8 @@ class ImageScan  {
           results.add(maxDetectionResult.className as String);
           print('=====결과값이 있을 때 결과 개수: ${results.length}====');
         } else {
-          results.add(null); // 비어 있는 결과인 경우 null 추가
+          // 비어 있는 결과인 경우 null 대신 빈 리스트를 추가하거나 결과를 추가하지 않음
+          // results.add([]); // 빈 리스트를 추가하는 방법
           print('=====결과값이 없을 때 결과 개수: ${results.length}====');
         }
         print('=====if문 나와서 결과 개수: ${results.length}====');

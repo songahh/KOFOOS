@@ -10,7 +10,7 @@ class WishlistApi {
 
   var wishlistDio = dio.Dio(
     dio.BaseOptions(
-       //baseUrl: "http://10.0.2.2:8080",
+      //baseUrl: "http://10.0.2.2:8080",
       baseUrl: "http://i10a309.p.ssafy.io:8080",
       connectTimeout: 5000,
       receiveTimeout: 5000,
@@ -20,6 +20,7 @@ class WishlistApi {
       },
     ),
   );
+
 
   Future<List<FolderDto>> getWishlistFolder() async {
     DeviceController deviceController = Get.find<DeviceController>();
