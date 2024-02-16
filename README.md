@@ -73,7 +73,7 @@ AI
 # 5.기술 소개
 
 - On-Device Ai를 통한 상품 인식
-  - Object Detection 딥러닝 모델 YOLO를 통해 효율적인 실시간 스캔 구현
+  - Object Detection 딥러닝 모델 YOLO를 통해 효율적인 실시간 스캔 구현<br>
 [![ondevice-AI.png](https://i.postimg.cc/L4wqB5nq/ondevice-AI.png)](https://postimg.cc/6TV5B9Vw)
 <br>
 - 상품 조회수를 통한 랭킹, 최근 조회한 상품
