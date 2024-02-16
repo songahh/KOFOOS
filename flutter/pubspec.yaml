@@ -1,5 +1,5 @@
 name: kofoos
-description: "A new Flutter project."
+description: "KOFOOS"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -31,22 +31,44 @@ dependencies:
   flutter:
     sdk: flutter
 
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+  # 필요한 디펜던시는 여기에 추가하세요
   cupertino_icons: ^1.0.2
+  get: ^4.6.6
+  fluttertoast: ^8.2.4
+  carousel_slider: ^4.0.0
+  change_app_package_name: ^1.1.0
+  animation_list: ^2.2.1
+  dio: ^4.0.0
+  http: ^0.13.3
+  device_info: ^2.0.3
+  provider: ^6.0.1
+  cached_network_image: ^3.2.0
+  animations: ^2.0.0
+  flutter_vision: ^1.1.4
+  image_picker: ^1.0.7
+  camera: ^0.10.5+9
+  flutter_speed_dial: ^7.0.0
+  image: ^4.1.6
+  pytorch_lite: ^4.2.4
+  simple_barcode_scanner:
+    path: ../packages/simple_barcode_scanner-main/
+  lazy_load_indexed_stack: ^1.1.0
+  shake: ^2.2.0
+  vibration: ^1.8.4
+  motion_toast: ^2.8.0
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-
+dependency_overrides:
+  sensors_plus: ^4.0.2
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -60,8 +82,15 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - img/
-
+    - assets/icon/
+    - assets/logo/
+    - assets/info/
+    - assets/editor/carousel/
+    - assets/editor/content/
+    - assets/editor/related_products/
+    - assets/ranking/
+    - assets/test/
+    - assets/ai/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
