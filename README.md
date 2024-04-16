@@ -95,9 +95,9 @@ AI
 
 - On-Device Ai를 통한 상품 인식
   - Object Detection 딥러닝 모델 YOLO를 통해 효율적인 실시간 스캔 구현<br>
-[![ondevice-AI.png](https://i.postimg.cc/L4wqB5nq/ondevice-AI.png)](https://postimg.cc/6TV5B9Vw)
+[![ondevice-AI.png](https://i.postimg.cc/L4wqB5nq/ondevice-AI.png)](https://postimg.cc/6TV5B9Vw)  
+![image](https://github.com/songahh/KOFOOS_/assets/77879519/723b728a-35a3-419b-8c17-35621783db4e)  
 <br>
-
 - 상품 조회수를 통한 랭킹, 최근 조회한 상품
   - in-memory DB인 **Redis**의 자료구조를 이용해 정해진 기간 단위로 상품 랭킹 반영 및 사용자별 최근 본 상품 정보 제공
 
