@@ -47,32 +47,32 @@ AI
 
 # 3.서비스 화면
 ### 회원가입 페이지
-|<img src="./exec/scenario/1,2. 개인정보 동의, 재료 선택.gif">|
+|<img src="./assets/1,2. 개인정보 동의, 재료 선택.gif">|
 |------------|
 | 2023-08-24 |
 
 ### 홈 화면
-| <img src="./exec/scenario/3. 홈화면.gif"> | <img src="./exec/scenario/4. 에디터 추천.gif"> |
+| <img src="./assets/3. 홈화면.gif"> | <img src="./exec/scenario/4. 에디터 추천.gif"> |
 |------------|------------|
 | 홈 화면  | 에디터 추천 |
 
 ### 검색 화면
-| <img src="./exec/scenario/5. 검색.gif">|
+| <img src="./assets/5. 검색.gif">|
 |------------|
 | 검색 화면 |
 
 ### 카메라 화면
-| <img src="./exec/scenario/6-1. 카메라.gif"> | <img src="./exec/scenario/6-2. 카메라.gif"> |
+| <img src="./assets/6-1. 카메라.gif"> | <img src="./exec/scenario/6-2. 카메라.gif"> |
 |------------|------------|
 | AI  | 바코드 |
 
 ### 위시리스트 화면
-| <img src="./exec/scenario/7. 위시리스트.gif">|
+| <img src="./assets/7. 위시리스트.gif">|
 |------------|
 | 위시리스트 화면 |
 
 ### 마이페이지 화면
-| <img src="./exec/scenario/8. 마이페이지.gif">|
+| <img src="./assets/8. 마이페이지.gif">|
 |------------|
 | 마이페이지 화면 |
 
