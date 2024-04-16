@@ -52,7 +52,7 @@ AI
 | 2023-08-24 |
 
 ### 홈 화면
-| <img src="./assets/3. 홈화면.gif"> | <img src="./exec/scenario/4. 에디터 추천.gif"> |
+| <img src="./assets/3. 홈화면.gif"> | <img src="./assets/4. 에디터 추천.gif"> |
 |------------|------------|
 | 홈 화면  | 에디터 추천 |
 
@@ -62,7 +62,7 @@ AI
 | 검색 화면 |
 
 ### 카메라 화면
-| <img src="./assets/6-1. 카메라.gif"> | <img src="./exec/scenario/6-2. 카메라.gif"> |
+| <img src="./assets/6-1. 카메라.gif"> | <img src="./assets/6-2. 카메라.gif"> |
 |------------|------------|
 | AI  | 바코드 |
 
